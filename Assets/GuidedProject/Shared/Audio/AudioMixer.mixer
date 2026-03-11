@@ -33,6 +33,39 @@ AudioMixerEffectController:
   m_SendTarget: {fileID: 0}
   m_EnableWetMix: 0
   m_Bypass: 0
+--- !u!244 &-3565746212233402405
+AudioMixerEffectController:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_EffectID: 6b5647eae3351144db011766650580b1
+  m_EffectName: Attenuation
+  m_MixLevel: dcb8c72844be15b4a8728989cfe7270b
+  m_Parameters: []
+  m_SendTarget: {fileID: 0}
+  m_EnableWetMix: 0
+  m_Bypass: 0
+--- !u!243 &-1340013426804399100
+AudioMixerGroupController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Crawl
+  m_AudioMixer: {fileID: 24100000}
+  m_GroupID: 04849352ab9b3bb45a08fa36e978819d
+  m_Children: []
+  m_Volume: 3f0a1956e7a92834183aff0daf04e647
+  m_Pitch: 07474a0371fe6134f8d467c9b45dd3c4
+  m_Send: 00000000000000000000000000000000
+  m_Effects:
+  - {fileID: -3565746212233402405}
+  m_UserColorIndex: 0
+  m_Mute: 0
+  m_Solo: 0
+  m_BypassEffects: 0
 --- !u!241 &24100000
 AudioMixerController:
   m_ObjectHideFlags: 0
@@ -56,6 +89,7 @@ AudioMixerController:
     - bd6ad16f14504c94f8b5292e249ea7c8
     - d5f3890a632dccd4782a554a55e82e96
     - b901fc4f2163c6c47a527b84ae542cbb
+    - 04849352ab9b3bb45a08fa36e978819d
     name: View
   m_CurrentViewIndex: 0
   m_TargetSnapshot: {fileID: 24500006}
@@ -70,6 +104,7 @@ AudioMixerGroupController:
   m_GroupID: bd6ad16f14504c94f8b5292e249ea7c8
   m_Children:
   - {fileID: 7899411067101319220}
+  - {fileID: -1340013426804399100}
   - {fileID: -8194415124627976109}
   m_Volume: b29a0867246a3264bb6a7b449207962f
   m_Pitch: 3fcea577cadd7674381b3fa10fd4a694

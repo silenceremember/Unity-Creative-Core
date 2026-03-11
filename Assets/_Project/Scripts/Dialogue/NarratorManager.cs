@@ -72,10 +72,14 @@ public class NarratorManager : MonoBehaviour
     {
         if (_playback != null)
         {
-            StopCoroutine(_playback);
+            StopAllCoroutines(); // убиваем и дочерние (EraseText, ShowLine)
             _playback = null;
         }
         _currentSequence = null;
+
+        // Очищаем текст чтобы не было наложений
+        if (lineText != null) lineText.text = "";
+        if (speakerText != null) speakerText.text = "";
         if (subtitleRoot != null) subtitleRoot.SetActive(false);
     }
 

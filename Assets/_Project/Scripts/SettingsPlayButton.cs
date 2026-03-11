@@ -54,17 +54,8 @@ public class SettingsPlayButton : MonoBehaviour
     {
         if (completed != sequence) return;
 
-        // Рассказчик договорил — затемняем экран
-        if (ScreenFader.Instance != null)
-            ScreenFader.Instance.FadeToBlack(OnFadeComplete);
-        else
-            OnFadeComplete();
-    }
-
-    private void OnFadeComplete()
-    {
-        // Здесь можно загрузить сцену игры:
-        // SceneManager.LoadScene("GameScene");
-        Debug.Log("[SettingsPlayButton] Fade complete — load game scene here.");
+        // Рассказчик договорил — запускаем кроул
+        if (IntroCrawl.Instance != null)
+            IntroCrawl.Instance.Play();
     }
 }
