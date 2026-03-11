@@ -17,20 +17,15 @@ public static class DialogueAssetFactory
 
         CreateSeqBrokenPlay();
         CreateSeqBrokenRepeat();
+        CreateSeqTVOn();
+        CreateSeqTVOff();
+        CreateSeqLangToEnglish();
+        CreateSeqLangToRussian();
+        CreateSeqSettingsPlay();
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         Debug.Log("[DialogueAssetFactory] Done: " + FOLDER);
-    }
-
-    [MenuItem("Tools/Update Seq_BrokenPlay")]
-    public static void UpdateBrokenPlay()
-    {
-        CreateSeqBrokenPlay();
-        CreateSeqBrokenRepeat();
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-        Debug.Log("[Factory] Seq_BrokenPlay updated.");
     }
 
     // ──────────────────────────────────────────────
@@ -38,6 +33,7 @@ public static class DialogueAssetFactory
     private static void CreateSeqBrokenPlay()
     {
         var seq = CreateAsset<DialogueSequence>("Seq_BrokenPlay");
+        seq.priority = 1;
 
         seq.lines = new DialogueLine[]
         {
@@ -84,6 +80,7 @@ public static class DialogueAssetFactory
     private static void CreateSeqBrokenRepeat()
     {
         var seq = CreateAsset<DialogueSequence>("Seq_BrokenPlay_Repeat");
+        seq.priority = 0;
 
         seq.lines = new DialogueLine[]
         {
@@ -113,5 +110,101 @@ public static class DialogueAssetFactory
         var asset = ScriptableObject.CreateInstance<T>();
         AssetDatabase.CreateAsset(asset, path);
         return asset;
+    }
+
+    // ── Settings sequences ────────────────────
+
+    private static void CreateSeqTVOn()
+    {
+        var seq = CreateAsset<DialogueSequence>("Seq_TVOn");
+        seq.priority = 2;
+        seq.lines = new DialogueLine[]
+        {
+            new DialogueLine { speaker = "Narrator",
+                text = "Телевизор включён.", pauseAfter = 0.5f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Программа — атмосферный шум.", pauseAfter = 0.5f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Жильцы скорее всего довольны.", pauseAfter = 0f },
+        };
+        EditorUtility.SetDirty(seq);
+    }
+
+    private static void CreateSeqTVOff()
+    {
+        var seq = CreateAsset<DialogueSequence>("Seq_TVOff");
+        seq.priority = 2;
+        seq.lines = new DialogueLine[]
+        {
+            new DialogueLine { speaker = "Narrator",
+                text = "Телевизор выключен.", pauseAfter = 0.5f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Жильцы чуть менее счастливы.", pauseAfter = 0.5f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Может, и нет.", pauseAfter = 0f },
+        };
+        EditorUtility.SetDirty(seq);
+    }
+
+    private static void CreateSeqLangToEnglish()
+    {
+        var seq = CreateAsset<DialogueSequence>("Seq_LangToEnglish");
+        seq.priority = 2;
+        seq.lines = new DialogueLine[]
+        {
+            new DialogueLine { speaker = "Narrator",
+                text = "Переключаемся.", pauseAfter = 0.5f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Сейчас я скажу...", pauseAfter = 0.7f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Oh. That actually worked.", pauseAfter = 0.6f },
+            new DialogueLine { speaker = "Narrator",
+                text = "I sound different in English.", pauseAfter = 0.5f },
+            new DialogueLine { speaker = "Narrator",
+                text = "More professional. Less me.", pauseAfter = 0.8f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Anyway.", pauseAfter = 0f },
+        };
+        EditorUtility.SetDirty(seq);
+    }
+
+    private static void CreateSeqLangToRussian()
+    {
+        var seq = CreateAsset<DialogueSequence>("Seq_LangToRussian");
+        seq.priority = 2;
+        seq.lines = new DialogueLine[]
+        {
+            new DialogueLine { speaker = "Narrator",
+                text = "Switching language.", pauseAfter = 0.5f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Back to Russian. Here goes.", pauseAfter = 0.7f },
+            new DialogueLine { speaker = "Narrator",
+                text = "О. Это снова я.", pauseAfter = 0.6f },
+            new DialogueLine { speaker = "Narrator",
+                text = "По-русски звучу по-другому.", pauseAfter = 0.5f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Гораздо менее профессионально.", pauseAfter = 0.5f },
+            new DialogueLine { speaker = "Narrator",
+                text = "По крайней мере, честно.", pauseAfter = 0f },
+        };
+        EditorUtility.SetDirty(seq);
+    }
+
+    private static void CreateSeqSettingsPlay()
+    {
+        var seq = CreateAsset<DialogueSequence>("Seq_SettingsPlay");
+        seq.priority = 3;
+        seq.lines = new DialogueLine[]
+        {
+            new DialogueLine { speaker = "Narrator",
+                text = "О, отлично. Ты нашёл ещё одну кнопку.", pauseAfter = 0.6f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Похоже, она тоже не работает.", pauseAfter = 0.5f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Разработчик совсем не старался.", pauseAfter = 0.7f },
+            new DialogueLine { speaker = "Narrator",
+                text = "Ладно. Я запущу нас сам.", pauseAfter = 0f },
+        };
+        EditorUtility.SetDirty(seq);
     }
 }

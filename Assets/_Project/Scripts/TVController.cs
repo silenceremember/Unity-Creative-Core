@@ -24,13 +24,8 @@ public class TVController : MonoBehaviour
 
     void Start()
     {
-        // Определяем начальное состояние по материалу
-        if (tvRenderer != null && screenOff != null)
-        {
-            var mats = tvRenderer.sharedMaterials;
-            _isOn = (screenMaterialIndex < mats.Length) &&
-                    (mats[screenMaterialIndex].name != screenOff.name);
-        }
+        // TV изначально включён всегда
+        SetState(true);
     }
 
     // ── Public: привязываются к кнопкам ───────

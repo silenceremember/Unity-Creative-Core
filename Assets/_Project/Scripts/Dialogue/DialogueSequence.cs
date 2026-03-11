@@ -17,8 +17,8 @@ public class DialogueSequence : ScriptableObject
     public DialogueSequence nextSequence;
 
     [Header("Настройки")]
-    [Tooltip("Прервать текущую воспроизводимую последовательность и начать эту")]
-    public bool interrupt = false;
+    [Tooltip("Приоритет. >= текущего — прерывает, < текущего — не прерывает.")]
+    public int priority = 0;
 
 #if UNITY_EDITOR
     void OnValidate()

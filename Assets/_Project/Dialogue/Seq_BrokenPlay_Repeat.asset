@@ -20,4 +20,4 @@ MonoBehaviour:
     pauseAfter: 0.5
     audioClip: {fileID: 0}
   nextSequence: {fileID: 0}
-  interrupt: 0
+  priority: 0

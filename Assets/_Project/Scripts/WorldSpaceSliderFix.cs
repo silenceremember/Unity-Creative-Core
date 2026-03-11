@@ -37,6 +37,7 @@ public class WorldSpaceSliderFix : MonoBehaviour
     {
         var mouse = Mouse.current;
         if (mouse == null) return;
+        if (!_slider.interactable) return; // заблокирован — не обрабатываем
 
         Vector2 screenPos = mouse.position.ReadValue();
 

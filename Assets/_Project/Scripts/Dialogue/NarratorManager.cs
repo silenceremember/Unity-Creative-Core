@@ -25,6 +25,7 @@ public class NarratorManager : MonoBehaviour
 
     // ──────────────────────────────
     private Coroutine _playback;
+    private DialogueSequence _currentSequence;
     private CanvasGroup _group;
 
     void Awake()
@@ -55,8 +56,15 @@ public class NarratorManager : MonoBehaviour
     public void Play(DialogueSequence sequence)
     {
         if (sequence == null) return;
-        if (_playback != null && !sequence.interrupt) return;
+
+        if (_playback != null)
+        {
+            if (sequence.priority < (_currentSequence?.priority ?? 0))
+                return; // приоритет ниже — не прерываем
+        }
+
         Stop();
+        _currentSequence = sequence;
         _playback = StartCoroutine(PlaySequence(sequence));
     }
 
@@ -67,6 +75,7 @@ public class NarratorManager : MonoBehaviour
             StopCoroutine(_playback);
             _playback = null;
         }
+        _currentSequence = null;
         if (subtitleRoot != null) subtitleRoot.SetActive(false);
     }
 
@@ -102,6 +111,7 @@ public class NarratorManager : MonoBehaviour
         }
 
         _playback = null;
+        _currentSequence = null;
     }
 
     private IEnumerator ShowLine(DialogueLine line)
