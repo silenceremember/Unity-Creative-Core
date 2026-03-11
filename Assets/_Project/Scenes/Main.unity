@@ -459,7 +459,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 159926426}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1867730423}
+        m_TargetAssemblyTypeName: ExitGame, Assembly-CSharp
+        m_MethodName: Quit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &159926426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -758,7 +770,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 191724215}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 383498468}
+        m_TargetAssemblyTypeName: TVController, Assembly-CSharp
+        m_MethodName: TurnOff
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &191724215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1230,6 +1254,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!23 &383498466 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3106723209010167810, guid: 0d37b8b98879ecc4ea439140dbf04d7d, type: 3}
+  m_PrefabInstance: {fileID: 1794525460}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &383498468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383498460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f468482f8e372604abc6ede5c7499cdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TVController
+  tvRenderer: {fileID: 383498466}
+  screenMaterialIndex: 1
+  screenOn: {fileID: 2100000, guid: f955342e1a881354f999e18035491eb7, type: 2}
+  screenOff: {fileID: 2100000, guid: 3d2747776266bbb499ed7c22cbe8be3a, type: 2}
+  tvAudio: {fileID: 383498464}
+  tvLight: {fileID: 2120011725}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -2278,7 +2325,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 546158162}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 383498468}
+        m_TargetAssemblyTypeName: TVController, Assembly-CSharp
+        m_MethodName: TurnOn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &546158162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24097,7 +24156,7 @@ PrefabInstance:
     - target: {fileID: 3106723209010167810, guid: 0d37b8b98879ecc4ea439140dbf04d7d, type: 3}
       propertyPath: 'm_Materials.Array.data[1]'
       value: 
-      objectReference: {fileID: 2100000, guid: 3d2747776266bbb499ed7c22cbe8be3a, type: 2}
+      objectReference: {fileID: 2100000, guid: f955342e1a881354f999e18035491eb7, type: 2}
     - target: {fileID: 3136419526712202445, guid: 0d37b8b98879ecc4ea439140dbf04d7d, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
@@ -25271,6 +25330,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3467121061469675991, guid: 0d37b8b98879ecc4ea439140dbf04d7d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 383498464}
+    - targetCorrespondingSourceObject: {fileID: 3467121061469675991, guid: 0d37b8b98879ecc4ea439140dbf04d7d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 383498468}
   m_SourcePrefab: {fileID: 100100000, guid: 0d37b8b98879ecc4ea439140dbf04d7d, type: 3}
 --- !u!1 &1794525461 stripped
 GameObject:
@@ -25584,6 +25646,50 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1867730421
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1867730422}
+  - component: {fileID: 1867730423}
+  m_Layer: 0
+  m_Name: Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1867730422
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1867730421}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1867730423
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1867730421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eb2e5896cfdd9e4c995bf4a28df477c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExitGame
 --- !u!1 &1886187122
 GameObject:
   m_ObjectHideFlags: 0
@@ -40550,6 +40656,11 @@ Transform:
   - {fileID: 545697136}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!108 &2120011725 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 8886178266299255174, guid: 0d37b8b98879ecc4ea439140dbf04d7d, type: 3}
+  m_PrefabInstance: {fileID: 1794525460}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2144435610
 GameObject:
   m_ObjectHideFlags: 0
@@ -40727,6 +40838,7 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1867730422}
   - {fileID: 330585546}
   - {fileID: 848989913}
   - {fileID: 1572382380}
