@@ -4,9 +4,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 /// <summary>
-/// Полностью обходит EventSystem для World Space Canvas.
-/// Во время drag слайдера отключает EventSystem (блокирует hover/click на кнопках).
-/// Восстанавливает EventSystem через один кадр после отпускания мыши.
+/// Обходит EventSystem для World Space Canvas.
+/// Во время drag — отключает EventSystem, блокируя hover/клики на кнопках.
 /// </summary>
 [RequireComponent(typeof(Slider))]
 public class WorldSpaceSliderFix : MonoBehaviour
@@ -16,7 +15,7 @@ public class WorldSpaceSliderFix : MonoBehaviour
     private Slider _slider;
     private RectTransform _sliderRect;
     private bool _isDragging;
-    private int _restoreOnFrame = -1; // кадр, в котором нужно восстановить EventSystem
+    private EventSystem _eventSystem; // кэшируем — current возвращает null когда disabled
 
     void Awake()
     {
@@ -30,6 +29,8 @@ public class WorldSpaceSliderFix : MonoBehaviour
         }
         if (uiCamera == null)
             uiCamera = Camera.main;
+
+        _eventSystem = EventSystem.current; // запоминаем пока он ещё включён
     }
 
     void Update()
@@ -39,37 +40,22 @@ public class WorldSpaceSliderFix : MonoBehaviour
 
         Vector2 screenPos = mouse.position.ReadValue();
 
-        // --- Начало drag ---
+        // Начинаем drag только если нажали НАД слайдером
         if (mouse.leftButton.wasPressedThisFrame &&
             RectTransformUtility.RectangleContainsScreenPoint(_sliderRect, screenPos, uiCamera))
         {
             _isDragging = true;
-            _restoreOnFrame = -1; // сбрасываем отложенное восстановление
-            SetEventSystem(false);
+            SetEventSystemEnabled(false); // блокируем все кнопки
         }
 
-        // --- Конец drag: запоминаем кадр восстановления ---
+        // Отпустили — восстанавливаем
         if (mouse.leftButton.wasReleasedThisFrame && _isDragging)
         {
             _isDragging = false;
-            _restoreOnFrame = Time.frameCount + 1; // восстановить в следующем кадре
+            SetEventSystemEnabled(true);
         }
 
-        // --- Отложенное восстановление ---
-        if (_restoreOnFrame >= 0 && Time.frameCount >= _restoreOnFrame)
-        {
-            _restoreOnFrame = -1;
-            SetEventSystem(true);
-        }
-
-        // --- Страховочный фолбэк: мышь не нажата и нет drag — всегда включаем ---
-        if (!_isDragging && _restoreOnFrame < 0 && !mouse.leftButton.isPressed)
-        {
-            if (EventSystem.current != null && !EventSystem.current.enabled)
-                SetEventSystem(true);
-        }
-
-        // --- Обновление значения слайдера во время drag ---
+        // Пока drag активен — обновляем даже за пределами rect
         if (_isDragging && mouse.leftButton.isPressed)
         {
             if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -82,20 +68,19 @@ public class WorldSpaceSliderFix : MonoBehaviour
         }
     }
 
-    private void SetEventSystem(bool state)
-    {
-        if (EventSystem.current != null)
-            EventSystem.current.enabled = state;
-    }
-
     void OnDisable()
     {
-        // Если объект выключился во время drag — гарантированно восстанавливаем
-        _isDragging = false;
-        _restoreOnFrame = -1;
-        SetEventSystem(true);
+        // Страховка: если объект отключили во время drag — восстанавливаем EventSystem
+        if (_isDragging)
+        {
+            _isDragging = false;
+            SetEventSystemEnabled(true);
+        }
+    }
+
+    private void SetEventSystemEnabled(bool enabled)
+    {
+        if (_eventSystem != null)
+            _eventSystem.enabled = enabled;
     }
 }
-
-
-
