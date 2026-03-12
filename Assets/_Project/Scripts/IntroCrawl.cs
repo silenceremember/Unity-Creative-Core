@@ -56,6 +56,10 @@ public class IntroCrawl : MonoBehaviour
     [Tooltip("Корневой Canvas (активируется при Play, деактивируется после)")]
     public GameObject crawlRoot;
 
+    [Header("State")]
+    [Tooltip("SO-канал состояний игры")]
+    public GameStateChannel gameStateChannel;
+
     private Coroutine _crawl;
     private Coroutine _blink;
     private Vector3 _savedPos;
@@ -78,6 +82,9 @@ public class IntroCrawl : MonoBehaviour
 
     private IEnumerator DoCrawl()
     {
+        // Объявляем состояние IntroCrawl — GameStateListener скроет меню автоматически
+        gameStateChannel?.Raise(GameState.IntroCrawl);
+
         // Телепортируем камеру к якорю
         if (mainCamera != null && crawlAnchor != null)
         {
@@ -129,16 +136,20 @@ public class IntroCrawl : MonoBehaviour
         if (crawlMusic != null) crawlMusic.Stop();
         if (sceneAudio != null) sceneAudio.Play();
 
-        // Кроул завершён — возвращаем камеру
+        // Кроул завершён
         if (crawlRoot != null) crawlRoot.SetActive(false);
-        if (mainCamera != null)
-        {
-            mainCamera.transform.position = _savedPos;
-            mainCamera.transform.rotation = _savedRot;
-        }
         _crawl = null;
 
-        Debug.Log("[IntroCrawl] Crawl complete.");
+        Debug.Log("[IntroCrawl] Crawl complete. Handing off to VisualNovelManager.");
+
+        // Переключаем состояние — VisualNovelManager запустится сам через StartNovel
+        gameStateChannel?.Raise(GameState.VisualNovel);
+
+        // На случай если VisualNovelManager не слушает канал — вызываем напрямую
+        if (VisualNovelManager.Instance != null)
+            VisualNovelManager.Instance.StartNovel();
+        else
+            Debug.LogWarning("[IntroCrawl] VisualNovelManager.Instance is null!");
     }
 
     private IEnumerator BlinkIcon()
