@@ -100,7 +100,7 @@ public class SmithNovelAssetFactory : EditorWindow
 
         // Финальный монолог
         var seqEnding = MakeSeq(folder, "Narr_Ending",
-            ("Рассказчик", "Да. Что-то есть.", 0.5f),
+            ("Рассказчик", "Похоже...", 0.5f),
             ("Рассказчик", "Они так и не разобрались кто вы.", 0.4f),
             ("Рассказчик", "Вы, впрочем, скорее всего, тоже.", 0.5f),
             ("Рассказчик", "В любом случае.", 0.4f),
@@ -166,11 +166,12 @@ public class SmithNovelAssetFactory : EditorWindow
             new NovelLine { speaker = "Джон",     text = "Я многофункциональный.",             cameraIndex = 0 },
 
             // ── ФИНАЛ ───────────────────────────────────────────────────────────
-            new NovelLine { speaker = "Мэри",     text = "Джон, впусти его нормально.",        cameraIndex = 1 },
-            new NovelLine { speaker = "Мэри",     text = "Или выпусти. Определись.",           cameraIndex = 1 },
-            new NovelLine { speaker = "Джон",     text = "Пусть пока побудет.",                cameraIndex = 0 },
-            new NovelLine { speaker = "Мэри",     text = "Здесь не так много всего.",          cameraIndex = 1 },
-            new NovelLine { speaker = "Джон",     text = "Но что-то есть.",                    cameraIndex = 0 },
+            new NovelLine { speaker = "Мэри",     text = "Джон.",                              cameraIndex = 1 },
+            new NovelLine { speaker = "Мэри",     text = "Он вообще уйдёт?",                  cameraIndex = 1 },
+            new NovelLine { speaker = "Джон",     text = "Не знаю.",                           cameraIndex = 0 },
+            new NovelLine { speaker = "Джон",     text = "Спрашивать бесполезно — он молчит.", cameraIndex = 0 },
+            new NovelLine { speaker = "Мэри",     text = "Понятно.",                           cameraIndex = 1 },
+            new NovelLine { speaker = "Мэри",     text = "Подождём пока сам разберётся.",      cameraIndex = 1 },
 
             // Финальный монолог рассказчика → конец катсцены
             new NovelLine { speaker = "",         text = "",                                    cameraIndex = 3, narratorSequenceBefore = seqEnding },
