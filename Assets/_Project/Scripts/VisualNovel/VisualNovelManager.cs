@@ -92,6 +92,9 @@ public class VisualNovelManager : MonoBehaviour
 
     // ─── Public API ───────────────────────────────────────────
 
+    /// <summary>Принудительно скрыть UI новеллы (для debug-скипа)</summary>
+    public void ForceHideNovelCanvas() => HideNovelCanvas();
+
     /// <summary>
     /// Вызывается из IntroCrawl по завершении кроула.
     /// Камера мгновенно телепортируется к anchor[0].
