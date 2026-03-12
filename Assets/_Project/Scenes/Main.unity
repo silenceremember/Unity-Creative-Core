@@ -28456,7 +28456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b42efe29b5c92b47927d5b45fa94768, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VisualNovelManager
-  novelChannel: {fileID: 0}
+  novelChannel: {fileID: 11400000, guid: fa8aa48318cf0c341b02f252ec3d3536, type: 2}
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
   narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
   novelCanvasRoot: {fileID: 6633761}
