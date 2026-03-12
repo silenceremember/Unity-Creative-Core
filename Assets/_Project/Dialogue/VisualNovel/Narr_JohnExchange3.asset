@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5dbbf1088378ae04aa7e3620b494a8f5, type: 3}
-  m_Name: Narr_BeforeJohn7
+  m_Name: Narr_JohnExchange3
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"

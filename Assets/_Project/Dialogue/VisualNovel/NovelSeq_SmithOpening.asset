@@ -17,20 +17,24 @@ MonoBehaviour:
     text: "\u042F \u0441\u0442\u043E\u044E \u0443 \u0434\u0432\u0435\u0440\u0438
       \u043F\u043E\u0442\u043E\u043C\u0443 \u0447\u0442\u043E..."
     cameraIndex: 0
-    narratorSequenceBefore: {fileID: 11400000, guid: f0efd16d06edabc43bfe6c0df8a7f942, type: 2}
+    narratorSequenceBefore: {fileID: 11400000, guid: 517d1283f39f7d848a5f6faf8cdfe53a, type: 2}
   - speaker: "\u0414\u0436\u043E\u043D"
     text: "...\u043F\u043E\u0442\u043E\u043C\u0443 \u0447\u0442\u043E \u043C\u043D\u0435
       \u0437\u0434\u0435\u0441\u044C \u0445\u043E\u0440\u043E\u0448\u043E."
     cameraIndex: 0
     narratorSequenceBefore: {fileID: 0}
+  - speaker: "\u0414\u0436\u043E\u043D"
+    text: "\u0421\u043B\u044B\u0448\u0443 \u0441\u043A\u0435\u043F\u0441\u0438\u0441."
+    cameraIndex: 0
+    narratorSequenceBefore: {fileID: 11400000, guid: 1d746b22a2ad0f34786ae1d089df2ecb, type: 2}
   - speaker: "\u041C\u044D\u0440\u0438"
     text: "\u041A\u0440\u0430\u0441\u0438\u0432\u043E \u0437\u0434\u0435\u0441\u044C."
     cameraIndex: 1
-    narratorSequenceBefore: {fileID: 11400000, guid: d285a9de092be4e4ea566ef3ce260010, type: 2}
+    narratorSequenceBefore: {fileID: 11400000, guid: 90712c32ca251184db4aebca25898d5c, type: 2}
   - speaker: "\u0414\u0436\u043E\u043D"
     text: "\u041C\u044D\u0440\u0438."
-    cameraIndex: 3
-    narratorSequenceBefore: {fileID: 11400000, guid: 707c5fe7ebe438c4bb7dfe21cb445a6b, type: 2}
+    cameraIndex: 0
+    narratorSequenceBefore: {fileID: 0}
   - speaker: "\u041C\u044D\u0440\u0438"
     text: "\u0427\u0442\u043E."
     cameraIndex: 1
@@ -49,10 +53,14 @@ MonoBehaviour:
       \u043A\u0442\u043E-\u0442\u043E \u0435\u0441\u0442\u044C."
     cameraIndex: 0
     narratorSequenceBefore: {fileID: 0}
+  - speaker: Player 1
+    text: ...
+    cameraIndex: 3
+    narratorSequenceBefore: {fileID: 11400000, guid: d8dd587f4b1ba064da9c72c0fab34a8b, type: 2}
   - speaker: "\u0414\u0436\u043E\u043D"
     text: "\u042D\u0442\u043E \u0431\u044B\u043B\u043E \u043D\u0435\u043F\u0440\u0438\u044F\u0442\u043D\u043E."
     cameraIndex: 0
-    narratorSequenceBefore: {fileID: 11400000, guid: e143c6e4868ee2d4a99d465e3ff46d41, type: 2}
+    narratorSequenceBefore: {fileID: 11400000, guid: 40a1aef2a5eb8104ab479ef31537685b, type: 2}
   - speaker: "\u041C\u044D\u0440\u0438"
     text: "\u041C\u043E\u0436\u0435\u0442, \u044D\u0442\u043E \u043C\u0430\u0441\u0442\u0435\u0440
       \u043F\u043E \u0442\u0435\u043B\u0435\u0432\u0438\u0437\u043E\u0440\u0443?"
@@ -77,15 +85,19 @@ MonoBehaviour:
   - speaker: "\u0414\u0436\u043E\u043D"
     text: "\u042D\u0439. \u0422\u044B \u043A\u0442\u043E?"
     cameraIndex: 2
-    narratorSequenceBefore: {fileID: 11400000, guid: e64ab9406e444994897e1a0bdfe3c463, type: 2}
+    narratorSequenceBefore: {fileID: 11400000, guid: 2ddee7679b5a49848b01d6076dc38ec6, type: 2}
+  - speaker: Player 1
+    text: ...
+    cameraIndex: 3
+    narratorSequenceBefore: {fileID: 0}
   - speaker: "\u0414\u0436\u043E\u043D"
     text: "\u0422\u044B \u0443\u043C\u0435\u0435\u0448\u044C \u0447\u0438\u043D\u0438\u0442\u044C
       \u0442\u0435\u043B\u0435\u0432\u0438\u0437\u043E\u0440\u044B?"
     cameraIndex: 0
-    narratorSequenceBefore: {fileID: 11400000, guid: ba046ca46e9e98c43aa6a52afaf493c5, type: 2}
-  - speaker: 
+    narratorSequenceBefore: {fileID: 11400000, guid: 2c4de8093a151ac488e3c93605f4039e, type: 2}
+  - speaker: Player 1
     text: ...
-    cameraIndex: 2
+    cameraIndex: 3
     narratorSequenceBefore: {fileID: 0}
   - speaker: "\u0414\u0436\u043E\u043D"
     text: "\u041C\u043E\u043B\u0447\u0430\u043D\u0438\u0435 \u2014 \u0437\u043D\u0430\u043A
@@ -95,15 +107,15 @@ MonoBehaviour:
   - speaker: "\u0414\u0436\u043E\u043D"
     text: "\u0410 \u043A\u0430\u043A \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442?"
     cameraIndex: 0
-    narratorSequenceBefore: {fileID: 11400000, guid: 69dcdb7c0a32b9341a227a2296495334, type: 2}
+    narratorSequenceBefore: {fileID: 11400000, guid: d2fc75dfa7c1ccd40b3025eef9e476c9, type: 2}
   - speaker: "\u0414\u0436\u043E\u043D"
     text: "\u042F \u0441\u0442\u043E\u044E."
     cameraIndex: 0
-    narratorSequenceBefore: {fileID: 11400000, guid: e72363d757acacc4a9d2beefc4c3a2c0, type: 2}
+    narratorSequenceBefore: {fileID: 11400000, guid: 51a712fc3e49a2a44ac794a2cf133d57, type: 2}
   - speaker: "\u0414\u0436\u043E\u043D"
     text: "\u042F \u0441\u0442\u043E\u044E \u0438 \u0440\u0430\u0437\u0433\u043E\u0432\u0430\u0440\u0438\u0432\u0430\u044E."
     cameraIndex: 0
-    narratorSequenceBefore: {fileID: 11400000, guid: d0c4a7c35b87d3f468f739cfac482d5b, type: 2}
+    narratorSequenceBefore: {fileID: 11400000, guid: e4362cfbc35eb07478c5e229997a7353, type: 2}
   - speaker: "\u0414\u0436\u043E\u043D"
     text: "\u042F \u043C\u043D\u043E\u0433\u043E\u0444\u0443\u043D\u043A\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439."
     cameraIndex: 0
@@ -132,5 +144,5 @@ MonoBehaviour:
     narratorSequenceBefore: {fileID: 0}
   - speaker: 
     text: 
-    cameraIndex: 2
+    cameraIndex: 3
     narratorSequenceBefore: {fileID: 11400000, guid: eaa4a09752246524a91504cc4fa17937, type: 2}
