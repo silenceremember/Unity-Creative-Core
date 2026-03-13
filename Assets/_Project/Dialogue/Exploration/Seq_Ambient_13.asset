@@ -14,16 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
-    text: "\u041A \u0442\u043E\u043C\u0443 \u0436\u0435..."
+    text: "\u0422\u0430\u043A\u0436\u0435..."
     duration: 0
-    pauseAfter: 2
+    pauseAfter: 1
     audioClip: {fileID: 0}
     activateObject: 
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
-    text: "\u0415\u0441\u043B\u0438 \u0442\u044B \u0438\u0433\u0440\u0430\u0435\u0448\u044C
-      \u0432\u0442\u043E\u0440\u043E\u0439 \u0440\u0430\u0437."
+    text: "\u0415\u0441\u043B\u0438 \u0442\u044B \u043F\u043E\u0438\u0433\u0440\u0430\u0435\u0448\u044C
+      \u0432\u043E \u0432\u0442\u043E\u0440\u043E\u0439 \u0440\u0430\u0437."
     duration: 0
-    pauseAfter: 2.5
+    pauseAfter: 1.5
     audioClip: {fileID: 0}
     activateObject: 
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
@@ -36,7 +36,7 @@ MonoBehaviour:
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
     text: "\u0421\u043B\u043E\u0432\u043E \u0432 \u0441\u043B\u043E\u0432\u043E."
     duration: 0
-    pauseAfter: 2
+    pauseAfter: 1.5
     audioClip: {fileID: 0}
     activateObject: 
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"

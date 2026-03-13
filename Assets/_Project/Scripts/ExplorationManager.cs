@@ -41,11 +41,15 @@ public class ExplorationManager : MonoBehaviour
     [Tooltip("Длительность декоративного таймера в секундах (по умолчанию 30 сек)")]
     public float decorativeTimerDuration = 30f;
 
+    [Header("Canvas")]
+    [Tooltip("Корневой Canvas таймера и кликера — включается при старте Gameplay")]
+    public GameObject explorationCanvas;
+
     [Header("Clicker")]
     [Tooltip("TMP_Text счётчика кликов. Оставьте пустым — кликер не появится.")]
     public TMP_Text clickerLabel;
-    [Tooltip("Звук клика (опционально)")]
-    public AudioSource clickerSound;
+    [Tooltip("Компонент сочных эффектов кликера — назначается автоматически")]
+    public ClickerJuice clickerJuice;
 
     // ── State ────────────────────────────────────────────────────────
     private bool             _explorationActive;
@@ -60,7 +64,6 @@ public class ExplorationManager : MonoBehaviour
 
     // Clicker
     private bool             _clickerActive;
-    private int              _clickCount;
 
     // ── Lifecycle ────────────────────────────────────────────────────
 
@@ -92,13 +95,11 @@ public class ExplorationManager : MonoBehaviour
     void Update()
     {
         // Обрабатываем клик по кликеру (только когда кликер активен)
-        if (_clickerActive && Input.GetMouseButtonDown(0))
+        var mouse = UnityEngine.InputSystem.Mouse.current;
+        if (_clickerActive && mouse != null && mouse.leftButton.wasPressedThisFrame)
         {
-            _clickCount++;
-            UpdateClickerDisplay();
-
-            if (clickerSound != null)
-                clickerSound.Play();
+            if (clickerJuice != null)
+                clickerJuice.RegisterClick();
         }
     }
 
@@ -118,6 +119,10 @@ public class ExplorationManager : MonoBehaviour
         _explorationActive = true;
 
         Debug.Log("[ExplorationManager] Starting exploration phase.");
+
+        // Показываем корневой Canvas (таймер + кликер)
+        if (explorationCanvas != null)
+            explorationCanvas.SetActive(true);
 
         // Запускаем ambient с первого сегмента
         PlayAmbient(seqAmbientStart);
@@ -215,35 +220,32 @@ public class ExplorationManager : MonoBehaviour
     private IEnumerator DecorativeCountdown()
     {
         timerLabel.gameObject.SetActive(true);
-        float remaining = decorativeTimerDuration;
+        float elapsed = 0f;
 
-        while (remaining > 0f)
+        while (true)
         {
-            int minutes = Mathf.FloorToInt(remaining / 60f);
-            int seconds = Mathf.FloorToInt(remaining % 60f);
-            timerLabel.text = $"{minutes:0}:{seconds:00}";
-            yield return new WaitForSeconds(1f);
-            remaining -= 1f;
-        }
+            float display = decorativeTimerDuration - elapsed;
+            bool negative = display < 0f;
+            float abs = Mathf.Abs(display);
+            int minutes = Mathf.FloorToInt(abs / 60f);
+            int seconds = Mathf.FloorToInt(abs % 60f);
+            timerLabel.text = negative
+                ? $"-{minutes:0}:{seconds:00}"
+                : $"{minutes:0}:{seconds:00}";
 
-        timerLabel.text = "0:00";
-        // Таймер иссяк — рассказчик к этому моменту уже всё сказал
+            yield return new WaitForSeconds(1f);
+            elapsed += 1f;
+        }
     }
 
     // ── Clicker ───────────────────────────────────────────────────────
 
     private void ShowClicker()
     {
-        _clickCount = 0;
         _clickerActive = true;
-        UpdateClickerDisplay();
         clickerLabel.gameObject.SetActive(true);
+        // Сбрасываем текст — ClickerJuice сам будет рисовать число
+        clickerLabel.text = "0";
         Debug.Log("[ExplorationManager] Clicker shown.");
-    }
-
-    private void UpdateClickerDisplay()
-    {
-        if (clickerLabel != null)
-            clickerLabel.text = _clickCount.ToString();
     }
 }

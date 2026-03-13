@@ -20,5 +20,11 @@ MonoBehaviour:
     pauseAfter: 3
     audioClip: {fileID: 0}
     activateObject: 
+  - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
+    text: ...
+    duration: 0
+    pauseAfter: 1
+    audioClip: {fileID: 0}
+    activateObject: 
   nextSequence: {fileID: 0}
   priority: 0

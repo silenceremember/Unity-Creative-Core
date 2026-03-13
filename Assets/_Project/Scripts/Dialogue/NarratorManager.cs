@@ -35,6 +35,18 @@ public class NarratorManager : MonoBehaviour
     private CanvasGroup _group;
     private Dictionary<string, GameObject> _sceneObjectMap;
 
+    // Debug skip
+    private bool _skipLine;
+
+    void Update()
+    {
+#if UNITY_EDITOR
+        var kb = UnityEngine.InputSystem.Keyboard.current;
+        if (kb != null && kb.pKey.wasPressedThisFrame)
+            _skipLine = true;
+#endif
+    }
+
     void Awake()
     {
         _group = subtitleRoot?.GetComponent<CanvasGroup>();
@@ -106,7 +118,15 @@ public class NarratorManager : MonoBehaviour
                 yield return StartCoroutine(EraseText());
 
             yield return StartCoroutine(ShowLine(line));
-            yield return new WaitForSeconds(line.pauseAfter);
+
+            // Пауза между строками — прерывается по P
+            float pauseLeft = line.pauseAfter;
+            while (pauseLeft > 0f && !_skipLine)
+            {
+                pauseLeft -= Time.deltaTime;
+                yield return null;
+            }
+            _skipLine = false;
         }
 
         // Стираем последнюю реплику в конце последовательности
@@ -115,6 +135,11 @@ public class NarratorManager : MonoBehaviour
 
         subtitleRoot?.SetActive(false);
 
+        // Уведомляем подписчиков о завершении ЭТОГО сегмента
+        // (нужно до перехода к nextSequence, чтобы ExplorationManager
+        // мог среагировать на промежуточные триггеры: таймер, кликер и т.д.)
+        channel?.NotifyCompleted(sequence);
+
         // Автопереход
         if (sequence.nextSequence != null)
         {
@@ -122,13 +147,10 @@ public class NarratorManager : MonoBehaviour
         }
         else
         {
-            // Цепочка полностью завершена — сначала сбрасываем состояние,
-            // чтобы подписчики (ExplorationManager) могли сразу запустить
-            // следующую последовательность без блокировки приоритетом.
+            // Цепочка полностью завершена — сбрасываем состояние
             _playback = null;
             _currentSequence = null;
-            channel?.NotifyCompleted(sequence);
-            yield break; // _playback уже null, выходим без повторного обнуления
+            yield break;
         }
 
         _playback = null;
@@ -137,6 +159,8 @@ public class NarratorManager : MonoBehaviour
 
     private IEnumerator ShowLine(DialogueLine line)
     {
+        _skipLine = false;
+
         // Если задан, активируем объект сцены перед показом реплики
         if (!string.IsNullOrEmpty(line.activateObject))
         {
@@ -150,21 +174,38 @@ public class NarratorManager : MonoBehaviour
         if (speakerText != null) speakerText.text = line.speaker;
         if (lineText != null)    lineText.text = "";
 
-        // Печатаем по символам
+        // Печатаем по символам (P — мгновенно допечатать)
         if (lineText != null)
         {
             foreach (char c in line.text)
             {
+                if (_skipLine)
+                {
+                    lineText.text = line.text; // допечатать всё сразу
+                    break;
+                }
                 lineText.text += c;
                 yield return new WaitForSeconds(1f / charsPerSecond);
             }
         }
 
-        // Ждём остаток времени
-        float elapsed = line.text.Length / charsPerSecond;
-        float total   = line.GetDuration();
-        if (total > elapsed)
-            yield return new WaitForSeconds(total - elapsed);
+        // Ждём остаток времени (P — пропустить паузу)
+        if (!_skipLine)
+        {
+            float elapsed = line.text.Length / charsPerSecond;
+            float total   = line.GetDuration();
+            if (total > elapsed)
+            {
+                float remaining = total - elapsed;
+                while (remaining > 0f && !_skipLine)
+                {
+                    remaining -= Time.deltaTime;
+                    yield return null;
+                }
+            }
+        }
+
+        _skipLine = false;
     }
 
     private IEnumerator EraseText()
