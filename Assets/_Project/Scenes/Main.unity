@@ -3030,8 +3030,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarratorTrigger
   triggerId: 1
-  oneShot: 1
-  gizmoColor: {r: 0.2, g: 0.8, b: 1, a: 0.25}
 --- !u!54 &449558343
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -3604,8 +3602,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarratorTrigger
   triggerId: 0
-  oneShot: 1
-  gizmoColor: {r: 0.2, g: 0.8, b: 1, a: 0.25}
 --- !u!54 &517283715
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -34140,11 +34136,15 @@ MonoBehaviour:
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
   narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
   seqAmbientStart: {fileID: 11400000, guid: 1d1c259b8e6546141b6da63536788e54, type: 2}
-  seqTimerTrigger: {fileID: 0}
+  seqTimerTrigger: {fileID: 11400000, guid: 9578f731e3f91a0449ff138c27d1c14d, type: 2}
+  seqClickerTrigger: {fileID: 11400000, guid: d1d9169568ba12949956bc40ed8841b5, type: 2}
+  seqClickerEnd: {fileID: 11400000, guid: 6dd205dec02640446ba8b031822ceb3f, type: 2}
   seqTriggerA: {fileID: 11400000, guid: 63333007b13b67140935ff78043fcfae, type: 2}
   seqTriggerB: {fileID: 11400000, guid: 8e9218d7b72d00048ad351ca96cb30bc, type: 2}
-  timerLabel: {fileID: 0}
+  timerLabel: {fileID: 1863839310}
   decorativeTimerDuration: 300
+  clickerLabel: {fileID: 1673319463}
+  clickerSound: {fileID: 0}
 --- !u!1 &1870226643 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1575304400484108474, guid: 0d37b8b98879ecc4ea439140dbf04d7d, type: 3}

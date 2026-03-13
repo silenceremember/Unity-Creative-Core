@@ -5,7 +5,9 @@ using UnityEngine;
 /// <summary>
 /// Управляет фазой исследования:
 ///   • seqAmbientStart   — линейная цепочка реплик рассказчика
-///   • seqTimerTrigger   — конкретный сегмент, после которого появляется декоративный таймер
+///   • seqTimerTrigger   — сегмент, ПОСЛЕ которого появляется декоративный таймер (Seq_Ambient_19)
+///   • seqClickerTrigger — сегмент, ПОСЛЕ которого появляется кликер (Seq_Ambient_22)
+///   • seqClickerEnd     — сегмент, ПОСЛЕ которого кликер скрывается (Seq_Ambient_38)
 ///   • Квест стартует по завершению всей ambient-цепочки (последний сегмент, nextSequence == null)
 ///   • Триггер A / B     — прерывают ambient, после возобновляют с того же места (одноразовые)
 /// </summary>
@@ -25,6 +27,10 @@ public class ExplorationManager : MonoBehaviour
     [Tooltip("Сегмент, ПОСЛЕ которого появится декоративный таймер (Seq_Ambient_19)")]
     public DialogueSequence seqTimerTrigger;
 
+    [Header("Clicker Trigger")]
+    [Tooltip("Сегмент, ПОСЛЕ которого появится кликер (Seq_Ambient_22)")]
+    public DialogueSequence seqClickerTrigger;
+
     [Header("Trigger Sequences (одноразовые)")]
     public DialogueSequence seqTriggerA;
     public DialogueSequence seqTriggerB;
@@ -34,6 +40,12 @@ public class ExplorationManager : MonoBehaviour
     public TMP_Text timerLabel;
     [Tooltip("Длительность декоративного таймера в секундах (по умолчанию 30 сек)")]
     public float decorativeTimerDuration = 30f;
+
+    [Header("Clicker")]
+    [Tooltip("TMP_Text счётчика кликов. Оставьте пустым — кликер не появится.")]
+    public TMP_Text clickerLabel;
+    [Tooltip("Звук клика (опционально)")]
+    public AudioSource clickerSound;
 
     // ── State ────────────────────────────────────────────────────────
     private bool             _explorationActive;
@@ -46,9 +58,20 @@ public class ExplorationManager : MonoBehaviour
     // Decorative timer
     private Coroutine        _decorativeCo;
 
+    // Clicker
+    private bool             _clickerActive;
+    private int              _clickCount;
+
     // ── Lifecycle ────────────────────────────────────────────────────
 
     void Awake() => Instance = this;
+
+    void Start()
+    {
+        // Убеждаемся что таймер и кликер скрыты в начале
+        if (timerLabel != null)   timerLabel.gameObject.SetActive(false);
+        if (clickerLabel != null) clickerLabel.gameObject.SetActive(false);
+    }
 
     void OnEnable()
     {
@@ -64,6 +87,19 @@ public class ExplorationManager : MonoBehaviour
             gameStateChannel.OnStateChanged -= OnStateChanged;
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
+    }
+
+    void Update()
+    {
+        // Обрабатываем клик по кликеру (только когда кликер активен)
+        if (_clickerActive && Input.GetMouseButtonDown(0))
+        {
+            _clickCount++;
+            UpdateClickerDisplay();
+
+            if (clickerSound != null)
+                clickerSound.Play();
+        }
     }
 
     // ── GameState ────────────────────────────────────────────────────
@@ -147,6 +183,12 @@ public class ExplorationManager : MonoBehaviour
                 _decorativeCo = StartCoroutine(DecorativeCountdown());
             }
 
+            // Специальный сегмент: кликер появляется после его завершения
+            if (completed == seqClickerTrigger && clickerLabel != null)
+            {
+                ShowClicker();
+            }
+
             // Ambient-сегмент завершился.
             // NarratorManager сам запускает следующий через nextSequence.
             // Если nextSequence == null — цепочка кончилась → стартуем квест.
@@ -186,5 +228,22 @@ public class ExplorationManager : MonoBehaviour
 
         timerLabel.text = "0:00";
         // Таймер иссяк — рассказчик к этому моменту уже всё сказал
+    }
+
+    // ── Clicker ───────────────────────────────────────────────────────
+
+    private void ShowClicker()
+    {
+        _clickCount = 0;
+        _clickerActive = true;
+        UpdateClickerDisplay();
+        clickerLabel.gameObject.SetActive(true);
+        Debug.Log("[ExplorationManager] Clicker shown.");
+    }
+
+    private void UpdateClickerDisplay()
+    {
+        if (clickerLabel != null)
+            clickerLabel.text = _clickCount.ToString();
     }
 }
