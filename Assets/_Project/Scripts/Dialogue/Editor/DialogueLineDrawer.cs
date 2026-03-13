@@ -17,6 +17,7 @@ public class DialogueLineDrawer : PropertyDrawer
         var durationProp = property.FindPropertyRelative("duration");
         var pauseProp    = property.FindPropertyRelative("pauseAfter");
         var audioProp    = property.FindPropertyRelative("audioClip");
+        var activateProp = property.FindPropertyRelative("activateObject");
 
         float y    = position.y;
         float w    = position.width;
@@ -60,6 +61,10 @@ public class DialogueLineDrawer : PropertyDrawer
 
         // AudioClip
         EditorGUI.PropertyField(new Rect(position.x, y, w, lineH), audioProp, new GUIContent("Audio Clip"));
+        y += lineH + pad;
+
+        // Activate Object
+        EditorGUI.PropertyField(new Rect(position.x, y, w, lineH), activateProp, new GUIContent("Activate Object"));
 
         EditorGUI.EndProperty();
     }
@@ -68,11 +73,12 @@ public class DialogueLineDrawer : PropertyDrawer
     {
         float lineH = EditorGUIUtility.singleLineHeight;
         float pad   = 2f;
-        // Speaker + Text(x3) + Counter + Duration/Pause + Audio
+        // Speaker + Text(x3) + Counter + Duration/Pause + Audio + ActivateObject
         return lineH + pad  // speaker
              + lineH * 3 + pad  // text
              + lineH + pad  // counter
              + lineH + pad  // duration/pause
-             + lineH + pad; // audio
+             + lineH + pad  // audio
+             + lineH + pad; // activateObject
     }
 }

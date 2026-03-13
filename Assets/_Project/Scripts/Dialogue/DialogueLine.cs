@@ -22,6 +22,9 @@ public class DialogueLine
     [Tooltip("Аудиоклип (опционально)")]
     public AudioClip audioClip;
 
+    [Tooltip("Имя GameObject для SetActive(true) в начале этой реплики (пусто = не трогать)")]
+    public string activateObject = "";
+
     public float GetDuration()
     {
         if (duration > 0f) return duration;

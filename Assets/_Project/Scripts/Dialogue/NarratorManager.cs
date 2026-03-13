@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -16,6 +17,11 @@ public class NarratorManager : MonoBehaviour
     public TextMeshProUGUI speakerText;
     public TextMeshProUGUI lineText;
 
+    [Header("Объекты сцены (activateObject)")]
+    [Tooltip("Список объектов сцены, на которые ссылаются DialogueLine.activateObject. " +
+             "Перетащи GameObject сюда — работает даже если объект изначально неактивен.")]
+    public List<SceneObjectEntry> sceneObjects = new();
+
     [Header("Настройки")]
     [Range(20, 200)]
     public float charsPerSecond = 50f;
@@ -27,10 +33,16 @@ public class NarratorManager : MonoBehaviour
     private Coroutine _playback;
     private DialogueSequence _currentSequence;
     private CanvasGroup _group;
+    private Dictionary<string, GameObject> _sceneObjectMap;
 
     void Awake()
     {
         _group = subtitleRoot?.GetComponent<CanvasGroup>();
+
+        _sceneObjectMap = new Dictionary<string, GameObject>(sceneObjects.Count);
+        foreach (var entry in sceneObjects)
+            if (!string.IsNullOrEmpty(entry.key) && entry.gameObject != null)
+                _sceneObjectMap[entry.key] = entry.gameObject;
     }
 
     void OnEnable()
@@ -110,8 +122,13 @@ public class NarratorManager : MonoBehaviour
         }
         else
         {
-            // Цепочка полностью завершена — уведомляем подписчиков
+            // Цепочка полностью завершена — сначала сбрасываем состояние,
+            // чтобы подписчики (ExplorationManager) могли сразу запустить
+            // следующую последовательность без блокировки приоритетом.
+            _playback = null;
+            _currentSequence = null;
             channel?.NotifyCompleted(sequence);
+            yield break; // _playback уже null, выходим без повторного обнуления
         }
 
         _playback = null;
@@ -120,6 +137,15 @@ public class NarratorManager : MonoBehaviour
 
     private IEnumerator ShowLine(DialogueLine line)
     {
+        // Если задан, активируем объект сцены перед показом реплики
+        if (!string.IsNullOrEmpty(line.activateObject))
+        {
+            if (_sceneObjectMap.TryGetValue(line.activateObject, out var go))
+                go.SetActive(true);
+            else
+                Debug.LogWarning($"[NarratorManager] activateObject '{line.activateObject}' не назначен в списке sceneObjects");
+        }
+
         if (subtitleRoot != null) subtitleRoot.SetActive(true);
         if (speakerText != null) speakerText.text = line.speaker;
         if (lineText != null)    lineText.text = "";

@@ -18,16 +18,19 @@ MonoBehaviour:
     duration: 0
     pauseAfter: 2
     audioClip: {fileID: 0}
+    activateObject: 
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
     text: "\u041F\u0440\u0438\u043C\u0438\u0442\u0438\u0432\u043D\u044B\u0439 \u0440\u0438\u0442\u043C."
     duration: 0
     pauseAfter: 2
     audioClip: {fileID: 0}
+    activateObject: 
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
     text: "\u041A\u043B\u0438\u043A. \u0417\u0432\u0443\u043A. \u0427\u0438\u0441\u043B\u043E
       \u0440\u0430\u0441\u0442\u0451\u0442."
     duration: 0
     pauseAfter: 2.5
     audioClip: {fileID: 0}
+    activateObject: 
   nextSequence: {fileID: 0}
   priority: 0
