@@ -38,7 +38,7 @@ public class SmithNovelAssetFactory : EditorWindow
         var seqIntroJohn = MakeSeq(folder, "Narr_IntroJohn",
             ("Рассказчик", "Это Джон Смит.", 0.4f),
             ("Рассказчик", "Он стоит у двери.", 0.3f),
-            ("Рассказчик", "Точнее — думает, что стоит по своей воле.", 0.4f),
+            ("Рассказчик", "Точнее, думает, что стоит по своей воле.", 0.4f),
             ("Рассказчик", "Но на самом деле — это Разработчик...", 0.4f),
             ("Рассказчик", "Написал что он стоит у двери.", 0.5f)
         );
@@ -55,12 +55,12 @@ public class SmithNovelAssetFactory : EditorWindow
             ("Рассказчик", "Она на балконе. Смотрит вдаль.", 0.3f),
             ("Рассказчик", "Разработчик не прописал что там во дворе.", 0.4f),
             ("Рассказчик", "Поэтому вдаль — это просто HDRI карта.", 0.5f),
-            ("Рассказчик", "Хотя, по мнению Мэри — красивая HDRI карта.", 0.7f)
+            ("Рассказчик", "Хотя, по мнению Мэри, красивая HDRI карта.", 0.7f)
         );
 
         // Реакция на «Я... чувствую.» + ввод игрока — одна непрерывная последовательность
         var seqIntroYou = MakeSeq(folder, "Narr_IntroYou",
-            ("Рассказчик", "А это — вы.", 0.6f),
+            ("Рассказчик", "А это вы.", 0.6f),
             ("Рассказчик", "Появились в гостиной. Без объяснений.", 0.4f),
             ("Рассказчик", "Я тоже не понимаю как вы сюда попали.", 0.5f),
             ("Рассказчик", "У Разработчика явно была какая-то идея.", 0.7f)
@@ -70,7 +70,7 @@ public class SmithNovelAssetFactory : EditorWindow
         var seqAfterNotRemember = MakeSeq(folder, "Narr_AfterNotRemember",
             ("Рассказчик", "Она не вызывала.", 0.3f),
             ("Рассказчик", "Воспоминаний до этой сцены у неё нет.", 0.4f),
-            ("Рассказчик", "Откуда взялись вы — тоже не вполне ясно.", 0.7f)
+            ("Рассказчик", "Откуда взялись вы, тоже не вполне ясно.", 0.7f)
         );
 
         // Реакция на молчание игрока — перед вопросом про телевизор
@@ -107,7 +107,7 @@ public class SmithNovelAssetFactory : EditorWindow
             ("Рассказчик", "Он разблокировал для вас...", 0.4f),
             ("Рассказчик", "Ходьбу.", 1.1f),
             ("Рассказчик", "WASD. Любая кнопка на ваш выбор.", 0.4f),
-            ("Рассказчик", "Перед вами — комната.", 0.4f),
+            ("Рассказчик", "Перед вами комната.", 0.4f),
             ("Рассказчик", "Ходите. Смотрите на вещи.", 0.5f)
         );
 
@@ -150,7 +150,7 @@ public class SmithNovelAssetFactory : EditorWindow
             // Рассказчик: «Игрок молчит. Джон работает с тем что есть.»
             new NovelLine { speaker = "Джон",     text = "Ты умеешь чинить телевизоры?",       cameraIndex = 0, narratorSequenceBefore = seqAfterPlayerSilence },
             new NovelLine { speaker = "Player 1", text = "...",                                 cameraIndex = 3 },
-            new NovelLine { speaker = "Джон",     text = "Молчание — знак согласия.",          cameraIndex = 0 },
+            new NovelLine { speaker = "Джон",     text = "Возможно это знак согласия.",          cameraIndex = 0 },
 
             // ── БЛОК 7: ДИАЛОГ ДЖОНА С РАССКАЗЧИКОМ ─────────────────────────────
             new NovelLine { speaker = "Джон",     text = "А как работает?",                    cameraIndex = 0, narratorSequenceBefore = seqJohnNarr1 },
@@ -162,7 +162,7 @@ public class SmithNovelAssetFactory : EditorWindow
             new NovelLine { speaker = "Мэри",     text = "Джон.",                              cameraIndex = 1 },
             new NovelLine { speaker = "Мэри",     text = "Он вообще уйдёт?",                  cameraIndex = 1 },
             new NovelLine { speaker = "Джон",     text = "Не знаю.",                           cameraIndex = 0 },
-            new NovelLine { speaker = "Джон",     text = "Спрашивать бесполезно — он молчит.", cameraIndex = 0 },
+            new NovelLine { speaker = "Джон",     text = "Спрашивать бесполезно, он молчит.", cameraIndex = 0 },
             new NovelLine { speaker = "Мэри",     text = "Понятно.",                           cameraIndex = 1 },
             new NovelLine { speaker = "Мэри",     text = "Подождём пока сам разберётся.",      cameraIndex = 1 },
 

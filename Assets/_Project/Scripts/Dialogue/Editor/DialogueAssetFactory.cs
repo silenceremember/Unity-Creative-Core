@@ -58,6 +58,12 @@ public static class DialogueAssetFactory
             new DialogueLine
             {
                 speaker    = "Narrator",
+                text       = "И вряд ли будет...",
+                pauseAfter = 0.5f
+            },
+            new DialogueLine
+            {
+                speaker    = "Narrator",
                 text       = "Хотя... незавершённость придаёт шарм.",
                 pauseAfter = 0.5f
             },
@@ -87,7 +93,7 @@ public static class DialogueAssetFactory
             new DialogueLine
             {
                 speaker    = "Narrator",
-                text       = "Всё ещё не работает. И вряд-ли будет.",
+                text       = "Всё ещё не работает.",
                 pauseAfter = 0.5f
             },
         };

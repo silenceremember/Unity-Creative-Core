@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5dbbf1088378ae04aa7e3620b494a8f5, type: 3}
+  m_Name: Seq_Ambient_39
+  m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
+  lines:
+  - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
+    text: "\u0427\u0442\u043E \u043D\u0430\u0441\u0447\u0451\u0442 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0433\u043E
+      \u043A\u0432\u0435\u0441\u0442\u0430?"
+    duration: 0
+    pauseAfter: 3
+    audioClip: {fileID: 0}
+  nextSequence: {fileID: 0}
+  priority: 0
