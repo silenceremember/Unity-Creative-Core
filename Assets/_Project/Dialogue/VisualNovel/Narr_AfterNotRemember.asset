@@ -16,21 +16,21 @@ MonoBehaviour:
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
     text: "\u041E\u043D\u0430 \u043D\u0435 \u0432\u044B\u0437\u044B\u0432\u0430\u043B\u0430."
     duration: 0
-    pauseAfter: 0.3
+    pauseAfter: 1
     audioClip: {fileID: 0}
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
     text: "\u0412\u043E\u0441\u043F\u043E\u043C\u0438\u043D\u0430\u043D\u0438\u0439
       \u0434\u043E \u044D\u0442\u043E\u0439 \u0441\u0446\u0435\u043D\u044B \u0443
       \u043D\u0435\u0451 \u043D\u0435\u0442."
     duration: 0
-    pauseAfter: 0.4
+    pauseAfter: 1.8
     audioClip: {fileID: 0}
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
     text: "\u041E\u0442\u043A\u0443\u0434\u0430 \u0432\u0437\u044F\u043B\u0438\u0441\u044C
       \u0432\u044B, \u0442\u043E\u0436\u0435 \u043D\u0435 \u0432\u043F\u043E\u043B\u043D\u0435
       \u044F\u0441\u043D\u043E."
     duration: 0
-    pauseAfter: 0.7
+    pauseAfter: 1.8
     audioClip: {fileID: 0}
   nextSequence: {fileID: 0}
   priority: 0

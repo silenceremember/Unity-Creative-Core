@@ -16,7 +16,7 @@ MonoBehaviour:
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
     text: "\u0422\u044B \u0440\u0430\u0437\u0433\u043E\u0432\u0430\u0440\u0438\u0432\u0430\u0435\u0448\u044C."
     duration: 0
-    pauseAfter: 0.8
+    pauseAfter: 1
     audioClip: {fileID: 0}
   nextSequence: {fileID: 0}
   priority: 0
