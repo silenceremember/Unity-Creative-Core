@@ -20,6 +20,6 @@ MonoBehaviour:
     duration: 0
     pauseAfter: 4
     audioClip: {fileID: 0}
-    activateObject: 
+    activateObject: QuestCanvas
   nextSequence: {fileID: 0}
   priority: 0

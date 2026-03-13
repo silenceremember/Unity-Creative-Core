@@ -362,30 +362,49 @@ public static class ExplorationDialogueBuilder
             L("Рассказчик", "...", 1f),
         };
 
-        // Сегмент 40 — ужас картин
+        // Сегмент 40 — ужас картин (картины сдвигаются при первой реплике)
         a[40].lines = new[]
         {
-            L("Рассказчик", "...Какой ужас.", 2f),
+            L("Рассказчик", "...Какой ужас.", 2f, "PaintingShift"),
             L("Рассказчик", "Картины магическим образом наклонились.", 3f),
             L("Рассказчик", "Их надо поместить на прежнее место.", 3f),
         };
 
         // Сегмент 41 — финал цепочки, квест стартует (nextSequence = null)
+        // Квест-канвас появляется вместе с последней репликой
         a[41].lines = new[]
         {
-            L("Рассказчик", "Помоги жильцам разобраться с этой непростой проблемой.", 4f),
+            L("Рассказчик", "Помоги жильцам разобраться с этой непростой проблемой.", 4f, "QuestCanvas"),
         };
 
-        // Chain: каждый → следующему, последний → null
-        for (int i = 0; i < a.Length - 1; i++)
-            a[i].nextSequence = a[i + 1];
-        a[a.Length - 1].nextSequence = null;
+        // Ключевые индексы для авто-назначения в ExplorationManager
+        const int idxTimerTrigger   = 19;
+        const int idxClickerTrigger = 22;
 
         foreach (var seg in a)
             seg.priority = 0;
 
+        // ── Проход 1: сохраняем/перезаписываем данные на диск ──────────
+        // Важно: nextSequence НЕ прошиваем пока — ссылки ещё in-memory.
+        // SaveAsset возвращает реальный дисковый объект (с живым GUID).
+        var disk = new DialogueSequence[a.Length];
         for (int i = 0; i < a.Length; i++)
-            SaveAsset(a[i], folder, $"Seq_Ambient_{i:D2}");
+            disk[i] = SaveAsset(a[i], folder, $"Seq_Ambient_{i:D2}");
+
+        // ── Проход 2: прошиваем nextSequence между ДИСКОВЫМИ объектами ─
+        for (int i = 0; i < disk.Length - 1; i++)
+        {
+            disk[i].nextSequence = disk[i + 1];
+            EditorUtility.SetDirty(disk[i]);
+        }
+        disk[disk.Length - 1].nextSequence = null;
+        EditorUtility.SetDirty(disk[disk.Length - 1]);
+
+        // Переключаемся на дисковые объекты для авто-назначения
+        // (AutoAssignInScene получит корректные ссылки)
+        var diskStart          = disk[0];
+        var diskTimerTrigger   = disk[idxTimerTrigger];
+        var diskClickerTrigger = disk[idxClickerTrigger];
 
         // ══════════════════════════════════════════════════════════════
         //  TRIGGER A — замечание о перфекционизме (~48с), одноразовый
@@ -446,16 +465,58 @@ public static class ExplorationDialogueBuilder
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        Debug.Log($"[ExplorationDialogueBuilder] ✓ Создано {a.Length + 2} ассетов в {folder}");
+        // ── Авто-назначение в ExplorationManager в сцене ─────────────
+        int assignedCount = AutoAssignInScene(
+            ambientStart:   diskStart,
+            timerTrigger:   diskTimerTrigger,
+            clickerTrigger: diskClickerTrigger,
+            triggerA:       trigA,
+            triggerB:       trigB);
+
+        Debug.Log($"[ExplorationDialogueBuilder] ✓ Создано/обновлено {a.Length + 2} ассетов в {folder}");
+        string autoMsg = assignedCount > 0
+            ? $"ExplorationManager в сцене обновлён автоматически ({assignedCount} поля)."
+            : "⚠ ExplorationManager не найден в открытой сцене — назначь вручную.";
         EditorUtility.DisplayDialog("Готово!",
-            $"Создано {a.Length} ambient-сегментов + 2 триггера.\n\n" +
-            "Назначь в ExplorationManager:\n" +
-            "  Seq Ambient Start  =  Seq_Ambient_00\n" +
-            "  Seq Timer Trigger  =  Seq_Ambient_19  ← таймер\n" +
-            "  Seq Trigger A      =  Seq_Trigger_A\n" +
-            "  Seq Trigger B      =  Seq_Trigger_B\n" +
-            "Quest start: последний сегмент Seq_Ambient_41",
+            $"Обновлено {a.Length} ambient-сегментов + 2 триггера.\n\n{autoMsg}",
             "OK");
+    }
+
+    // ── Авто-назначение ────────────────────────────────────────────────
+
+    /// <summary>
+    /// Находит ExplorationManager в открытой сцене и через SerializedObject
+    /// прописывает все dialogue-ссылки. Возвращает количество обновлённых полей.
+    /// </summary>
+    private static int AutoAssignInScene(
+        DialogueSequence ambientStart,
+        DialogueSequence timerTrigger,
+        DialogueSequence clickerTrigger,
+        DialogueSequence triggerA,
+        DialogueSequence triggerB)
+    {
+        var mgr = Object.FindFirstObjectByType<ExplorationManager>();
+        if (mgr == null)
+        {
+            Debug.LogWarning("[ExplorationDialogueBuilder] ExplorationManager не найден в сцене.");
+            return 0;
+        }
+
+        var so = new SerializedObject(mgr);
+        so.FindProperty("seqAmbientStart")  .objectReferenceValue = ambientStart;
+        so.FindProperty("seqTimerTrigger")  .objectReferenceValue = timerTrigger;
+        so.FindProperty("seqClickerTrigger").objectReferenceValue = clickerTrigger;
+        so.FindProperty("seqTriggerA")      .objectReferenceValue = triggerA;
+        so.FindProperty("seqTriggerB")      .objectReferenceValue = triggerB;
+        so.ApplyModifiedProperties();
+
+        // Помечаем сцену как изменённую (чтобы Unity предложила сохранить)
+        UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
+            mgr.gameObject.scene);
+
+        Debug.Log("[ExplorationDialogueBuilder] ExplorationManager обновлён: " +
+                  "seqAmbientStart, seqTimerTrigger, seqClickerTrigger, seqTriggerA, seqTriggerB");
+        return 5;
     }
 
     // ── Helpers ───────────────────────────────────────────────────────
@@ -465,16 +526,34 @@ public static class ExplorationDialogueBuilder
     {
         var seq = ScriptableObject.CreateInstance<DialogueSequence>();
         seq.priority = priority;
-        seq.nextSequence = next;
+        seq.nextSequence = next; // для триггеров next = null, поэтому in-memory ссылка не нужна
         seq.lines = lines;
-        SaveAsset(seq, folder, name);
-        return seq;
+        var disk = SaveAsset(seq, folder, name);
+        // Прошиваем nextSequence на дисковом объекте (для триггеров это null)
+        disk.nextSequence = next;
+        EditorUtility.SetDirty(disk);
+        return disk; // возвращаем дисковый объект, а не временный
     }
 
-    private static void SaveAsset(DialogueSequence seq, string folder, string name)
+    private static DialogueSequence SaveAsset(DialogueSequence seq, string folder, string name)
     {
         string path = $"{folder}/{name}.asset";
+
+        var existing = AssetDatabase.LoadAssetAtPath<DialogueSequence>(path);
+        if (existing != null)
+        {
+            // Перезаписываем данные существующего ассета — GUID сохраняется.
+            // nextSequence специально НЕ копируем здесь — он прошивается отдельно
+            // в проходе 2 через дисковые объекты (иначе ссылки были бы на in-memory мусор).
+            existing.lines    = seq.lines;
+            existing.priority = seq.priority;
+            // nextSequence — будет задан снаружи в проходе 2
+            EditorUtility.SetDirty(existing);
+            return existing;
+        }
+
         AssetDatabase.CreateAsset(seq, path);
+        return seq;
     }
 
     private static DialogueLine L(string speaker, string text, float pause, string activateObject = "")

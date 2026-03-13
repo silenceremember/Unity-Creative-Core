@@ -205,7 +205,9 @@ public class NarratorManager : MonoBehaviour
             }
         }
 
-        _skipLine = false;
+        // Не сбрасываем _skipLine здесь — пусть флаг «протечёт» в pauseAfter-цикл
+        // PlaySequence, который сам его сбросит. Иначе P приходилось нажимать дважды:
+        // первый раз — допечатать текст, второй — пропустить паузу.
     }
 
     private IEnumerator EraseText()

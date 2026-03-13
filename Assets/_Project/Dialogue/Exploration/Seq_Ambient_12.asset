@@ -33,5 +33,5 @@ MonoBehaviour:
     pauseAfter: 5
     audioClip: {fileID: 0}
     activateObject: 
-  nextSequence: {fileID: 0}
+  nextSequence: {fileID: 11400000, guid: a309229de42c0844fb17bedeaf8b8db0, type: 2}
   priority: 0

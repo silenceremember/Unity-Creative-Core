@@ -18,7 +18,7 @@ MonoBehaviour:
     duration: 0
     pauseAfter: 2
     audioClip: {fileID: 0}
-    activateObject: 
+    activateObject: PaintingShift
   - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
     text: "\u041A\u0430\u0440\u0442\u0438\u043D\u044B \u043C\u0430\u0433\u0438\u0447\u0435\u0441\u043A\u0438\u043C
       \u043E\u0431\u0440\u0430\u0437\u043E\u043C \u043D\u0430\u043A\u043B\u043E\u043D\u0438\u043B\u0438\u0441\u044C."
@@ -33,5 +33,5 @@ MonoBehaviour:
     pauseAfter: 3
     audioClip: {fileID: 0}
     activateObject: 
-  nextSequence: {fileID: 0}
+  nextSequence: {fileID: 11400000, guid: 5975ba70ddb9e1145a9ab27726f01b95, type: 2}
   priority: 0

@@ -65,11 +65,14 @@ public static class DialogueAssetFactory
     {
         string path = $"{FOLDER}/{assetName}.asset";
 
-        // Не перезаписываем если уже есть
         var existing = AssetDatabase.LoadAssetAtPath<T>(path);
         if (existing != null)
         {
-            Debug.Log($"[Factory] Already exists, skipping: {path}");
+            // Перезаписываем данные — GUID сохраняется, ссылки в сцене не ломаются
+            var fresh = ScriptableObject.CreateInstance<T>();
+            EditorUtility.CopySerialized(fresh, existing);
+            EditorUtility.SetDirty(existing);
+            Object.DestroyImmediate(fresh);
             return existing;
         }
 
