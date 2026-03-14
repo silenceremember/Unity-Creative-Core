@@ -1,5 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -30,9 +31,8 @@ public class NarratorManager : MonoBehaviour
     public float fadeSpeed = 4f;
 
     // ──────────────────────────────
-    private Coroutine _playback;
+    private CancellationTokenSource _cts;
     private DialogueSequence _currentSequence;
-    private CanvasGroup _group;
     private Dictionary<string, GameObject> _sceneObjectMap;
 
     // Debug skip
@@ -41,7 +41,7 @@ public class NarratorManager : MonoBehaviour
     public static NarratorManager Instance { get; private set; }
 
     /// <summary>True пока воспроизводится любой диалог.</summary>
-    public bool IsPlaying => _playback != null;
+    public bool IsPlaying => _cts != null && !_cts.IsCancellationRequested;
 
     void Update()
     {
@@ -55,7 +55,6 @@ public class NarratorManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
-        _group = subtitleRoot?.GetComponent<CanvasGroup>();
 
         _sceneObjectMap = new Dictionary<string, GameObject>(sceneObjects.Count);
         foreach (var entry in sceneObjects)
@@ -81,13 +80,19 @@ public class NarratorManager : MonoBehaviour
         }
     }
 
+    void OnDestroy()
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+    }
+
     // ── Public API ───────────────
 
     public void Play(DialogueSequence sequence)
     {
         if (sequence == null) return;
 
-        if (_playback != null)
+        if (_currentSequence != null)
         {
             if (sequence.priority < (_currentSequence?.priority ?? 0))
                 return; // приоритет ниже — не прерываем
@@ -95,15 +100,18 @@ public class NarratorManager : MonoBehaviour
 
         Stop();
         _currentSequence = sequence;
-        _playback = StartCoroutine(PlaySequence(sequence));
+
+        _cts = new CancellationTokenSource();
+        PlaySequence(sequence, _cts.Token).Forget();
     }
 
     public void Stop()
     {
-        if (_playback != null)
+        if (_cts != null)
         {
-            StopAllCoroutines(); // убиваем и дочерние (EraseText, ShowLine)
-            _playback = null;
+            _cts.Cancel();
+            _cts.Dispose();
+            _cts = null;
         }
         _currentSequence = null;
 
@@ -115,55 +123,60 @@ public class NarratorManager : MonoBehaviour
 
     // ── Playback ─────────────────
 
-    private IEnumerator PlaySequence(DialogueSequence sequence)
+    private async UniTask PlaySequence(DialogueSequence sequence, CancellationToken ct)
     {
-        foreach (var line in sequence.lines)
+        try
         {
-            // Стираем предыдущий текст быстро (пропускаем для первой строки)
-            if (lineText != null && lineText.text.Length > 0)
-                yield return StartCoroutine(EraseText());
-
-            yield return StartCoroutine(ShowLine(line));
-
-            // Пауза между строками — прерывается по P
-            float pauseLeft = line.pauseAfter;
-            while (pauseLeft > 0f && !_skipLine)
+            foreach (var line in sequence.lines)
             {
-                pauseLeft -= Time.deltaTime;
-                yield return null;
+                // Стираем предыдущий текст быстро (пропускаем для первой строки)
+                if (lineText != null && lineText.text.Length > 0)
+                    await EraseText(ct);
+
+                await ShowLine(line, ct);
+
+                // Пауза между строками — прерывается по P
+                float pauseLeft = line.pauseAfter;
+                while (pauseLeft > 0f && !_skipLine)
+                {
+                    await UniTask.Yield(ct);
+                    pauseLeft -= Time.deltaTime;
+                }
+                _skipLine = false;
             }
-            _skipLine = false;
+
+            // Стираем последнюю реплику в конце последовательности
+            if (lineText != null && lineText.text.Length > 0)
+                await EraseText(ct);
+
+            subtitleRoot?.SetActive(false);
+
+            // Уведомляем подписчиков о завершении ЭТОГО сегмента
+            // (нужно до перехода к nextSequence, чтобы ExplorationManager
+            // мог среагировать на промежуточные триггеры: таймер, кликер и т.д.)
+            channel?.NotifyCompleted(sequence);
+
+            // Автопереход
+            if (sequence.nextSequence != null)
+            {
+                _currentSequence = sequence.nextSequence;
+                await PlaySequence(sequence.nextSequence, ct);
+            }
+            else
+            {
+                // Цепочка полностью завершена — сбрасываем состояние
+                _cts?.Dispose();
+                _cts = null;
+                _currentSequence = null;
+            }
         }
-
-        // Стираем последнюю реплику в конце последовательности
-        if (lineText != null && lineText.text.Length > 0)
-            yield return StartCoroutine(EraseText());
-
-        subtitleRoot?.SetActive(false);
-
-        // Уведомляем подписчиков о завершении ЭТОГО сегмента
-        // (нужно до перехода к nextSequence, чтобы ExplorationManager
-        // мог среагировать на промежуточные триггеры: таймер, кликер и т.д.)
-        channel?.NotifyCompleted(sequence);
-
-        // Автопереход
-        if (sequence.nextSequence != null)
+        catch (System.OperationCanceledException)
         {
-            yield return StartCoroutine(PlaySequence(sequence.nextSequence));
+            // Нормальное прерывание через Stop() — UI уже очищен в Stop()
         }
-        else
-        {
-            // Цепочка полностью завершена — сбрасываем состояние
-            _playback = null;
-            _currentSequence = null;
-            yield break;
-        }
-
-        _playback = null;
-        _currentSequence = null;
     }
 
-    private IEnumerator ShowLine(DialogueLine line)
+    private async UniTask ShowLine(DialogueLine line, CancellationToken ct)
     {
         _skipLine = false;
 
@@ -183,6 +196,7 @@ public class NarratorManager : MonoBehaviour
         // Печатаем по символам (P — мгновенно допечатать)
         if (lineText != null)
         {
+            int delayMs = Mathf.Max(1, Mathf.RoundToInt(1000f / charsPerSecond));
             foreach (char c in line.text)
             {
                 if (_skipLine)
@@ -191,39 +205,36 @@ public class NarratorManager : MonoBehaviour
                     break;
                 }
                 lineText.text += c;
-                yield return new WaitForSeconds(1f / charsPerSecond);
+                await UniTask.Delay(delayMs, cancellationToken: ct);
             }
         }
 
-        // Ждём остаток времени (P — пропустить паузу)
+        // Ждём остаток времени (P — пропустить)
         if (!_skipLine)
         {
-            float elapsed = line.text.Length / charsPerSecond;
-            float total   = line.GetDuration();
-            if (total > elapsed)
+            float elapsed   = line.text.Length / charsPerSecond;
+            float total     = line.GetDuration();
+            float remaining = total - elapsed;
+            if (remaining > 0f)
             {
-                float remaining = total - elapsed;
-                while (remaining > 0f && !_skipLine)
-                {
-                    remaining -= Time.deltaTime;
-                    yield return null;
-                }
+                float endTime = Time.time + remaining;
+                while (Time.time < endTime && !_skipLine)
+                    await UniTask.Yield(ct);
             }
         }
 
         // Не сбрасываем _skipLine здесь — пусть флаг «протечёт» в pauseAfter-цикл
-        // PlaySequence, который сам его сбросит. Иначе P приходилось нажимать дважды:
-        // первый раз — допечатать текст, второй — пропустить паузу.
+        // PlaySequence, который сам его сбросит.
     }
 
-    private IEnumerator EraseText()
+    private async UniTask EraseText(CancellationToken ct)
     {
-        if (lineText == null) yield break;
-        float delay = 1f / eraseSpeed;
+        if (lineText == null) return;
+        int delayMs = Mathf.Max(1, Mathf.RoundToInt(1000f / eraseSpeed));
         while (lineText.text.Length > 0)
         {
-            lineText.text = lineText.text[..^1]; // убираем последний символ
-            yield return new WaitForSeconds(delay);
+            lineText.text = lineText.text[..^1];
+            await UniTask.Delay(delayMs, cancellationToken: ct);
         }
     }
 }

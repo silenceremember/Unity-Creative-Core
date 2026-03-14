@@ -146,11 +146,11 @@ public class ExplorationManager : MonoBehaviour
 
     // ── Area Triggers (одноразовые) ──────────────────────────────────
 
-    /// <summary>Вызывается из NarratorTrigger (triggerId: 0 = A, 1 = B).</summary>
+    /// <summary>Вызывается из NarratorTrigger (triggerId: 0 = A, 1 = B).
+    /// Срабатывает в любом GameState (всегда активен), но одноразово.
+    /// </summary>
     public void OnAreaTrigger(int triggerId)
     {
-        if (!_explorationActive) return;
-
         if (triggerId == 0 && !_triggerAUsed && seqTriggerA != null)
         {
             _triggerAUsed = true;
@@ -179,38 +179,38 @@ public class ExplorationManager : MonoBehaviour
 
     private void OnNarratorCompleted(DialogueSequence completed)
     {
-        if (!_explorationActive) return;
-
         bool isTrigger = (completed == seqTriggerA || completed == seqTriggerB);
 
         if (isTrigger)
         {
             _triggerDialoguePlaying = false;
-            // После триггера — возобновить ambient с сохранённого сегмента
-            PlayAmbient(_currentAmbientSeg);
+            // Возобновляем ambient только если exploration ещё активна
+            if (_explorationActive)
+                PlayAmbient(_currentAmbientSeg);
+            return;
         }
-        else
+
+        if (!_explorationActive) return;
+
+        // Специальный сегмент: таймер появляется после его завершения
+        if (completed == seqTimerTrigger && timerLabel != null)
         {
-            // Специальный сегмент: таймер появляется после его завершения
-            if (completed == seqTimerTrigger && timerLabel != null)
-            {
-                if (_decorativeCo != null) StopCoroutine(_decorativeCo);
-                _decorativeCo = StartCoroutine(DecorativeCountdown());
-            }
+            if (_decorativeCo != null) StopCoroutine(_decorativeCo);
+            _decorativeCo = StartCoroutine(DecorativeCountdown());
+        }
 
-            // Специальный сегмент: кликер появляется после его завершения
-            if (completed == seqClickerTrigger && clickerLabel != null)
-            {
-                ShowClicker();
-            }
+        // Специальный сегмент: кликер появляется после его завершения
+        if (completed == seqClickerTrigger && clickerLabel != null)
+        {
+            ShowClicker();
+        }
 
-            // Ambient-сегмент завершился.
-            // NarratorManager сам запускает следующий через nextSequence.
-            // Если nextSequence == null — цепочка кончилась → стартуем квест.
-            if (completed.nextSequence == null)
-            {
-                OnAmbientChainCompleted();
-            }
+        // Ambient-сегмент завершился.
+        // NarratorManager сам запускает следующий через nextSequence.
+        // Если nextSequence == null — цепочка кончилась → стартуем квест.
+        if (completed.nextSequence == null)
+        {
+            OnAmbientChainCompleted();
         }
     }
 

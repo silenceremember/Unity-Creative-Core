@@ -8,4 +8,5 @@ public enum GameState
     VisualNovel = 2,  // визуальная новелла The Smith Family
     Gameplay    = 3,  // исследование (ambient нарратор, таймер, кликер)
     Quest       = 4,  // квест с картинами
+    Final       = 5,  // финальная последовательность (падение, заморозка, выход)
 }

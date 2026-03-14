@@ -1,15 +1,16 @@
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// XP/Level Manager.
-/// - Уровень повышается АВТОМАТИЧЕСКИ при заполнении полоски (без ожидания X).
+/// XP/Level Manager (UniTask).
+/// - Уровень повышается АВТОМАТИЧЕСКИ при заполнении полоски.
 /// - Текст Lv.N меняется с анимацией (punch scale + flash).
-/// - "▲ Level Up! [X]" мигает — X откроет канвас апгрейдов (пока просто скрывает).
+/// - "▲ Level Up! [X]" мигает — X откроет канвас апгрейдов.
 /// - Оверфлоу XP автоматически переходит в следующий уровень.
-/// - После level-up → рассказчик ведёт игрока по нарративу до исчезновения двери.
+/// - НАГРАДА убывает непрерывно через первый и второй проход до 0, после чего TMP скрывается.
 /// </summary>
 public class XPLevelManager : MonoBehaviour
 {
@@ -42,25 +43,20 @@ public class XPLevelManager : MonoBehaviour
 
     [Header("Стиль")]
     public Color flashColor      = new Color(1f, 0.85f, 0f, 1f);   // золотой
-    public float levelLabelPunch = 1.35f;   // масштаб при смене уровня
+    public float levelLabelPunch = 1.35f;
     public float punchDuration   = 0.35f;
 
     [Header("Нарратор")]
     [Tooltip("Канал рассказчика")]
     public NarratorChannel narratorChannel;
-
     [Tooltip("Реплика при активации XP-бара")]
     public DialogueSequence seqXPBarActivated;
-
     [Tooltip("Реплика после level-up (до промпта X)")]
     public DialogueSequence seqLevelUp;
-
     [Tooltip("Реплика когда X нажат — показывается канвас апгрейдов")]
     public DialogueSequence seqAbilityChosen;
-
     [Tooltip("Реплика после попытки опробовать способность (Ctrl/Shift/Space)")]
     public DialogueSequence seqAbilityTried;
-
     [Tooltip("Реплика об открытии нового уровня + исчезновении двери")]
     public DialogueSequence seqDoorUnlocked;
 
@@ -68,28 +64,31 @@ public class XPLevelManager : MonoBehaviour
     [Tooltip("Объект двери — отключается при нарративе seqDoorUnlocked")]
     public GameObject doorObject;
 
-    // ── State ─────────────────────────────────────────────────────────────
-
-    private int   _level           = 0;
-    private int   _currentXP       = 0;
-    private float _displayXP       = 0f;
-    private bool  _animating       = false;
-    private bool  _promptVisible   = false;   // мигалка апгрейда
-    private Color _fillOriginalColor;
-
-    // Нарратив-состояние
-    private bool  _xpBarNarrPlayed = false;   // играли ли нарратив XP-бара
-
-    // Антиспам: кулдаун после диалога перед X
-    private float _xBlockedUntil      = 0f;
-    private const float InputSpamCooldown = 0.5f;
-
     [Header("Reject анимация")]
     [Tooltip("Амплитуда встряски подсказки X (пиксели)")]
     public float promptShakeMagnitude = 10f;
     [Tooltip("Длительность встряски подсказки X (сек)")]
     public float promptShakeDuration  = 0.35f;
-    private bool _promptShaking = false;
+
+    // ── State ─────────────────────────────────────────────────────────────
+
+    private int   _level         = 0;
+    private int   _currentXP     = 0;
+    private float _displayXP     = 0f;
+    private bool  _promptVisible = false;
+    private Color _fillOriginalColor;
+    private bool  _xpBarNarrPlayed = false;
+    private bool  _promptShaking   = false;
+
+    private const float InputSpamCooldown = 0.5f;
+    private float _xBlockedUntil = 0f;
+
+    // ── UniTask CTS ────────────────────────────────────────────────────────
+
+    /// <summary>Управляет цепочкой TransferAnimation → AutoLevelUp.</summary>
+    private CancellationTokenSource _animCts;
+    /// <summary>Управляет BlinkUpgradePrompt (отдельно от анимации).</summary>
+    private CancellationTokenSource _blinkCts;
 
     private int XPForCurrentLevel =>
         _level < xpRequirements.Length
@@ -103,12 +102,15 @@ public class XPLevelManager : MonoBehaviour
         if (levelBar      != null) levelBar.SetActive(false);
         if (levelUpPrompt != null) levelUpPrompt.SetActive(false);
         InitSlider();
-        if (fillImage   != null) _fillOriginalColor = fillImage.color;
-        if (rewardLabel != null)
-            rewardLabel.text = string.Format(rewardFormat, questRewardXP);
-        RefreshUI();
+        if (fillImage != null) _fillOriginalColor = fillImage.color;
 
-        // Подписываемся на событие выбора способности
+        if (rewardLabel != null)
+        {
+            rewardLabel.gameObject.SetActive(true);
+            rewardLabel.text = string.Format(rewardFormat, questRewardXP);
+        }
+
+        RefreshUI();
         LevelUpCanvas.OnAbilityChosen += HandleAbilityChosen;
     }
 
@@ -127,10 +129,29 @@ public class XPLevelManager : MonoBehaviour
     void OnDestroy()
     {
         LevelUpCanvas.OnAbilityChosen -= HandleAbilityChosen;
+        CancelAnim();
+        _blinkCts?.Cancel(); _blinkCts?.Dispose();
     }
+
+    // ── Narrator events ───────────────────────────────────────────────────
 
     private void OnNarratorCompleted(DialogueSequence completed)
     {
+        // seqXPBarActivated завершился → запускаем seqLevelUp
+        if (completed == seqXPBarActivated)
+        {
+            if (seqLevelUp != null)
+                narratorChannel?.Raise(seqLevelUp);
+            return;
+        }
+
+        // seqLevelUp завершился → показываем промпт X
+        if (completed == seqLevelUp)
+        {
+            ShowUpgradePrompt();
+            return;
+        }
+
         // seqDoorUnlocked завершился → гасим дверь
         if (completed == seqDoorUnlocked)
         {
@@ -142,28 +163,28 @@ public class XPLevelManager : MonoBehaviour
         }
     }
 
+    // ── Input ─────────────────────────────────────────────────────────────
+
     void Update()
     {
         var kb = UnityEngine.InputSystem.Keyboard.current;
-        bool dialoguePlaying = NarratorManager.Instance != null && NarratorManager.Instance.IsPlaying;
+        if (!_promptVisible || kb == null || !kb.xKey.wasPressedThisFrame) return;
 
-        // X — открыть канвас апгрейдов
-        // Блокируем с reject-эффектом ТОЛЬКО во время диалога триггера A/B
-        if (_promptVisible && kb != null && kb.xKey.wasPressedThisFrame)
+        bool triggerDialogue = ExplorationManager.Instance != null &&
+                               ExplorationManager.Instance.TriggerDialoguePlaying;
+        bool narratorActive  = NarratorManager.Instance != null &&
+                               NarratorManager.Instance.IsPlaying;
+
+        if (triggerDialogue || narratorActive)
         {
-            bool triggerDialogue = ExplorationManager.Instance != null &&
-                                   ExplorationManager.Instance.TriggerDialoguePlaying;
-            if (triggerDialogue)
-            {
-                Debug.Log("[XPLevelManager] X заблокирован: идёт диалог триггера A/B.");
-                if (!_promptShaking && levelUpPrompt != null)
-                    StartCoroutine(ShakePrompt());
-            }
-            else
-            {
-                _xBlockedUntil = Time.unscaledTime + InputSpamCooldown;
-                OnUpgradeKeyPressed();
-            }
+            Debug.Log("[XPLevelManager] X заблокирован: идёт диалог.");
+            if (!_promptShaking && levelUpPrompt != null)
+                ShakePrompt(this.GetCancellationTokenOnDestroy()).Forget();
+        }
+        else
+        {
+            _xBlockedUntil = Time.unscaledTime + InputSpamCooldown;
+            OnUpgradeKeyPressed();
         }
     }
 
@@ -171,7 +192,9 @@ public class XPLevelManager : MonoBehaviour
 
     public void AddXP(int amount)
     {
-        if (_animating) return;
+        // Не запускаем если анимация уже идёт
+        if (_animCts != null && !_animCts.IsCancellationRequested) return;
+
         if (levelBar != null) levelBar.SetActive(true);
 
         // Нарратив при первом появлении XP-бара
@@ -181,126 +204,156 @@ public class XPLevelManager : MonoBehaviour
             narratorChannel?.Raise(seqXPBarActivated);
         }
 
-        // Сразу показываем реальную сумму награды
+        // Показываем награду
         if (rewardLabel != null)
-            rewardLabel.text = string.Format(rewardFormat, amount);
-        StopAllCoroutines();
-        StartCoroutine(TransferAnimation(amount, isOverflow: false));
-    }
-
-    // ── Transfer Animation ─────────────────────────────────────────────────
-
-    private IEnumerator TransferAnimation(int xpToAdd, bool isOverflow)
-    {
-        _animating = true;
-
-        int   cap      = XPForCurrentLevel;
-        int   canFill  = cap - _currentXP;
-        int   fill     = Mathf.Min(xpToAdd, canFill);
-        int   overflow = xpToAdd - fill;
-        int   endXP    = _currentXP + fill;
-
-        float startXP    = _currentXP;
-        float dur        = fillDuration * Mathf.Max((float)fill / cap, 0.2f);
-        float elapsed    = 0f;
-
-        while (elapsed < dur)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / dur);
-            float curve = fillCurve != null && fillCurve.length > 0
-                ? fillCurve.Evaluate(t)
-                : Mathf.SmoothStep(0f, 1f, t);
-
-            _displayXP = Mathf.Lerp(startXP, endXP, curve);
-            if (xpSlider != null) xpSlider.value = _displayXP;
-            if (xpLabel  != null) xpLabel.text   = $"{Mathf.RoundToInt(_displayXP)} / {cap}";
-
-            // Награда убывает только при первом проходе
-            if (!isOverflow && rewardLabel != null)
-            {
-                int rewardLeft = Mathf.RoundToInt(Mathf.Lerp(xpToAdd, overflow, curve));
-                rewardLabel.text = string.Format(rewardFormat, rewardLeft);
-            }
-
-            yield return null;
+            rewardLabel.gameObject.SetActive(true);
+            rewardLabel.text = string.Format(rewardFormat, amount);
         }
 
-        // Фиксируем финал
-        _currentXP = endXP;
-        _displayXP = endXP;
-        if (xpSlider != null) xpSlider.value = endXP;
-        if (xpLabel  != null) xpLabel.text   = $"{endXP} / {cap}";
-        if (!isOverflow && rewardLabel != null)
-            rewardLabel.text = string.Format(rewardFormat, overflow);
+        _animCts = new CancellationTokenSource();
+        // rewardDisplay = сколько награды ещё нужно «съесть» в UI (убывает до 0)
+        TransferAnimation(amount, rewardDisplay: amount, _animCts.Token).Forget();
+    }
 
-        _animating = false;
+    // ── Transfer Animation ────────────────────────────────────────────────
+    //
+    // xpToAdd      — XP добавляемый в текущем проходе
+    // rewardDisplay — остаток награды который нужно «списать» в UI в этом проходе
+    //                 (при overflow передаём остаток, чтобы он дошёл до 0)
 
-        if (_currentXP >= cap)
+    private async UniTask TransferAnimation(int xpToAdd, int rewardDisplay, CancellationToken ct)
+    {
+        try
         {
-            // Автоматически повышаем уровень
-            yield return StartCoroutine(AutoLevelUp(overflow));
+            int cap     = XPForCurrentLevel;
+            int canFill = cap - _currentXP;
+            int fill    = Mathf.Min(xpToAdd, canFill);
+            int overflow = xpToAdd - fill;
+            int endXP   = _currentXP + fill;
+
+            // Сколько награды «уходит» в этом проходе (пропорционально fill)
+            // rewardEnd — остаток, который передадим дальше
+            int rewardEnd = rewardDisplay - fill;
+            // Защита: не даём уйти ниже нуля раньше времени (если fill > rewardDisplay)
+            rewardEnd = Mathf.Max(rewardEnd, 0);
+
+            float startXP = _currentXP;
+            float dur     = fillDuration * Mathf.Max((float)fill / cap, 0.2f);
+            float elapsed = 0f;
+
+            while (elapsed < dur)
+            {
+                elapsed += Time.deltaTime;
+                float t = Mathf.Clamp01(elapsed / dur);
+                float curve = fillCurve != null && fillCurve.length > 0
+                    ? fillCurve.Evaluate(t)
+                    : Mathf.SmoothStep(0f, 1f, t);
+
+                _displayXP = Mathf.Lerp(startXP, endXP, curve);
+                if (xpSlider != null) xpSlider.value = _displayXP;
+                if (xpLabel  != null) xpLabel.text   = $"{Mathf.RoundToInt(_displayXP)} / {cap}";
+
+                // Награда убывает от rewardDisplay → rewardEnd плавно
+                if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
+                {
+                    int rewardLeft = Mathf.RoundToInt(Mathf.Lerp(rewardDisplay, rewardEnd, curve));
+                    rewardLabel.text = string.Format(rewardFormat, rewardLeft);
+                    if (rewardLeft <= 0)
+                        rewardLabel.gameObject.SetActive(false);
+                }
+
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
+
+            // Финальные значения
+            _currentXP = endXP;
+            _displayXP = endXP;
+            if (xpSlider != null) xpSlider.value = endXP;
+            if (xpLabel  != null) xpLabel.text   = $"{endXP} / {cap}";
+
+            if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
+            {
+                rewardLabel.text = string.Format(rewardFormat, rewardEnd);
+                if (rewardEnd <= 0)
+                    rewardLabel.gameObject.SetActive(false);
+            }
+
+            if (_currentXP >= cap)
+                await AutoLevelUp(overflow, rewardEnd, ct);
+            else
+                FinishAnim();
+        }
+        catch (System.OperationCanceledException)
+        {
+            // нормальная отмена
         }
     }
 
     // ── Auto Level Up ─────────────────────────────────────────────────────
 
-    private IEnumerator AutoLevelUp(int overflow)
+    private async UniTask AutoLevelUp(int overflow, int rewardLeft, CancellationToken ct)
     {
-        // Мигание полоски перед сбросом
-        yield return StartCoroutine(FlashFill(times: 3, interval: 0.12f));
-
-        _level++;
-        _currentXP = 0;
-        _displayXP = 0f;
-
-        // Анимированная смена текста уровня
-        StartCoroutine(PunchLevelLabel());
-
-        // Сброс слайдера на новый уровень
-        ResetFillColor();
-        InitSlider();
-        RefreshUI();
-
-        // Нарратив при повышении уровня
-        if (seqLevelUp != null)
-            narratorChannel?.Raise(seqLevelUp);
-
-        // Показываем мигалку апгрейда
-        ShowUpgradePrompt();
-
-        // Если есть оверфлоу — заливаем остаток
-        if (overflow > 0)
+        try
         {
-            yield return new WaitForSeconds(0.2f);
-            yield return StartCoroutine(TransferAnimation(overflow, isOverflow: true));
+            // Мигание полоски перед сбросом
+            await FlashFill(times: 3, interval: 0.12f, ct);
+
+            _level++;
+            _currentXP = 0;
+            _displayXP = 0f;
+
+            // Анимированная смена текста уровня (отдельный CT — не завязан на _animCts)
+            PunchLevelLabel(this.GetCancellationTokenOnDestroy()).Forget();
+
+            ResetFillColor();
+            InitSlider();
+            RefreshUI();
+
+            // seqLevelUp запустится через OnNarratorCompleted(seqXPBarActivated→seqLevelUp),
+            // промпт X — через OnNarratorCompleted(seqLevelUp).
+
+            // Если есть оверфлоу — заливаем остаток (rewardLeft продолжает убывать)
+            if (overflow > 0)
+            {
+                await UniTask.Delay(200, cancellationToken: ct);
+                await TransferAnimation(overflow, rewardLeft, ct);
+            }
+            else
+            {
+                FinishAnim();
+            }
+        }
+        catch (System.OperationCanceledException)
+        {
+            // нормальная отмена
         }
     }
 
-    // ── Level Label Punch ─────────────────────────────────────────────────
+    // ── PunchLevelLabel ───────────────────────────────────────────────────
 
-    private IEnumerator PunchLevelLabel()
+    private async UniTask PunchLevelLabel(CancellationToken ct)
     {
-        if (levelLabel == null) yield break;
+        if (levelLabel == null) return;
         var rt    = levelLabel.GetComponent<RectTransform>();
         var canvg = levelLabel.GetComponent<CanvasRenderer>();
 
-        // Обновляем текст сразу
         levelLabel.text = $"Lv.{_level}";
 
-        // Punch scale
         float elapsed = 0f;
-        while (elapsed < punchDuration)
+        try
         {
-            elapsed += Time.deltaTime;
-            float t = elapsed / punchDuration;
-            // 0→peak→1 через sin
-            float scale = 1f + (levelLabelPunch - 1f) * Mathf.Sin(t * Mathf.PI);
-            if (rt != null) rt.localScale = Vector3.one * scale;
-            // Flash alpha
-            if (canvg != null) canvg.SetAlpha(Mathf.PingPong(t * 6f, 1f));
-            yield return null;
+            while (elapsed < punchDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = elapsed / punchDuration;
+                float scale = 1f + (levelLabelPunch - 1f) * Mathf.Sin(t * Mathf.PI);
+                if (rt    != null) rt.localScale = Vector3.one * scale;
+                if (canvg != null) canvg.SetAlpha(Mathf.PingPong(t * 6f, 1f));
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
         }
+        catch (System.OperationCanceledException) { }
 
         if (rt    != null) rt.localScale = Vector3.one;
         if (canvg != null) canvg.SetAlpha(1f);
@@ -312,7 +365,11 @@ public class XPLevelManager : MonoBehaviour
     {
         _promptVisible = true;
         if (levelUpPrompt != null) levelUpPrompt.SetActive(true);
-        StartCoroutine(BlinkUpgradePrompt());
+
+        _blinkCts?.Cancel();
+        _blinkCts?.Dispose();
+        _blinkCts = new CancellationTokenSource();
+        BlinkUpgradePrompt(_blinkCts.Token).Forget();
     }
 
     private void OnUpgradeKeyPressed()
@@ -320,7 +377,10 @@ public class XPLevelManager : MonoBehaviour
         _promptVisible = false;
         if (levelUpPrompt != null) levelUpPrompt.SetActive(false);
 
-        // Нарратив «ого, новые способности»
+        _blinkCts?.Cancel();
+        _blinkCts?.Dispose();
+        _blinkCts = null;
+
         if (seqAbilityChosen != null)
             narratorChannel?.Raise(seqAbilityChosen);
 
@@ -330,40 +390,41 @@ public class XPLevelManager : MonoBehaviour
             Debug.LogWarning("[XPLevelManager] upgradeCanvas не назначен в Inspector!");
     }
 
-    private IEnumerator BlinkUpgradePrompt()
+    private async UniTask BlinkUpgradePrompt(CancellationToken ct)
     {
-        if (levelUpPrompt == null) yield break;
+        if (levelUpPrompt == null) return;
         var tmpText = levelUpPrompt.GetComponentInChildren<TextMeshProUGUI>();
         var rt      = levelUpPrompt.GetComponent<RectTransform>();
         Image fillImg = fillImage;
 
-        while (_promptVisible)
+        try
         {
-            float t   = (Mathf.Sin(Time.time * Mathf.PI * 2f) + 1f) * 0.5f;
-            if (tmpText != null) tmpText.alpha = Mathf.Lerp(0.3f, 1f, t);
-            if (rt      != null) rt.localScale = Vector3.one * Mathf.Lerp(1f, 1.06f, t);
-            if (fillImg != null) fillImg.color = Color.Lerp(_fillOriginalColor, flashColor, t);
-            yield return null;
+            while (true)
+            {
+                float t = (Mathf.Sin(Time.time * Mathf.PI * 2f) + 1f) * 0.5f;
+                if (tmpText != null) tmpText.alpha = Mathf.Lerp(0.3f, 1f, t);
+                if (rt      != null) rt.localScale = Vector3.one * Mathf.Lerp(1f, 1.06f, t);
+                if (fillImg != null) fillImg.color = Color.Lerp(_fillOriginalColor, flashColor, t);
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
         }
+        catch (System.OperationCanceledException) { }
 
-        if (tmpText != null) tmpText.alpha  = 1f;
-        if (rt      != null) rt.localScale  = Vector3.one;
-        if (fillImg != null) fillImg.color  = _fillOriginalColor;
+        if (tmpText != null) tmpText.alpha = 1f;
+        if (rt      != null) rt.localScale = Vector3.one;
+        if (fillImg != null) fillImg.color = _fillOriginalColor;
     }
 
     // ── Ability Selection & Trial ─────────────────────────────────────────
 
     private void HandleAbilityChosen()
     {
-        // Игрок закрыл меню навыков — сразу запускаем следующий диалог.
         Debug.Log("[XPLevelManager] Ability chosen — starting seqAbilityTried.");
         OnAbilityTried();
     }
 
     private void OnAbilityTried()
     {
-        // Прерываем текущий диалог и сразу запускаем seqAbilityTried.
-        // Дальнейшая цепочка (→ seqDoorUnlocked → дверь) идёт через OnNarratorCompleted.
         narratorChannel?.Stop();
         if (seqAbilityTried != null)
             narratorChannel?.Raise(seqAbilityTried);
@@ -373,37 +434,64 @@ public class XPLevelManager : MonoBehaviour
 
     // ── Helpers ───────────────────────────────────────────────────────────
 
-    /// <summary>Встряхивает levelUpPrompt как reject-эффект (аналог ShakeLabels в квесте).</summary>
-    private IEnumerator ShakePrompt()
+    private async UniTask ShakePrompt(CancellationToken ct)
     {
-        if (levelUpPrompt == null) yield break;
+        if (levelUpPrompt == null) return;
         _promptShaking = true;
 
         var rt = levelUpPrompt.GetComponent<RectTransform>();
-        if (rt == null) { _promptShaking = false; yield break; }
+        if (rt == null) { _promptShaking = false; return; }
 
-        // Красим временно красным
-        var txt = levelUpPrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        var txt = levelUpPrompt.GetComponentInChildren<TextMeshProUGUI>();
         Color originalColor = txt != null ? txt.color : Color.white;
         if (txt != null) txt.color = Color.red;
 
         Vector2 origin  = rt.anchoredPosition;
         float   elapsed = 0f;
 
-        while (elapsed < promptShakeDuration)
+        try
         {
-            elapsed += Time.deltaTime;
-            float x = Random.Range(-promptShakeMagnitude, promptShakeMagnitude) *
-                      (1f - elapsed / promptShakeDuration);
-            rt.anchoredPosition = origin + new Vector2(x, 0f);
-            yield return null;
+            while (elapsed < promptShakeDuration)
+            {
+                elapsed += Time.deltaTime;
+                float x = Random.Range(-promptShakeMagnitude, promptShakeMagnitude) *
+                          (1f - elapsed / promptShakeDuration);
+                rt.anchoredPosition = origin + new Vector2(x, 0f);
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
         }
+        catch (System.OperationCanceledException) { }
 
         rt.anchoredPosition = origin;
         if (txt != null) txt.color = originalColor;
         _promptShaking = false;
     }
 
+    private async UniTask FlashFill(int times, float interval, CancellationToken ct)
+    {
+        if (fillImage == null) return;
+        int ms = Mathf.RoundToInt(interval * 1000f);
+        for (int i = 0; i < times; i++)
+        {
+            fillImage.color = flashColor;
+            await UniTask.Delay(ms, cancellationToken: ct);
+            fillImage.color = _fillOriginalColor;
+            await UniTask.Delay(ms, cancellationToken: ct);
+        }
+    }
+
+    private void FinishAnim()
+    {
+        _animCts?.Dispose();
+        _animCts = null;
+    }
+
+    private void CancelAnim()
+    {
+        _animCts?.Cancel();
+        _animCts?.Dispose();
+        _animCts = null;
+    }
 
     private void InitSlider()
     {
@@ -424,18 +512,5 @@ public class XPLevelManager : MonoBehaviour
     private void ResetFillColor()
     {
         if (fillImage != null) fillImage.color = _fillOriginalColor;
-    }
-
-    private IEnumerator FlashFill(int times, float interval)
-    {
-        if (fillImage == null) yield break;
-
-        for (int i = 0; i < times; i++)
-        {
-            fillImage.color = flashColor;
-            yield return new WaitForSeconds(interval);
-            fillImage.color = _fillOriginalColor;
-            yield return new WaitForSeconds(interval);
-        }
     }
 }

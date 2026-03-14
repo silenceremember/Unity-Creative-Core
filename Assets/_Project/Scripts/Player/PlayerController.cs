@@ -62,6 +62,13 @@ public class PlayerController : MonoBehaviour
 
     public static PlayerController Instance { get; private set; }
 
+    /// <summary>
+    /// Заблокировать горизонтальное движение (WASD).
+    /// Гравитация и CharacterController остаются активными — игрок продолжает падать.
+    /// Устанавливается FinalSequenceManager при триггере 0.
+    /// </summary>
+    public bool lockMovement = false;
+
     // ─────────────────────────────────────────────────────────
 
     void Awake()
@@ -144,9 +151,9 @@ public class PlayerController : MonoBehaviour
         var kb = Keyboard.current;
         if (kb == null) return;
 
-        // Входной вектор
-        float h = (kb.dKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed ? 1f : 0f);
-        float v = (kb.wKey.isPressed ? 1f : 0f) - (kb.sKey.isPressed ? 1f : 0f);
+        // Входной вектор — блокируем если lockMovement (падаем ровно вниз)
+        float h = lockMovement ? 0f : (kb.dKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed ? 1f : 0f);
+        float v = lockMovement ? 0f : (kb.wKey.isPressed ? 1f : 0f) - (kb.sKey.isPressed ? 1f : 0f);
 
         Vector3 wishDir = transform.right * h + transform.forward * v;
         wishDir = Vector3.ClampMagnitude(wishDir, 1f);
