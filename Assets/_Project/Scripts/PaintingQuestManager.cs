@@ -161,6 +161,7 @@ public class PaintingQuestManager : MonoBehaviour
         var kb = UnityEngine.InputSystem.Keyboard.current;
         if (kb != null && kb.eKey.wasPressedThisFrame)
         {
+            if (PauseMenuManager.IsPaused) return;
             bool triggerDialogue = ExplorationManager.Instance != null &&
                                    ExplorationManager.Instance.TriggerDialoguePlaying;
             if (triggerDialogue)

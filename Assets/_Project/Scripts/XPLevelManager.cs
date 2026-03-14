@@ -169,6 +169,7 @@ public class XPLevelManager : MonoBehaviour
     {
         var kb = UnityEngine.InputSystem.Keyboard.current;
         if (!_promptVisible || kb == null || !kb.xKey.wasPressedThisFrame) return;
+        if (PauseMenuManager.IsPaused) return;
 
         bool triggerDialogue = ExplorationManager.Instance != null &&
                                ExplorationManager.Instance.TriggerDialoguePlaying;

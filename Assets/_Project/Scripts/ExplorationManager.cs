@@ -100,6 +100,7 @@ public class ExplorationManager : MonoBehaviour
         var mouse = UnityEngine.InputSystem.Mouse.current;
         if (_clickerActive && mouse != null && mouse.leftButton.wasPressedThisFrame)
         {
+            if (PauseMenuManager.IsPaused) return;
             if (clickerJuice != null)
                 clickerJuice.RegisterClick();
         }
