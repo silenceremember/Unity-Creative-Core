@@ -96,6 +96,28 @@ public class PaintingQuestManager : MonoBehaviour
         if (ePrompt      != null) ePrompt     .SetActive(false);
     }
 
+    void OnEnable()
+    {
+        if (narratorChannel != null)
+            narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
+    }
+
+    void OnDisable()
+    {
+        if (narratorChannel != null)
+            narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
+    }
+
+    private void OnNarratorCompleted(DialogueSequence completed)
+    {
+        // Когда пост-квест нарратив завершился — добавляем XP
+        if (completed == seqPostQuest && XPLevelManager.Instance != null)
+        {
+            Debug.Log("[PaintingQuestManager] seqPostQuest finished — adding XP.");
+            XPLevelManager.Instance.AddXP(XPLevelManager.Instance.questRewardXP);
+        }
+    }
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
     /// <summary>[DEBUG] Мгновенно выполняет квест (O).</summary>
     public void DebugCompleteQuest()
@@ -269,7 +291,7 @@ public class PaintingQuestManager : MonoBehaviour
             if (seqPostQuest != null)
                 narratorChannel?.Raise(seqPostQuest);
             else
-                XPLevelManager.Instance?.AddXP(1000);
+                XPLevelManager.Instance?.AddXP(XPLevelManager.Instance != null ? XPLevelManager.Instance.questRewardXP : 1000);
         }
         else
         {
