@@ -26,6 +26,7 @@ public class PauseMenuManager : MonoBehaviour
     [Tooltip("AudioMixer для управления громкостью")]
     public AudioMixer audioMixer;
 
+
     [Tooltip("Имя exposed parameter (тот же что в SettingsMenuCanvas)")]
     public string exposedParam = "Master";
 
