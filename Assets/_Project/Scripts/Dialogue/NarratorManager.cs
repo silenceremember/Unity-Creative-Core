@@ -38,6 +38,8 @@ public class NarratorManager : MonoBehaviour
     // Debug skip
     private bool _skipLine;
 
+    public static NarratorManager Instance { get; private set; }
+
     void Update()
     {
 #if UNITY_EDITOR
@@ -49,6 +51,7 @@ public class NarratorManager : MonoBehaviour
 
     void Awake()
     {
+        Instance = this;
         _group = subtitleRoot?.GetComponent<CanvasGroup>();
 
         _sceneObjectMap = new Dictionary<string, GameObject>(sceneObjects.Count);

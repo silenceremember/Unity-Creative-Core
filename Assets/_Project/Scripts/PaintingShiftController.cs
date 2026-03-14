@@ -32,6 +32,17 @@ public class PaintingShiftController : MonoBehaviour
     // Уже сработал — не срабатываем повторно
     private bool _triggered;
 
+    public static PaintingShiftController Instance { get; private set; }
+    void Awake() => Instance = this;
+
+    /// <summary>[DEBUG] Принудительно запустить наклон картин.</summary>
+    public void ForceShift()
+    {
+        _triggered = false;   // сбрасываем флаг
+        StartCoroutine(DoShift());
+        _triggered = true;
+    }
+
     void OnEnable()
     {
         Debug.Log($"[PaintingShift] OnEnable — triggered={_triggered}, entries={paintings?.Length}");

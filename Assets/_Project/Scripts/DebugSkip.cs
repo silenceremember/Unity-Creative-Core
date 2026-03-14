@@ -3,9 +3,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// Дебаг-хоткеи. Вешается на любой постоянный GameObject в сцене.
+/// Дебаг-хоткеи.
 /// F1 — пропустить всё (меню + кроул), сразу запустить визуальную новеллу.
 /// F2 — перейти напрямую в Gameplay (камера на игрока, управление).
+/// F3 — то же что F2, но сразу + квест с картинами.
+/// O  — мгновенно выполнить квест картин (accept).
 /// </summary>
 public class DebugSkip : MonoBehaviour
 {
@@ -21,18 +23,21 @@ public class DebugSkip : MonoBehaviour
 
         if (Keyboard.current.f2Key.wasPressedThisFrame)
             SkipToGameplay();
+
+        if (Keyboard.current.f3Key.wasPressedThisFrame)
+            SkipToQuest();
+
+        if (Keyboard.current.oKey.wasPressedThisFrame)
+            CompleteQuest();
     }
 
     void SkipToNovel()
     {
-        // Останавливаем кроул если он идёт
         if (IntroCrawl.Instance != null && IntroCrawl.Instance.crawlRoot != null)
             IntroCrawl.Instance.crawlRoot.SetActive(false);
 
-        // Переключаем состояние — GameStateListener скроет меню автоматически
         gameStateChannel?.Raise(GameState.VisualNovel);
 
-        // Запускаем новеллу напрямую
         if (VisualNovelManager.Instance != null)
             VisualNovelManager.Instance.StartNovel();
         else
@@ -43,17 +48,54 @@ public class DebugSkip : MonoBehaviour
 
     void SkipToGameplay()
     {
-        // Скрыть кроул если идёт
         if (IntroCrawl.Instance != null && IntroCrawl.Instance.crawlRoot != null)
             IntroCrawl.Instance.crawlRoot.SetActive(false);
 
-        // Скрыть новеллу если открыта
         if (VisualNovelManager.Instance != null)
             VisualNovelManager.Instance.ForceHideNovelCanvas();
 
-        // Переходим в Gameplay — GameplaySetup всё сделает сам
         gameStateChannel?.Raise(GameState.Gameplay);
         Debug.Log("[DebugSkip] F2 → Gameplay");
+    }
+
+    void SkipToQuest()
+    {
+        // Всё то же что F2 (камера, управление)
+        SkipToGameplay();
+
+        // Останавливаем нарратора
+        if (NarratorManager.Instance != null)
+            NarratorManager.Instance.Stop();
+
+        // Наклоняем картины — GO может быть неактивным, ищем включая неактивные
+        var shiftController = FindFirstObjectByType<PaintingShiftController>(FindObjectsInactive.Include);
+        if (shiftController != null)
+        {
+            shiftController.gameObject.SetActive(true);   // нужен активный GO для корутин
+            shiftController.ForceShift();
+        }
+        else
+            Debug.LogWarning("[DebugSkip] PaintingShiftController not found!");
+
+        // Запускаем квест
+        if (PaintingQuestManager.Instance != null)
+            PaintingQuestManager.Instance.StartQuest();
+        else
+            Debug.LogWarning("[DebugSkip] PaintingQuestManager.Instance is null!");
+
+        Debug.Log("[DebugSkip] F3 → Gameplay + Quest");
+    }
+
+    void CompleteQuest()
+    {
+        if (PaintingQuestManager.Instance == null)
+        {
+            Debug.LogWarning("[DebugSkip] PaintingQuestManager.Instance is null — сначала F3.");
+            return;
+        }
+
+        PaintingQuestManager.Instance.DebugCompleteQuest();
+        Debug.Log("[DebugSkip] O → Quest complete");
     }
 }
 #endif

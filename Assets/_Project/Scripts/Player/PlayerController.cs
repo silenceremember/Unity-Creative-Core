@@ -60,10 +60,13 @@ public class PlayerController : MonoBehaviour
     // Маски для camera raycast — исключаем игрока
     private int _wallMask;
 
+    public static PlayerController Instance { get; private set; }
+
     // ─────────────────────────────────────────────────────────
 
     void Awake()
     {
+        Instance = this;
         _cc = GetComponent<CharacterController>();
         // Игнорируем слой самого игрока при camera raycast
         _wallMask = ~(1 << gameObject.layer);
