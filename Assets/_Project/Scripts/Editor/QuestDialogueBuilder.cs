@@ -77,10 +77,11 @@ public static class QuestDialogueBuilder
         // seqPostQuest — сразу после accept квеста
         var postQuest = CreateSeq(folder, "QuestDone_PostQuest", 5, null,
             L("Рассказчик", "Похоже, ты выполнил квест.", 2.5f),
-            L("Рассказчик", "И заработал 1000 опыта.", 2.5f),
-            L("Рассказчик", "Но тебе, кажется, некуда его тратить...", 3f),
-            L("Рассказчик", "Однако.", 1f),
-            L("Рассказчик", "У меня есть полоска опыта!", 3f));
+            L("Рассказчик", "И сломал картины...", 2.5f),
+            L("Рассказчик", "Но, ты заработал 1000 опыта.", 2.5f),
+            L("Рассказчик", "Однако, тебе некуда его тратить...", 3f),
+            L("Рассказчик", "Хм, я кое что нашел.", 1f),
+            L("Рассказчик", "У меня есть полоска опыта.", 3f));
 
         // seqXPBarActivated — при появлении XP-бара (AddXP вызывается из кода после postQuest)
         var xpBar = CreateSeq(folder, "QuestDone_XPBar", 5, null,
@@ -92,24 +93,35 @@ public static class QuestDialogueBuilder
             L("Рассказчик", "Нажми X, чтобы посмотреть...", 2f),
             L("Рассказчик", "Что же предложил Разработчик.", 2.5f));
 
-        // seqAbilityChosen — при нажатии X (до показа канваса)
-        var abilitychosen = CreateSeq(folder, "QuestDone_AbilityChosen", 5, null,
+        // seqAbilityChosen — при нажатии X (показывается канвас выбора)
+        var abilityChosen = CreateSeq(folder, "QuestDone_AbilityChosen", 5, null,
             L("Рассказчик", "Ого, какой выбор...", 2f),
-            L("Рассказчик", "Новые способности.", 3f));
+            L("Рассказчик", "Новые способности.", 3f),
+            L("Рассказчик", "Делай выбор очень внимательно.", 3f),
+            L("Рассказчик", "Ты не сможешь откатить изменения.", 3f));
 
-        // seqAbilityTried — после нажатия Ctrl/Shift/Space (попытка применить способность)
-        var abilityTried = CreateSeq(folder, "QuestDone_AbilityTried", 5, null,
-            L("Рассказчик", "Похоже...", 1.5f),
-            L("Рассказчик", "Способности не доделаны.", 3f),
-            L("Рассказчик", "Ладно.", 1.5f),
-            L("Рассказчик", "Не смотря на это...", 1.5f),
-            L("Рассказчик", "С повышением уровня.", 2f));
+        // seqDoorEpilogue — финал после исчезновения двери (nextSequence из doorUnlocked)
+        var doorEpilogue = CreateSeq(folder, "QuestDone_DoorEpilogue", 5, null,
+            L("Рассказчик", "Смотри, дверь пропала.", 3.5f),
+            L("Рассказчик", "Ты можешь идти.", 2.5f),
+            L("Рассказчик", "Но я тебя торопить не буду.", 3f),
+            L("Рассказчик", "Можешь находится здесь сколько хочешь...", 3f),
+            L("Рассказчик", "И смотреть на результаты своих действий.", 3.5f));
 
-        // seqDoorUnlocked — после abilityTried (дверь пропадает в середине диалога)
-        var doorUnlocked = CreateSeq(folder, "QuestDone_DoorUnlocked", 5, null,
-            L("Рассказчик", "Тебе открылся новый уровень...", 3f),
-            L("Рассказчик", "Смотри, дверь пропала!", 2.5f),
-            L("Рассказчик", "Вперёд же, навстречу приключениям!", 3.5f));
+        // seqDoorUnlocked — дверь исчезает по завершении этого сегмента (OnNarratorCompleted),
+        // затем автоматически играет doorEpilogue через nextSequence
+        var doorUnlocked = CreateSeq(folder, "QuestDone_DoorUnlocked", 5, doorEpilogue,
+            L("Рассказчик", "Кстати, тебе открылся переход...", 3f),
+            L("Рассказчик", "На новый уровень.", 2.5f));
+
+        // seqAbilityTried — после выбора навыка. nextSequence = doorUnlocked (цепочка идёт автоматически)
+        var abilityTried = CreateSeq(folder, "QuestDone_AbilityTried", 5, doorUnlocked,
+            L("Рассказчик", "Отличный выбор!", 2f),
+            L("Рассказчик", "Хм, но похоже...", 1.5f),
+            L("Рассказчик", "Разработчик оставил это как заглушку.", 3.5f),
+            L("Рассказчик", "Впрочем, слишком широкие возможности...", 2.5f),
+            L("Рассказчик", "...могут привести к неожиданным последствиям.", 3f),
+            L("Рассказчик", "В любом случае, поздравляю с повышением уровня.", 5f));
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
@@ -118,7 +130,7 @@ public static class QuestDialogueBuilder
         int assigned = AutoAssign(
             click0, click1, click2, click3,
             reject0, reject1, reject2, reject3, reject4,
-            postQuest, xpBar, levelUp, abilitychosen, abilityTried, doorUnlocked);
+            postQuest, xpBar, levelUp, abilityChosen, abilityTried, doorUnlocked);
 
         string autoMsg = assigned > 0
             ? $"Manager обновлён автоматически ({assigned} поля)."
@@ -214,7 +226,6 @@ public static class QuestDialogueBuilder
         seq.nextSequence = next;
         seq.lines        = lines;
         var disk = SaveAsset(seq, folder, name);
-        disk.nextSequence = next;
         EditorUtility.SetDirty(disk);
         return disk;
     }
@@ -225,8 +236,9 @@ public static class QuestDialogueBuilder
         var existing = AssetDatabase.LoadAssetAtPath<DialogueSequence>(path);
         if (existing != null)
         {
-            existing.lines    = seq.lines;
-            existing.priority = seq.priority;
+            existing.lines        = seq.lines;
+            existing.priority     = seq.priority;
+            existing.nextSequence = seq.nextSequence;   // исправлено: сохраняем nextSequence
             EditorUtility.SetDirty(existing);
             return existing;
         }

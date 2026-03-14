@@ -78,12 +78,10 @@ public class XPLevelManager : MonoBehaviour
     private Color _fillOriginalColor;
 
     // Нарратив-состояние
-    private bool  _abilityPending  = false;   // ждём Ctrl/Shift/Space после скрытия канваса
     private bool  _xpBarNarrPlayed = false;   // играли ли нарратив XP-бара
 
-    // Антиспам: кулдаун после диалога перед X и движением
+    // Антиспам: кулдаун после диалога перед X
     private float _xBlockedUntil      = 0f;
-    private float _abilityBlockedUntil = 0f;
     private const float InputSpamCooldown = 0.5f;
 
     [Header("Reject анимация")]
@@ -114,9 +112,34 @@ public class XPLevelManager : MonoBehaviour
         LevelUpCanvas.OnAbilityChosen += HandleAbilityChosen;
     }
 
+    void OnEnable()
+    {
+        if (narratorChannel != null)
+            narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
+    }
+
+    void OnDisable()
+    {
+        if (narratorChannel != null)
+            narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
+    }
+
     void OnDestroy()
     {
         LevelUpCanvas.OnAbilityChosen -= HandleAbilityChosen;
+    }
+
+    private void OnNarratorCompleted(DialogueSequence completed)
+    {
+        // seqDoorUnlocked завершился → гасим дверь
+        if (completed == seqDoorUnlocked)
+        {
+            if (doorObject != null)
+            {
+                doorObject.SetActive(false);
+                Debug.Log("[XPLevelManager] Door deactivated!");
+            }
+        }
     }
 
     void Update()
@@ -140,35 +163,6 @@ public class XPLevelManager : MonoBehaviour
             {
                 _xBlockedUntil = Time.unscaledTime + InputSpamCooldown;
                 OnUpgradeKeyPressed();
-            }
-        }
-
-        // Ctrl/Shift/Space — проверка способности
-        // Блокируем с reject-эффектом ТОЛЬКО во время диалога триггера A/B
-        if (_abilityPending && kb != null)
-        {
-            bool abilityKey = kb.leftCtrlKey.wasPressedThisFrame ||
-                              kb.rightCtrlKey.wasPressedThisFrame ||
-                              kb.leftShiftKey.wasPressedThisFrame ||
-                              kb.rightShiftKey.wasPressedThisFrame ||
-                              kb.spaceKey.wasPressedThisFrame;
-
-            if (abilityKey)
-            {
-                bool triggerDialogue = ExplorationManager.Instance != null &&
-                                       ExplorationManager.Instance.TriggerDialoguePlaying;
-                if (triggerDialogue)
-                {
-                    Debug.Log("[XPLevelManager] Ctrl/Shift/Space заблокирован: идёт диалог триггера A/B.");
-                    if (!_promptShaking && levelUpPrompt != null)
-                        StartCoroutine(ShakePrompt());
-                }
-                else
-                {
-                    _abilityBlockedUntil = Time.unscaledTime + InputSpamCooldown;
-                    _abilityPending = false;
-                    StartCoroutine(OnAbilityTried());
-                }
             }
         }
     }
@@ -361,32 +355,20 @@ public class XPLevelManager : MonoBehaviour
 
     private void HandleAbilityChosen()
     {
-        // Игрок нажал кнопку способности — теперь ждём попытку применения
-        _abilityPending = true;
-        Debug.Log("[XPLevelManager] Ability chosen — waiting for Ctrl/Shift/Space.");
+        // Игрок закрыл меню навыков — сразу запускаем следующий диалог.
+        Debug.Log("[XPLevelManager] Ability chosen — starting seqAbilityTried.");
+        OnAbilityTried();
     }
 
-    private IEnumerator OnAbilityTried()
+    private void OnAbilityTried()
     {
-        // «Опробуй же её!» уже звучала to seqAbilityChosen... теперь воспроизводим seqAbilityTried
+        // Прерываем текущий диалог и сразу запускаем seqAbilityTried.
+        // Дальнейшая цепочка (→ seqDoorUnlocked → дверь) идёт через OnNarratorCompleted.
+        narratorChannel?.Stop();
         if (seqAbilityTried != null)
             narratorChannel?.Raise(seqAbilityTried);
-
-        // Ждём пока нарратив закончится (примерно 4 сек), затем дверь исчезает
-        yield return new WaitForSeconds(4f);
-
-        if (seqDoorUnlocked != null)
-        {
+        else if (seqDoorUnlocked != null)
             narratorChannel?.Raise(seqDoorUnlocked);
-        }
-
-        // Небольшая доп. задержка чтобы дать нарратору начать, потом гасим дверь
-        yield return new WaitForSeconds(3f);
-        if (doorObject != null)
-        {
-            doorObject.SetActive(false);
-            Debug.Log("[XPLevelManager] Door deactivated!");
-        }
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────
