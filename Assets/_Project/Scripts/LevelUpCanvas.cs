@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,6 +9,9 @@ using UnityEngine.UI;
 public class LevelUpCanvas : MonoBehaviour
 {
     public static LevelUpCanvas Instance { get; private set; }
+
+    /// <summary>Срабатывает когда игрок нажал любую кнопку (т.е. «выбрал» способность).</summary>
+    public static event Action OnAbilityChosen;
 
     [Tooltip("Корневой объект этого канваса")]
     public GameObject root;
@@ -45,5 +49,8 @@ public class LevelUpCanvas : MonoBehaviour
         // Возвращаем управление игроку
         if (PlayerController.Instance != null)
             PlayerController.Instance.enabled = true;
+
+        // Уведомляем XPLevelManager о том, что способность выбрана
+        OnAbilityChosen?.Invoke();
     }
 }

@@ -49,6 +49,19 @@ public class PaintingQuestManager : MonoBehaviour
     public Color colorAccept   = Color.green;
     public Color colorReject   = Color.red;
 
+    [Header("Нарратор")]
+    [Tooltip("Канал рассказчика")]
+    public NarratorChannel narratorChannel;
+
+    [Tooltip("Реплики при нажатии на картину (4 штуки — перебираются по кругу)")]
+    public DialogueSequence[] paintingClickDialogues = new DialogueSequence[4];
+
+    [Tooltip("Реплики при reject-е (5 штук: reject 1..5)")]
+    public DialogueSequence[] rejectDialogues = new DialogueSequence[5];
+
+    [Tooltip("Диалог после успешного выполнения квеста (далее XPLevelManager добавит XP)")]
+    public DialogueSequence seqPostQuest;
+
     // ── state ─────────────────────────────────────────────────────────────
     // Фиксированный маппинг: нажатие N → индекс в pictureLabels
     // 1-е → [2] (Picture3), 2-е → [0] (Picture1), 3-е → [3] (Picture4), 4-е → [1] (Picture2)
@@ -58,6 +71,7 @@ public class PaintingQuestManager : MonoBehaviour
     private int            _pressCount    = 0;
     private bool           _questActive   = false;
     private bool           _resolved      = false;
+    private int            _rejectCount   = 0;
 
     private PaintingInteractable _nearPainting; // ближайшая (для E-prompt)
 
@@ -118,11 +132,10 @@ public class PaintingQuestManager : MonoBehaviour
 
     // ── Public API ────────────────────────────────────────────────────────
 
-    /// <summary>Вызывается из PaintingQuestManager.StartQuest — запускает квест.</summary>
+    /// <summary>Вызывается из ExplorationManager — запускает квест.</summary>
     public void StartQuest()
     {
         // Захватываем ТЕКУЩИЙ поворот каждой картины (уже наклонённый PaintingShiftController-ом).
-        // Именно в это положение будем возвращать их после reject.
         foreach (var interactable in interactables)
             if (interactable != null)
                 interactable.CaptureQuestStart();
@@ -131,6 +144,7 @@ public class PaintingQuestManager : MonoBehaviour
         _resolved     = false;
         _enteredCode  = "";
         _pressCount   = 0;
+        _rejectCount  = 0;
 
         if (questCanvas != null) questCanvas.SetActive(true);
 
@@ -170,11 +184,9 @@ public class PaintingQuestManager : MonoBehaviour
             painting.AssignedSlotIndex = SlotOrder[_pressCount];
 
         // Цифра кода = номер слота + 1 (слот 0 = Picture1 = цифра "1")
-        // Первая попытка ВСЕГДА даёт "3142" (reveal), вторая при порядке 1→2→3→4 = accept
         _enteredCode += (painting.AssignedSlotIndex + 1).ToString();
 
         int slotIndex = painting.AssignedSlotIndex;
-
         if (slotIndex < pictureLabels.Length && pictureLabels[slotIndex] != null)
         {
             pictureLabels[slotIndex].color = colorDone;
@@ -182,6 +194,14 @@ public class PaintingQuestManager : MonoBehaviour
         }
 
         _pressCount++;
+
+        // Реплика рассказчика при нажатии (перебираем по кругу)
+        if (paintingClickDialogues != null && paintingClickDialogues.Length > 0)
+        {
+            int idx = (_pressCount - 1) % paintingClickDialogues.Length;
+            var seq = paintingClickDialogues[idx];
+            if (seq != null) narratorChannel?.Raise(seq);
+        }
 
         // Скрываем E-prompt — картина уже использована
         if (ePrompt != null) ePrompt.SetActive(false);
@@ -198,7 +218,7 @@ public class PaintingQuestManager : MonoBehaviour
 
     private IEnumerator Resolve()
     {
-        _resolved   = true;
+        _resolved    = true;
         _questActive = false;
 
         yield return new WaitForSeconds(0.3f);
@@ -208,9 +228,6 @@ public class PaintingQuestManager : MonoBehaviour
 
         Color resultColor = accepted ? colorAccept : colorReject;
 
-        if (accepted)
-            XPLevelManager.Instance?.AddXP(1000);
-
         foreach (var lbl in pictureLabels)
             if (lbl != null)
             {
@@ -219,30 +236,85 @@ public class PaintingQuestManager : MonoBehaviour
             }
 
         if (accepted)
-            StartCoroutine(PulseLabels());
+        {
+            yield return StartCoroutine(PulseLabels());
+
+            // Запускаем пост-квест нарратив. XPLevelManager добавит XP когда нарратор
+            // дойдёт до нужной реплики (через activateObject или из XPLevelManager напрямую).
+            if (seqPostQuest != null)
+                narratorChannel?.Raise(seqPostQuest);
+            else
+                XPLevelManager.Instance?.AddXP(1000);
+        }
         else
-            StartCoroutine(RejectAndReset());
+        {
+            yield return StartCoroutine(ShakeLabels());
+
+            _rejectCount++;
+            Debug.Log($"[PaintingQuestManager] Reject #{_rejectCount}");
+
+            // Реплика-подсказка рассказчика
+            int rejectIdx = _rejectCount - 1;
+            if (rejectDialogues != null && rejectIdx < rejectDialogues.Length && rejectDialogues[rejectIdx] != null)
+                narratorChannel?.Raise(rejectDialogues[rejectIdx]);
+
+            if (_rejectCount >= 5)
+            {
+                // 5-й reject: рассказчик решает квест за игрока после диалога
+                StartCoroutine(AutoSolveAfterDialogue());
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.8f);
+                DoReset();
+            }
+        }
+    }
+
+    // ── Auto-solve on 5th reject ──────────────────────────────────────────
+
+    private IEnumerator AutoSolveAfterDialogue()
+    {
+        // Ждём пока нарратор закончит реплику (5-й reject ~5 секунд)
+        yield return new WaitForSeconds(5f);
+
+        // Возвращаем картины в наклонённое положение
+        foreach (var interactable in interactables)
+            if (interactable != null)
+                interactable.ResetPainting(0.4f);
+
+        yield return new WaitForSeconds(0.6f);
+
+        // Сбрасываем состояние
+        _resolved    = false;
+        _questActive = true;
+        _enteredCode = "";
+        _pressCount  = 0;
+
+        foreach (var lbl in pictureLabels)
+            if (lbl != null)
+            {
+                lbl.color     = colorDefault;
+                lbl.fontStyle &= ~FontStyles.Strikethrough;
+            }
+
+        // Рассказчик «делает это сам»
+        DebugCompleteQuest();
     }
 
     // ── Reset after Reject ────────────────────────────────────────────────
 
-    private IEnumerator RejectAndReset()
+    private void DoReset()
     {
-        yield return StartCoroutine(ShakeLabels());  // сначала shake
-        yield return new WaitForSeconds(0.8f);        // чуть подождать
-
-        // Возвращаем картины в начальное наклонённое положение
         foreach (var interactable in interactables)
             if (interactable != null)
                 interactable.ResetPainting(0.5f);
 
-        // Сбрасываем состояние квеста
         _enteredCode  = "";
         _pressCount   = 0;
         _resolved     = false;
         _questActive  = true;
 
-        // Возвращаем жёлтый цвет на все строки задания
         foreach (var lbl in pictureLabels)
             if (lbl != null)
             {
@@ -257,7 +329,6 @@ public class PaintingQuestManager : MonoBehaviour
 
     private IEnumerator ShakeLabels()
     {
-        // Трясём Group (родитель pictureLabels)
         if (pictureLabels.Length == 0 || pictureLabels[0] == null) yield break;
         var groupRT = pictureLabels[0].transform.parent as RectTransform;
         if (groupRT == null) yield break;

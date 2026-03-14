@@ -6668,7 +6668,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStateListener
   channel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
-  activeInStates: 03000000
+  activeInStates: 0300000004000000
   targetOverride: {fileID: 0}
 --- !u!114 &736020685
 MonoBehaviour:
@@ -36295,7 +36295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStateListener
   channel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
-  activeInStates: 03000000
+  activeInStates: 0300000004000000
   targetOverride: {fileID: 0}
 --- !u!114 &1822483912
 MonoBehaviour:
@@ -36846,6 +36846,19 @@ MonoBehaviour:
   colorDone: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   colorAccept: {r: 0, g: 1, b: 0, a: 1}
   colorReject: {r: 1, g: 0, b: 0, a: 1}
+  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  paintingClickDialogues:
+  - {fileID: 11400000, guid: 6d81f1451a2b11e42a91c53b5a6a5553, type: 2}
+  - {fileID: 11400000, guid: 5dac05609e73f854ab9d35d49f098386, type: 2}
+  - {fileID: 11400000, guid: 809c5bba8602eaf40af46c19fcfd3273, type: 2}
+  - {fileID: 11400000, guid: 70713951d30c1cf4f8192db243ba03b2, type: 2}
+  rejectDialogues:
+  - {fileID: 11400000, guid: a25b019c222b05743ba7834cfdf48185, type: 2}
+  - {fileID: 11400000, guid: be7b04804bd9320479aa55917094e28a, type: 2}
+  - {fileID: 11400000, guid: 2ec97f0d7fcc8504fa4dc1c23c9cc392, type: 2}
+  - {fileID: 11400000, guid: a0851e4d0a1cbd2489ca30e67aedfdda, type: 2}
+  - {fileID: 11400000, guid: 7639c3d97d6148044ae83d40291cac46, type: 2}
+  seqPostQuest: {fileID: 11400000, guid: 7297832cf12085247a5cd8ce1d6f1274, type: 2}
 --- !u!114 &1867730429
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -36896,6 +36909,13 @@ MonoBehaviour:
   flashColor: {r: 1, g: 1, b: 0, a: 1}
   levelLabelPunch: 1.35
   punchDuration: 0.35
+  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  seqXPBarActivated: {fileID: 11400000, guid: 69fcc969602ba1944b9cda484b16d8bb, type: 2}
+  seqLevelUp: {fileID: 11400000, guid: 6c235e945d86a5f45927bcc86b6f73a9, type: 2}
+  seqAbilityChosen: {fileID: 11400000, guid: 5778e444f1b2d0645926312db3ff288f, type: 2}
+  seqAbilityTried: {fileID: 11400000, guid: 725d69e38fe1e0e49833b9fe58238cc2, type: 2}
+  seqDoorUnlocked: {fileID: 11400000, guid: d8987695e569f9b45b2972d8ce9b77c9, type: 2}
+  doorObject: {fileID: 1705948113}
 --- !u!1 &1870226643 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1575304400484108474, guid: 0d37b8b98879ecc4ea439140dbf04d7d, type: 3}

@@ -60,10 +60,13 @@ public class DebugSkip : MonoBehaviour
 
     void SkipToQuest()
     {
-        // Всё то же что F2 (камера, управление)
+        // Шаг 1: Gameplay — активирует камеру, игрока, ExplorationCanvas
         SkipToGameplay();
 
-        // Останавливаем нарратора
+        // Шаг 2: Quest — GameStateListener включит NarratorCanvas и QuestCanvas
+        gameStateChannel?.Raise(GameState.Quest);
+
+        // Останавливаем нарратора (ambient-цепочку) — квест стартует чисто
         if (NarratorManager.Instance != null)
             NarratorManager.Instance.Stop();
 
@@ -71,7 +74,7 @@ public class DebugSkip : MonoBehaviour
         var shiftController = FindFirstObjectByType<PaintingShiftController>(FindObjectsInactive.Include);
         if (shiftController != null)
         {
-            shiftController.gameObject.SetActive(true);   // нужен активный GO для корутин
+            shiftController.gameObject.SetActive(true);
             shiftController.ForceShift();
         }
         else
@@ -83,7 +86,7 @@ public class DebugSkip : MonoBehaviour
         else
             Debug.LogWarning("[DebugSkip] PaintingQuestManager.Instance is null!");
 
-        Debug.Log("[DebugSkip] F3 → Gameplay + Quest");
+        Debug.Log("[DebugSkip] F3 → Quest");
     }
 
     void CompleteQuest()

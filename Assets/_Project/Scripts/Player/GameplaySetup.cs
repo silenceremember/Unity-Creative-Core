@@ -65,7 +65,7 @@ public class GameplaySetup : MonoBehaviour
 
     private void OnStateChanged(GameState state)
     {
-        if (state == GameState.Gameplay)
+        if (state == GameState.Gameplay || state == GameState.Quest)
             EnterGameplay();
         else
             ExitGameplay();
@@ -73,25 +73,26 @@ public class GameplaySetup : MonoBehaviour
 
     private void EnterGameplay()
     {
-        if (_initialized) return;   // Репарентируем только ОДИН РАЗ
-
-        _initialized = true;
-
-        // 1. Скрыть модель капсулы
-        if (_capsuleRenderer != null)
-            _capsuleRenderer.enabled = false;
-
-        // 2. Репарентировать камеру под игрока
-        if (mainCamera != null && playerTransform != null)
+        if (!_initialized)
         {
-            mainCamera.transform.SetParent(playerTransform, worldPositionStays: false);
-            // localPosition = zero: PlayerController.PushCameraFromWalls
-            // сам позиционирует камеру через cameraBaseLocalOffset
-            mainCamera.transform.localPosition = Vector3.zero;
-            mainCamera.transform.localRotation = Quaternion.identity;
+            _initialized = true;
+
+            // 1. Скрыть модель капсулы
+            if (_capsuleRenderer != null)
+                _capsuleRenderer.enabled = false;
+
+            // 2. Репарентировать камеру под игрока
+            if (mainCamera != null && playerTransform != null)
+            {
+                mainCamera.transform.SetParent(playerTransform, worldPositionStays: false);
+                // localPosition = zero: PlayerController.PushCameraFromWalls
+                // сам позиционирует камеру через cameraBaseLocalOffset
+                mainCamera.transform.localPosition = Vector3.zero;
+                mainCamera.transform.localRotation = Quaternion.identity;
+            }
         }
 
-        // 3. Включить PlayerController и передать ссылку на камеру
+        // 3. Включить PlayerController и передать ссылку на камеру (всегда при входе в активные стейты)
         if (_playerController != null)
         {
             // Передаём offset из Inspector в контроллер
@@ -100,12 +101,12 @@ public class GameplaySetup : MonoBehaviour
             _playerController.Init(mainCamera != null ? mainCamera.transform : null);
         }
 
-        Debug.Log("[GameplaySetup] Gameplay entered: camera reparented, capsule hidden, player controller enabled.");
+        Debug.Log("[GameplaySetup] Active state entered: player controller enabled.");
     }
 
     private void ExitGameplay()
     {
-        // Если вдруг нужно выйти из Gameplay — отключаем контроллер
+        // Отключаем управление при переходе в VisualNovel/Menu/IntroCrawl
         if (_playerController != null)
             _playerController.enabled = false;
     }

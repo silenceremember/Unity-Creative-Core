@@ -9,6 +9,7 @@ using UnityEngine.UI;
 /// - Текст Lv.N меняется с анимацией (punch scale + flash).
 /// - "▲ Level Up! [X]" мигает — X откроет канвас апгрейдов (пока просто скрывает).
 /// - Оверфлоу XP автоматически переходит в следующий уровень.
+/// - После level-up → рассказчик ведёт игрока по нарративу до исчезновения двери.
 /// </summary>
 public class XPLevelManager : MonoBehaviour
 {
@@ -42,6 +43,29 @@ public class XPLevelManager : MonoBehaviour
     public float levelLabelPunch = 1.35f;   // масштаб при смене уровня
     public float punchDuration   = 0.35f;
 
+    [Header("Нарратор")]
+    [Tooltip("Канал рассказчика")]
+    public NarratorChannel narratorChannel;
+
+    [Tooltip("Реплика при активации XP-бара")]
+    public DialogueSequence seqXPBarActivated;
+
+    [Tooltip("Реплика после level-up (до промпта X)")]
+    public DialogueSequence seqLevelUp;
+
+    [Tooltip("Реплика когда X нажат — показывается канвас апгрейдов")]
+    public DialogueSequence seqAbilityChosen;
+
+    [Tooltip("Реплика после попытки опробовать способность (Ctrl/Shift/Space)")]
+    public DialogueSequence seqAbilityTried;
+
+    [Tooltip("Реплика об открытии нового уровня + исчезновении двери")]
+    public DialogueSequence seqDoorUnlocked;
+
+    [Header("Дверь")]
+    [Tooltip("Объект двери — отключается при нарративе seqDoorUnlocked")]
+    public GameObject doorObject;
+
     // ── State ─────────────────────────────────────────────────────────────
 
     private int   _level           = 0;
@@ -50,6 +74,10 @@ public class XPLevelManager : MonoBehaviour
     private bool  _animating       = false;
     private bool  _promptVisible   = false;   // мигалка апгрейда
     private Color _fillOriginalColor;
+
+    // Нарратив-состояние
+    private bool  _abilityPending  = false;   // ждём Ctrl/Shift/Space после скрытия канваса
+    private bool  _xpBarNarrPlayed = false;   // играли ли нарратив XP-бара
 
     private int XPForCurrentLevel =>
         _level < xpRequirements.Length
@@ -67,14 +95,41 @@ public class XPLevelManager : MonoBehaviour
         if (rewardLabel != null)
             rewardLabel.text = string.Format(rewardFormat, XPForCurrentLevel);
         RefreshUI();
+
+        // Подписываемся на событие выбора способности
+        LevelUpCanvas.OnAbilityChosen += HandleAbilityChosen;
+    }
+
+    void OnDestroy()
+    {
+        LevelUpCanvas.OnAbilityChosen -= HandleAbilityChosen;
     }
 
     void Update()
     {
-        if (!_promptVisible) return;
-        var kb = UnityEngine.InputSystem.Keyboard.current;
-        if (kb != null && kb.xKey.wasPressedThisFrame)
-            OnUpgradeKeyPressed();
+        // X — открыть канвас апгрейдов
+        if (_promptVisible)
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb != null && kb.xKey.wasPressedThisFrame)
+                OnUpgradeKeyPressed();
+        }
+
+        // После выбора способности — ждём попытку использовать (Ctrl / Shift / Space)
+        if (_abilityPending)
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (kb != null &&
+                (kb.leftCtrlKey.wasPressedThisFrame ||
+                 kb.rightCtrlKey.wasPressedThisFrame ||
+                 kb.leftShiftKey.wasPressedThisFrame ||
+                 kb.rightShiftKey.wasPressedThisFrame ||
+                 kb.spaceKey.wasPressedThisFrame))
+            {
+                _abilityPending = false;
+                StartCoroutine(OnAbilityTried());
+            }
+        }
     }
 
     // ── Public API ────────────────────────────────────────────────────────
@@ -83,6 +138,14 @@ public class XPLevelManager : MonoBehaviour
     {
         if (_animating) return;
         if (levelBar != null) levelBar.SetActive(true);
+
+        // Нарратив при первом появлении XP-бара
+        if (!_xpBarNarrPlayed && seqXPBarActivated != null)
+        {
+            _xpBarNarrPlayed = true;
+            narratorChannel?.Raise(seqXPBarActivated);
+        }
+
         // Сразу показываем реальную сумму награды
         if (rewardLabel != null)
             rewardLabel.text = string.Format(rewardFormat, amount);
@@ -164,6 +227,10 @@ public class XPLevelManager : MonoBehaviour
         InitSlider();
         RefreshUI();
 
+        // Нарратив при повышении уровня
+        if (seqLevelUp != null)
+            narratorChannel?.Raise(seqLevelUp);
+
         // Показываем мигалку апгрейда
         ShowUpgradePrompt();
 
@@ -217,6 +284,11 @@ public class XPLevelManager : MonoBehaviour
     {
         _promptVisible = false;
         if (levelUpPrompt != null) levelUpPrompt.SetActive(false);
+
+        // Нарратив «ого, новые способности»
+        if (seqAbilityChosen != null)
+            narratorChannel?.Raise(seqAbilityChosen);
+
         if (upgradeCanvas != null)
             upgradeCanvas.Show();
         else
@@ -228,16 +300,13 @@ public class XPLevelManager : MonoBehaviour
         if (levelUpPrompt == null) yield break;
         var tmpText = levelUpPrompt.GetComponentInChildren<TextMeshProUGUI>();
         var rt      = levelUpPrompt.GetComponent<RectTransform>();
-        // Мигание самой полоски fill
         Image fillImg = fillImage;
 
         while (_promptVisible)
         {
             float t   = (Mathf.Sin(Time.time * Mathf.PI * 2f) + 1f) * 0.5f;
-            // Мигание текста апгрейда
             if (tmpText != null) tmpText.alpha = Mathf.Lerp(0.3f, 1f, t);
             if (rt      != null) rt.localScale = Vector3.one * Mathf.Lerp(1f, 1.06f, t);
-            // Мигание самой полоски fill
             if (fillImg != null) fillImg.color = Color.Lerp(_fillOriginalColor, flashColor, t);
             yield return null;
         }
@@ -245,6 +314,38 @@ public class XPLevelManager : MonoBehaviour
         if (tmpText != null) tmpText.alpha  = 1f;
         if (rt      != null) rt.localScale  = Vector3.one;
         if (fillImg != null) fillImg.color  = _fillOriginalColor;
+    }
+
+    // ── Ability Selection & Trial ─────────────────────────────────────────
+
+    private void HandleAbilityChosen()
+    {
+        // Игрок нажал кнопку способности — теперь ждём попытку применения
+        _abilityPending = true;
+        Debug.Log("[XPLevelManager] Ability chosen — waiting for Ctrl/Shift/Space.");
+    }
+
+    private IEnumerator OnAbilityTried()
+    {
+        // «Опробуй же её!» уже звучала to seqAbilityChosen... теперь воспроизводим seqAbilityTried
+        if (seqAbilityTried != null)
+            narratorChannel?.Raise(seqAbilityTried);
+
+        // Ждём пока нарратив закончится (примерно 4 сек), затем дверь исчезает
+        yield return new WaitForSeconds(4f);
+
+        if (seqDoorUnlocked != null)
+        {
+            narratorChannel?.Raise(seqDoorUnlocked);
+        }
+
+        // Небольшая доп. задержка чтобы дать нарратору начать, потом гасим дверь
+        yield return new WaitForSeconds(3f);
+        if (doorObject != null)
+        {
+            doorObject.SetActive(false);
+            Debug.Log("[XPLevelManager] Door deactivated!");
+        }
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────

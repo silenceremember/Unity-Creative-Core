@@ -211,6 +211,15 @@ public class ExplorationManager : MonoBehaviour
         Debug.Log("[ExplorationManager] Ambient dialogue finished — starting quest.");
         _explorationActive = false;
 
+        // Отключаем триггеры A и B — в Quest-фазе они не должны срабатывать
+        seqTriggerA = null;
+        seqTriggerB = null;
+        _triggerAUsed = true;
+        _triggerBUsed = true;
+
+        // Переключаем состояние игры → Quest
+        gameStateChannel?.Raise(GameState.Quest);
+
         if (PaintingQuestManager.Instance != null)
             PaintingQuestManager.Instance.StartQuest();
     }
