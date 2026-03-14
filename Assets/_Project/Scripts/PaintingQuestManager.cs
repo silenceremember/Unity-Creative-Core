@@ -161,13 +161,10 @@ public class PaintingQuestManager : MonoBehaviour
         var kb = UnityEngine.InputSystem.Keyboard.current;
         if (kb != null && kb.eKey.wasPressedThisFrame)
         {
-            // Блокируем E с reject-эффектом ТОЛЬКО во время диалога триггера A/B
             bool triggerDialogue = ExplorationManager.Instance != null &&
                                    ExplorationManager.Instance.TriggerDialoguePlaying;
-
             if (triggerDialogue)
             {
-                Debug.Log("[PaintingQuestManager] E заблокирован: идёт диалог триггера A/B.");
                 if (!_ePromptShaking && ePrompt != null)
                     StartCoroutine(ShakeEPrompt());
                 return;

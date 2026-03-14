@@ -462,6 +462,12 @@ public static class ExplorationDialogueBuilder
             L("Рассказчик", "Возвращаемся.", 1f)
         );
 
+        // Триггеры A и B восстанавливают прерванный диалог (ambient / quest / XP / любой)
+        trigA.restoreInterrupted = true;
+        EditorUtility.SetDirty(trigA);
+        trigB.restoreInterrupted = true;
+        EditorUtility.SetDirty(trigB);
+
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 

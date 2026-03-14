@@ -35,3 +35,4 @@ MonoBehaviour:
     activateObject: 
   nextSequence: {fileID: 11400000, guid: d183d518c0cfbb944bb4718875fadc26, type: 2}
   priority: 0
+  restoreInterrupted: 0

@@ -174,3 +174,4 @@ MonoBehaviour:
     activateObject: 
   nextSequence: {fileID: 0}
   priority: 10
+  restoreInterrupted: 1

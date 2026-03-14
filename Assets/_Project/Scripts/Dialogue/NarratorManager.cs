@@ -43,6 +43,12 @@ public class NarratorManager : MonoBehaviour
     /// <summary>True пока воспроизводится любой диалог.</summary>
     public bool IsPlaying => _cts != null && !_cts.IsCancellationRequested;
 
+    /// <summary>Текущая последовательность (null если ничего не играет).</summary>
+    public DialogueSequence CurrentSequence => _currentSequence;
+
+    /// <summary>Сохранённая последовательность для восстановления после restoreInterrupted=true.</summary>
+    private DialogueSequence _savedSequence;
+
     void Update()
     {
 #if UNITY_EDITOR
@@ -94,8 +100,12 @@ public class NarratorManager : MonoBehaviour
 
         if (_currentSequence != null)
         {
-            if (sequence.priority < (_currentSequence?.priority ?? 0))
+            if (sequence.priority < _currentSequence.priority)
                 return; // приоритет ниже — не прерываем
+
+            // Если новая последовательность хочет восстановить прерванную — сохраняем
+            if (sequence.restoreInterrupted)
+                _savedSequence = _currentSequence;
         }
 
         Stop();
@@ -151,23 +161,31 @@ public class NarratorManager : MonoBehaviour
 
             subtitleRoot?.SetActive(false);
 
-            // Уведомляем подписчиков о завершении ЭТОГО сегмента
-            // (нужно до перехода к nextSequence, чтобы ExplorationManager
-            // мог среагировать на промежуточные триггеры: таймер, кликер и т.д.)
-            channel?.NotifyCompleted(sequence);
-
-            // Автопереход
+            // Автопереход / завершение цепочки
             if (sequence.nextSequence != null)
             {
+                // Промежуточный сегмент: уведомляем пока ещё "играем" (для таймера/кликера),
+                // затем сразу переходим к следующему.
+                channel?.NotifyCompleted(sequence);
                 _currentSequence = sequence.nextSequence;
                 await PlaySequence(sequence.nextSequence, ct);
             }
             else
             {
-                // Цепочка полностью завершена — сбрасываем состояние
+                // Терминальный сегмент: очищаем состояние ДО NotifyCompleted,
+                // чтобы подписчики могли сделать Raise нового диалога без блокировки по приоритету.
                 _cts?.Dispose();
                 _cts = null;
                 _currentSequence = null;
+                channel?.NotifyCompleted(sequence);
+
+                // Восстанавливаем прерванный диалог (если был сохранён через restoreInterrupted)
+                if (_savedSequence != null)
+                {
+                    var toRestore = _savedSequence;
+                    _savedSequence = null;
+                    channel?.Raise(toRestore);
+                }
             }
         }
         catch (System.OperationCanceledException)

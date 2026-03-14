@@ -22,3 +22,4 @@ MonoBehaviour:
     activateObject: 
   nextSequence: {fileID: 0}
   priority: 5
+  restoreInterrupted: 0

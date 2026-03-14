@@ -20,6 +20,9 @@ public class DialogueSequence : ScriptableObject
     [Tooltip("Приоритет. >= текущего — прерывает, < текущего — не прерывает.")]
     public int priority = 0;
 
+    [Tooltip("Если true — при запуске сохраняет прерванный диалог и восстанавливает его после завершения этой последовательности.")]
+    public bool restoreInterrupted = false;
+
 #if UNITY_EDITOR
     void OnValidate()
     {

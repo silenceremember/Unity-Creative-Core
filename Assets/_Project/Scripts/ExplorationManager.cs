@@ -60,9 +60,7 @@ public class ExplorationManager : MonoBehaviour
     public bool TriggerDialoguePlaying => _triggerDialoguePlaying;
     private bool _triggerDialoguePlaying;
 
-    // Ambient: последний «живой» сегмент (сохраняем при прерывании триггером)
-    private DialogueSequence _currentAmbientSeg;
-
+    // Ambient: tracking for OnAmbientChainCompleted (no longer used for restoration)
     // Decorative timer
     private Coroutine        _decorativeCo;
 
@@ -140,7 +138,6 @@ public class ExplorationManager : MonoBehaviour
     private void PlayAmbient(DialogueSequence seg)
     {
         if (seg == null) return;
-        _currentAmbientSeg = seg;
         narratorChannel?.Raise(seg);
     }
 
@@ -165,15 +162,17 @@ public class ExplorationManager : MonoBehaviour
 
     private void PlayTrigger(DialogueSequence triggerSeq)
     {
-        // Прервать ambient (но _currentAmbientSeg уже сохранён)
-        narratorChannel?.Stop();
+        // Проверяем примет ли нарратор триггер (для корректного выставления флага).
+        // Если triggerSeq.restoreInterrupted = true, NarratorManager сам сохранит
+        // прерванный диалог и восстановит его после завершения триггера.
+        int currentPriority = NarratorManager.Instance?.CurrentSequence?.priority ?? 0;
+        bool willPlay = !NarratorManager.Instance.IsPlaying || triggerSeq.priority >= currentPriority;
+        if (willPlay)
+            _triggerDialoguePlaying = true;
 
-        // Пока играет триггер — флаг активен (для reject-блокировки X/E/Space)
-        _triggerDialoguePlaying = true;
-
-        // Запустить триггер
         narratorChannel?.Raise(triggerSeq);
     }
+
 
     // ── Narrator Completed ───────────────────────────────────────────
 
@@ -183,10 +182,9 @@ public class ExplorationManager : MonoBehaviour
 
         if (isTrigger)
         {
+            // Восстановление прерванного диалога делает NarratorManager автоматически
+            // (если triggerSeq.restoreInterrupted = true в ассете).
             _triggerDialoguePlaying = false;
-            // Возобновляем ambient только если exploration ещё активна
-            if (_explorationActive)
-                PlayAmbient(_currentAmbientSeg);
             return;
         }
 
@@ -207,17 +205,19 @@ public class ExplorationManager : MonoBehaviour
 
         // Ambient-сегмент завершился.
         // NarratorManager сам запускает следующий через nextSequence.
-        // Если nextSequence == null — цепочка кончилась → стартуем квест.
+        // Обновляем логику таймера/кликера и проверяем конец цепочки.
         if (completed.nextSequence == null)
-        {
             OnAmbientChainCompleted();
-        }
     }
 
     // ── Ambient Chain End → Quest ────────────────────────────────────
 
     private void OnAmbientChainCompleted()
     {
+        // Защита от двойного вызова: если exploration уже остановлена — ничего не делаем.
+        // Может случиться если триггер прервал последний ambient, а restoration его повторила.
+        if (!_explorationActive) return;
+
         Debug.Log("[ExplorationManager] Ambient dialogue finished — starting quest.");
         _explorationActive = false;
 
