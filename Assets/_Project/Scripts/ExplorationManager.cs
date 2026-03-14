@@ -56,6 +56,10 @@ public class ExplorationManager : MonoBehaviour
     private bool             _triggerAUsed;
     private bool             _triggerBUsed;
 
+    /// <summary>True только пока прямо сейчас играет диалог триггера A или B.</summary>
+    public bool TriggerDialoguePlaying => _triggerDialoguePlaying;
+    private bool _triggerDialoguePlaying;
+
     // Ambient: последний «живой» сегмент (сохраняем при прерывании триггером)
     private DialogueSequence _currentAmbientSeg;
 
@@ -109,6 +113,8 @@ public class ExplorationManager : MonoBehaviour
     {
         if (state == GameState.Gameplay)
             StartExploration();
+        else if (state == GameState.Quest)
+            _explorationActive = false;  // Квест начался — больше не перехватываем завершения нарратора
     }
 
     // ── Exploration Start ────────────────────────────────────────────
@@ -162,6 +168,9 @@ public class ExplorationManager : MonoBehaviour
         // Прервать ambient (но _currentAmbientSeg уже сохранён)
         narratorChannel?.Stop();
 
+        // Пока играет триггер — флаг активен (для reject-блокировки X/E/Space)
+        _triggerDialoguePlaying = true;
+
         // Запустить триггер
         narratorChannel?.Raise(triggerSeq);
     }
@@ -176,6 +185,7 @@ public class ExplorationManager : MonoBehaviour
 
         if (isTrigger)
         {
+            _triggerDialoguePlaying = false;
             // После триггера — возобновить ambient с сохранённого сегмента
             PlayAmbient(_currentAmbientSeg);
         }
@@ -210,12 +220,6 @@ public class ExplorationManager : MonoBehaviour
     {
         Debug.Log("[ExplorationManager] Ambient dialogue finished — starting quest.");
         _explorationActive = false;
-
-        // Отключаем триггеры A и B — в Quest-фазе они не должны срабатывать
-        seqTriggerA = null;
-        seqTriggerB = null;
-        _triggerAUsed = true;
-        _triggerBUsed = true;
 
         // Переключаем состояние игры → Quest
         gameStateChannel?.Raise(GameState.Quest);
@@ -257,4 +261,19 @@ public class ExplorationManager : MonoBehaviour
         clickerLabel.text = "0";
         Debug.Log("[ExplorationManager] Clicker shown.");
     }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    /// <summary>[DEBUG] Сразу показывает таймер и кликер (F3 в DebugSkip).</summary>
+    public void DebugShowTimerAndClicker()
+    {
+        if (timerLabel != null && !timerLabel.gameObject.activeSelf)
+        {
+            if (_decorativeCo != null) StopCoroutine(_decorativeCo);
+            _decorativeCo = StartCoroutine(DecorativeCountdown());
+        }
+
+        if (clickerLabel != null && !clickerLabel.gameObject.activeSelf)
+            ShowClicker();
+    }
+#endif
 }

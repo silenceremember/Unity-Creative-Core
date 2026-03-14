@@ -40,6 +40,9 @@ public class NarratorManager : MonoBehaviour
 
     public static NarratorManager Instance { get; private set; }
 
+    /// <summary>True пока воспроизводится любой диалог.</summary>
+    public bool IsPlaying => _playback != null;
+
     void Update()
     {
 #if UNITY_EDITOR

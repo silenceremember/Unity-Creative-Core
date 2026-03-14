@@ -37,6 +37,8 @@ public class XPLevelManager : MonoBehaviour
     [Header("UI — Награда")]
     public TextMeshProUGUI rewardLabel;
     public string          rewardFormat = "НАГРАДА: {0} XP";
+    [Tooltip("Отображаемая награда (XP) — отдельно от xpRequirements!")]
+    public int             questRewardXP = 1000;
 
     [Header("Стиль")]
     public Color flashColor      = new Color(1f, 0.85f, 0f, 1f);   // золотой
@@ -79,6 +81,18 @@ public class XPLevelManager : MonoBehaviour
     private bool  _abilityPending  = false;   // ждём Ctrl/Shift/Space после скрытия канваса
     private bool  _xpBarNarrPlayed = false;   // играли ли нарратив XP-бара
 
+    // Антиспам: кулдаун после диалога перед X и движением
+    private float _xBlockedUntil      = 0f;
+    private float _abilityBlockedUntil = 0f;
+    private const float InputSpamCooldown = 0.5f;
+
+    [Header("Reject анимация")]
+    [Tooltip("Амплитуда встряски подсказки X (пиксели)")]
+    public float promptShakeMagnitude = 10f;
+    [Tooltip("Длительность встряски подсказки X (сек)")]
+    public float promptShakeDuration  = 0.35f;
+    private bool _promptShaking = false;
+
     private int XPForCurrentLevel =>
         _level < xpRequirements.Length
             ? xpRequirements[_level]
@@ -93,7 +107,7 @@ public class XPLevelManager : MonoBehaviour
         InitSlider();
         if (fillImage   != null) _fillOriginalColor = fillImage.color;
         if (rewardLabel != null)
-            rewardLabel.text = string.Format(rewardFormat, XPForCurrentLevel);
+            rewardLabel.text = string.Format(rewardFormat, questRewardXP);
         RefreshUI();
 
         // Подписываемся на событие выбора способности
@@ -107,27 +121,54 @@ public class XPLevelManager : MonoBehaviour
 
     void Update()
     {
+        var kb = UnityEngine.InputSystem.Keyboard.current;
+        bool dialoguePlaying = NarratorManager.Instance != null && NarratorManager.Instance.IsPlaying;
+
         // X — открыть канвас апгрейдов
-        if (_promptVisible)
+        // Блокируем с reject-эффектом ТОЛЬКО во время диалога триггера A/B
+        if (_promptVisible && kb != null && kb.xKey.wasPressedThisFrame)
         {
-            var kb = UnityEngine.InputSystem.Keyboard.current;
-            if (kb != null && kb.xKey.wasPressedThisFrame)
+            bool triggerDialogue = ExplorationManager.Instance != null &&
+                                   ExplorationManager.Instance.TriggerDialoguePlaying;
+            if (triggerDialogue)
+            {
+                Debug.Log("[XPLevelManager] X заблокирован: идёт диалог триггера A/B.");
+                if (!_promptShaking && levelUpPrompt != null)
+                    StartCoroutine(ShakePrompt());
+            }
+            else
+            {
+                _xBlockedUntil = Time.unscaledTime + InputSpamCooldown;
                 OnUpgradeKeyPressed();
+            }
         }
 
-        // После выбора способности — ждём попытку использовать (Ctrl / Shift / Space)
-        if (_abilityPending)
+        // Ctrl/Shift/Space — проверка способности
+        // Блокируем с reject-эффектом ТОЛЬКО во время диалога триггера A/B
+        if (_abilityPending && kb != null)
         {
-            var kb = UnityEngine.InputSystem.Keyboard.current;
-            if (kb != null &&
-                (kb.leftCtrlKey.wasPressedThisFrame ||
-                 kb.rightCtrlKey.wasPressedThisFrame ||
-                 kb.leftShiftKey.wasPressedThisFrame ||
-                 kb.rightShiftKey.wasPressedThisFrame ||
-                 kb.spaceKey.wasPressedThisFrame))
+            bool abilityKey = kb.leftCtrlKey.wasPressedThisFrame ||
+                              kb.rightCtrlKey.wasPressedThisFrame ||
+                              kb.leftShiftKey.wasPressedThisFrame ||
+                              kb.rightShiftKey.wasPressedThisFrame ||
+                              kb.spaceKey.wasPressedThisFrame;
+
+            if (abilityKey)
             {
-                _abilityPending = false;
-                StartCoroutine(OnAbilityTried());
+                bool triggerDialogue = ExplorationManager.Instance != null &&
+                                       ExplorationManager.Instance.TriggerDialoguePlaying;
+                if (triggerDialogue)
+                {
+                    Debug.Log("[XPLevelManager] Ctrl/Shift/Space заблокирован: идёт диалог триггера A/B.");
+                    if (!_promptShaking && levelUpPrompt != null)
+                        StartCoroutine(ShakePrompt());
+                }
+                else
+                {
+                    _abilityBlockedUntil = Time.unscaledTime + InputSpamCooldown;
+                    _abilityPending = false;
+                    StartCoroutine(OnAbilityTried());
+                }
             }
         }
     }
@@ -349,6 +390,38 @@ public class XPLevelManager : MonoBehaviour
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────
+
+    /// <summary>Встряхивает levelUpPrompt как reject-эффект (аналог ShakeLabels в квесте).</summary>
+    private IEnumerator ShakePrompt()
+    {
+        if (levelUpPrompt == null) yield break;
+        _promptShaking = true;
+
+        var rt = levelUpPrompt.GetComponent<RectTransform>();
+        if (rt == null) { _promptShaking = false; yield break; }
+
+        // Красим временно красным
+        var txt = levelUpPrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        Color originalColor = txt != null ? txt.color : Color.white;
+        if (txt != null) txt.color = Color.red;
+
+        Vector2 origin  = rt.anchoredPosition;
+        float   elapsed = 0f;
+
+        while (elapsed < promptShakeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float x = Random.Range(-promptShakeMagnitude, promptShakeMagnitude) *
+                      (1f - elapsed / promptShakeDuration);
+            rt.anchoredPosition = origin + new Vector2(x, 0f);
+            yield return null;
+        }
+
+        rt.anchoredPosition = origin;
+        if (txt != null) txt.color = originalColor;
+        _promptShaking = false;
+    }
+
 
     private void InitSlider()
     {

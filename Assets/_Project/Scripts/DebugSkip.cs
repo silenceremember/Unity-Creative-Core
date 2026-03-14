@@ -86,6 +86,12 @@ public class DebugSkip : MonoBehaviour
         else
             Debug.LogWarning("[DebugSkip] PaintingQuestManager.Instance is null!");
 
+        // Сразу показываем таймер и кликер (F3 = полный дебаг-режим)
+        if (ExplorationManager.Instance != null)
+            ExplorationManager.Instance.DebugShowTimerAndClicker();
+        else
+            Debug.LogWarning("[DebugSkip] ExplorationManager.Instance is null!");
+
         Debug.Log("[DebugSkip] F3 → Quest");
     }
 

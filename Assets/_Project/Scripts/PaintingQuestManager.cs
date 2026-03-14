@@ -75,6 +75,17 @@ public class PaintingQuestManager : MonoBehaviour
 
     private PaintingInteractable _nearPainting; // ближайшая (для E-prompt)
 
+    // Антиспам — задержка после диалога перед следующим E
+    private float _eBlockedUntil  = 0f;
+    private const float ESpamCooldown = 0.5f;
+
+    [Header("Reject анимация E-подсказки")]
+    [Tooltip("Амплитуда встряски E-промпта (пиксели)")]
+    public float ePromptShakeMagnitude = 10f;
+    [Tooltip("Длительность встряски (сек)")]
+    public float ePromptShakeDuration  = 0.35f;
+    private bool _ePromptShaking = false;
+
     // ── lifecycle ─────────────────────────────────────────────────────────
 
     void Awake() => Instance = this;
@@ -127,7 +138,21 @@ public class PaintingQuestManager : MonoBehaviour
 
         var kb = UnityEngine.InputSystem.Keyboard.current;
         if (kb != null && kb.eKey.wasPressedThisFrame)
+        {
+            // Блокируем E с reject-эффектом ТОЛЬКО во время диалога триггера A/B
+            bool triggerDialogue = ExplorationManager.Instance != null &&
+                                   ExplorationManager.Instance.TriggerDialoguePlaying;
+
+            if (triggerDialogue)
+            {
+                Debug.Log("[PaintingQuestManager] E заблокирован: идёт диалог триггера A/B.");
+                if (!_ePromptShaking && ePrompt != null)
+                    StartCoroutine(ShakeEPrompt());
+                return;
+            }
+            _eBlockedUntil = Time.unscaledTime + ESpamCooldown;
             InteractPainting(_nearPainting);
+        }
     }
 
     // ── Public API ────────────────────────────────────────────────────────
@@ -363,5 +388,37 @@ public class PaintingQuestManager : MonoBehaviour
             yield return null;
         }
         groupRT.localScale = originScale;
+    }
+
+    // ── Reject-встряска E-подсказки ───────────────────────────────────────
+
+    private IEnumerator ShakeEPrompt()
+    {
+        if (ePrompt == null) yield break;
+        _ePromptShaking = true;
+
+        var rt = ePrompt.GetComponent<RectTransform>();
+        if (rt == null) { _ePromptShaking = false; yield break; }
+
+        // Красим текст временно красным
+        var txt = ePrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        Color originalColor = txt != null ? txt.color : Color.white;
+        if (txt != null) txt.color = Color.red;
+
+        Vector2 origin  = rt.anchoredPosition;
+        float   elapsed = 0f;
+
+        while (elapsed < ePromptShakeDuration)
+        {
+            elapsed += Time.deltaTime;
+            float x = Random.Range(-ePromptShakeMagnitude, ePromptShakeMagnitude) *
+                      (1f - elapsed / ePromptShakeDuration);
+            rt.anchoredPosition = origin + new Vector2(x, 0f);
+            yield return null;
+        }
+
+        rt.anchoredPosition = origin;
+        if (txt != null) txt.color = originalColor;
+        _ePromptShaking = false;
     }
 }
