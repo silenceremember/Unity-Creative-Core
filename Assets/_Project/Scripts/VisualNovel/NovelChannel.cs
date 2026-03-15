@@ -15,4 +15,8 @@ public class NovelChannel : ScriptableObject
     /// <summary>Стреляет когда новелла полностью завершена</summary>
     public event Action OnNovelCompleted;
     public void NotifyCompleted() => OnNovelCompleted?.Invoke();
+
+    /// <summary>Вызови чтобы принудительно прервать новеллу (например из меню паузы)</summary>
+    public event Action OnNovelAbortRequested;
+    public void RaiseAbort() => OnNovelAbortRequested?.Invoke();
 }

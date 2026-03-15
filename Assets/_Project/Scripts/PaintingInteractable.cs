@@ -1,5 +1,6 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
-using System.Collections;
 
 /// <summary>
 /// Вешается на дочерний GameObject с trigger-коллайдером рядом с картиной.
@@ -82,24 +83,7 @@ public class PaintingInteractable : MonoBehaviour
         _col.enabled = false;
 
         if (paintingTransform != null)
-            StartCoroutine(SnapCoroutine());
-    }
-
-    private IEnumerator SnapCoroutine()
-    {
-        Quaternion start  = paintingTransform.localRotation;
-        Quaternion target = Quaternion.Euler(correctLocalEuler);
-        float elapsed     = 0f;
-
-        while (elapsed < snapDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t  = Mathf.SmoothStep(0f, 1f, elapsed / snapDuration);
-            paintingTransform.localRotation = Quaternion.Slerp(start, target, t);
-            yield return null;
-        }
-        paintingTransform.localRotation = target;
-        Debug.Log($"[PaintingInteractable] '{paintingTransform.name}' snapped.");
+            SnapToAsync(Quaternion.Euler(correctLocalEuler), snapDuration, destroyCancellationToken).Forget();
     }
 
     /// <summary>Возвращает картину в начальное (наклонённое) положение и сбрасывает флаг.</summary>
@@ -108,20 +92,27 @@ public class PaintingInteractable : MonoBehaviour
         IsUsed = false;
         _col.enabled = true;
         if (paintingTransform != null)
-            StartCoroutine(SnapTo(_initialRotation, duration));
+            SnapToAsync(_initialRotation, duration, destroyCancellationToken).Forget();
     }
 
-    private IEnumerator SnapTo(Quaternion target, float dur)
+    private async UniTask SnapToAsync(Quaternion target, float dur, CancellationToken ct)
     {
         Quaternion start = paintingTransform.localRotation;
-        float elapsed   = 0f;
-        while (elapsed < dur)
+        float elapsed    = 0f;
+
+        try
         {
-            elapsed += Time.deltaTime;
-            float t  = Mathf.SmoothStep(0f, 1f, elapsed / dur);
-            paintingTransform.localRotation = Quaternion.Slerp(start, target, t);
-            yield return null;
+            while (elapsed < dur)
+            {
+                ct.ThrowIfCancellationRequested();
+                elapsed += Time.deltaTime;
+                float t  = Mathf.SmoothStep(0f, 1f, elapsed / dur);
+                paintingTransform.localRotation = Quaternion.Slerp(start, target, t);
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
+            paintingTransform.localRotation = target;
+            Debug.Log($"[PaintingInteractable] '{paintingTransform.name}' snapped.");
         }
-        paintingTransform.localRotation = target;
+        catch (System.OperationCanceledException) { }
     }
 }

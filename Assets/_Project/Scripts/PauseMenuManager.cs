@@ -6,9 +6,9 @@ using UnityEngine.UI;
 /// <summary>
 /// ESC-меню паузы.
 ///
-/// Открывается по ESC только в состояниях Gameplay / Quest
-/// (не работает в Menu, IntroCrawl, VisualNovel, Final,
-///  а также когда открыт LevelUpCanvas).
+/// Открывается по ESC во всех состояниях кроме Menu, IntroCrawl и Final.
+/// В режиме VisualNovel ESC тоже работает — позволяет выйти в главное меню,
+/// прерывая течение новеллы через NovelChannel.RaiseAbort().
 ///
 /// Time.timeScale = 0 пока пауза открыта.
 /// </summary>
@@ -26,7 +26,6 @@ public class PauseMenuManager : MonoBehaviour
     [Tooltip("AudioMixer для управления громкостью")]
     public AudioMixer audioMixer;
 
-
     [Tooltip("Имя exposed parameter (тот же что в SettingsMenuCanvas)")]
     public string exposedParam = "Master";
 
@@ -43,6 +42,10 @@ public class PauseMenuManager : MonoBehaviour
 
     [Header("GameState")]
     public GameStateChannel gameStateChannel;
+
+    [Header("Novel")]
+    [Tooltip("Novel Channel — нужен чтобы прервать новеллу при выходе в меню")]
+    public NovelChannel novelChannel;
 
     // ─── Private ─────────────────────────────────────────────────────────────
 
@@ -93,10 +96,9 @@ public class PauseMenuManager : MonoBehaviour
         var kb = UnityEngine.InputSystem.Keyboard.current;
         if (kb == null || !kb.escapeKey.wasPressedThisFrame) return;
 
-        // Запрещённые состояния: меню, кроул, новелла, финал
-        if (_curState == GameState.Menu        ||
-            _curState == GameState.IntroCrawl  ||
-            _curState == GameState.VisualNovel ||
+        // Запрещённые состояния: главное меню, кроул, финал
+        if (_curState == GameState.Menu       ||
+            _curState == GameState.IntroCrawl ||
             _curState == GameState.Final)
             return;
 
@@ -118,8 +120,7 @@ public class PauseMenuManager : MonoBehaviour
         if (_isPaused &&
             (state == GameState.Final      ||
              state == GameState.Menu       ||
-             state == GameState.IntroCrawl ||
-             state == GameState.VisualNovel))
+             state == GameState.IntroCrawl))
         {
             ClosePause();
         }
@@ -140,6 +141,18 @@ public class PauseMenuManager : MonoBehaviour
         _isPaused = false;
 
         SceneManager.LoadScene(0);
+    }
+
+    /// <summary>
+    /// Выйти в главное меню из новеллы.
+    /// Прерывает новеллу через NovelChannel, затем загружает сцену 0.
+    /// Можно привязать к кнопке «В главное меню» вместо GoToMainMenu,
+    /// если хочется единой кнопки — она работает корректно в любом состоянии.
+    /// </summary>
+    public void GoToMainMenuFromNovel()
+    {
+        novelChannel?.RaiseAbort();
+        GoToMainMenu();
     }
 
     /// <summary>Полный выход из игры.</summary>
@@ -214,9 +227,11 @@ public class PauseMenuManager : MonoBehaviour
         if (pauseMenuCanvas != null)
             pauseMenuCanvas.SetActive(false);
 
-        // Включаем PlayerController обратно — его OnEnable() автоматически
-        // блокирует курсор (Locked/invisible) для gameplay.
-        if (PlayerController.Instance != null && !PlayerController.Instance.enabled)
+        // Включаем PlayerController обратно только если мы в Gameplay/Quest,
+        // но НЕ в VisualNovel — там PlayerController должен оставаться выключенным,
+        // иначе курсор спрячется и управление перейдёт игроку от первого лица.
+        if (_curState != GameState.VisualNovel &&
+            PlayerController.Instance != null && !PlayerController.Instance.enabled)
             PlayerController.Instance.enabled = true;
 
         Debug.Log("[PauseMenuManager] Resumed.");

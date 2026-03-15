@@ -1,4 +1,6 @@
-using System.Collections;
+using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -60,8 +62,7 @@ public class IntroCrawl : MonoBehaviour
     [Tooltip("SO-канал состояний игры")]
     public GameStateChannel gameStateChannel;
 
-    private Coroutine _crawl;
-    private Coroutine _blink;
+    private CancellationTokenSource _cts;
     private Vector3 _savedPos;
     private Quaternion _savedRot;
     private bool _isHolding;
@@ -72,105 +73,132 @@ public class IntroCrawl : MonoBehaviour
         if (crawlRoot != null) crawlRoot.SetActive(false);
     }
 
+    void OnDestroy()
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+    }
+
     /// <summary>Запускает кроул</summary>
     public void Play()
     {
-        if (_crawl != null) return;
+        if (_cts != null) return; // уже запущен
+
         if (crawlRoot != null) crawlRoot.SetActive(true);
-        _crawl = StartCoroutine(DoCrawl());
+
+        _cts = new CancellationTokenSource();
+        DoCrawlAsync(_cts.Token).Forget();
     }
 
-    private IEnumerator DoCrawl()
+    private async UniTask DoCrawlAsync(CancellationToken ct)
     {
-        // Объявляем состояние IntroCrawl — GameStateListener скроет меню автоматически
-        gameStateChannel?.Raise(GameState.IntroCrawl);
-
-        // Телепортируем камеру к якорю
-        if (mainCamera != null && crawlAnchor != null)
+        try
         {
-            _savedPos = mainCamera.transform.position;
-            _savedRot = mainCamera.transform.rotation;
-            mainCamera.transform.position = crawlAnchor.position;
-            mainCamera.transform.rotation = crawlAnchor.rotation;
-        }
+            // Объявляем состояние IntroCrawl — GameStateListener скроет меню автоматически
+            gameStateChannel?.Raise(GameState.IntroCrawl);
 
-        // Переключаем аудио
-        if (sceneAudio != null) sceneAudio.Stop();
-        if (crawlMusic != null) crawlMusic.Play();
+            // Телепортируем камеру к якорю
+            if (mainCamera != null && crawlAnchor != null)
+            {
+                _savedPos = mainCamera.transform.position;
+                _savedRot = mainCamera.transform.rotation;
+                mainCamera.transform.position = crawlAnchor.position;
+                mainCamera.transform.rotation = crawlAnchor.rotation;
+            }
 
-        // Показываем иконку и запускаем мигание
-        if (skipIcon != null)
-        {
-            skipIcon.gameObject.SetActive(true);
-            _blink = StartCoroutine(BlinkIcon());
-        }
+            // Переключаем аудио
+            if (sceneAudio != null) sceneAudio.Stop();
+            if (crawlMusic != null) crawlMusic.Play();
 
-        // Стартовая позиция
-        Vector2 pos = textTransform.anchoredPosition;
-        pos.y = startY;
-        textTransform.anchoredPosition = pos;
+            // Показываем иконку и запускаем мигание
+            if (skipIcon != null)
+            {
+                skipIcon.gameObject.SetActive(true);
+                BlinkIconAsync(ct).Forget();
+            }
 
-        // Скроллим до конечной позиции
-        while (textTransform.anchoredPosition.y < endY)
-        {
-            var mouse = Mouse.current;
-            _isHolding = mouse != null && mouse.leftButton.isPressed;
-
-            float speed = _isHolding ? scrollSpeed * holdMultiplier : scrollSpeed;
-
-            // Ускоряем музыку при удержании
-            if (crawlMusic != null)
-                crawlMusic.pitch = _isHolding ? 2f : 1f;
-
-            pos = textTransform.anchoredPosition;
-            pos.y += speed * Time.deltaTime;
+            // Стартовая позиция
+            Vector2 pos = textTransform.anchoredPosition;
+            pos.y = startY;
             textTransform.anchoredPosition = pos;
-            yield return null;
+
+            // Скроллим до конечной позиции
+            while (textTransform.anchoredPosition.y < endY)
+            {
+                ct.ThrowIfCancellationRequested();
+
+                var mouse = Mouse.current;
+                _isHolding = mouse != null && mouse.leftButton.isPressed;
+
+                float speed = _isHolding ? scrollSpeed * holdMultiplier : scrollSpeed;
+
+                // Ускоряем музыку при удержании
+                if (crawlMusic != null)
+                    crawlMusic.pitch = _isHolding ? 2f : 1f;
+
+                pos = textTransform.anchoredPosition;
+                pos.y += speed * Time.deltaTime;
+                textTransform.anchoredPosition = pos;
+
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.Log("[IntroCrawl] Crawl cancelled.");
+        }
+        finally
+        {
+            // Cleanup (всегда, в том числе при отмене)
+            if (skipIcon != null) skipIcon.gameObject.SetActive(false);
+
+            if (crawlMusic != null) { crawlMusic.pitch = 1f; crawlMusic.Stop(); }
+            if (sceneAudio != null) sceneAudio.Play();
+
+            if (crawlRoot != null) crawlRoot.SetActive(false);
+
+            _cts?.Dispose();
+            _cts = null;
         }
 
-        // Останавливаем мигание
-        if (_blink != null) { StopCoroutine(_blink); _blink = null; }
-        if (skipIcon != null) skipIcon.gameObject.SetActive(false);
-
-        // Останавливаем музыку кроула, восстанавливаем аудио сцены
-        if (crawlMusic != null) crawlMusic.Stop();
-        if (sceneAudio != null) sceneAudio.Play();
-
-        // Кроул завершён
-        if (crawlRoot != null) crawlRoot.SetActive(false);
-        _crawl = null;
-
+        // Только если не отменили — передаём управление новелле
         Debug.Log("[IntroCrawl] Crawl complete. Handing off to VisualNovelManager.");
 
-        // Переключаем состояние — VisualNovelManager запустится сам через StartNovel
         gameStateChannel?.Raise(GameState.VisualNovel);
 
-        // На случай если VisualNovelManager не слушает канал — вызываем напрямую
         if (VisualNovelManager.Instance != null)
             VisualNovelManager.Instance.StartNovel();
         else
             Debug.LogWarning("[IntroCrawl] VisualNovelManager.Instance is null!");
     }
 
-    private IEnumerator BlinkIcon()
+    private async UniTask BlinkIconAsync(CancellationToken ct)
     {
-        Color baseColor = new Color(1f, 1f, 1f, 0.3f); // полупрозрачный белый
-        Color holdColor = Color.white;                    // яркий белый
+        Color baseColor = new Color(1f, 1f, 1f, 0.3f);
+        Color holdColor = Color.white;
 
-        while (true)
+        try
         {
-            if (_isHolding)
+            while (true)
             {
-                // Удерживают — яркий белый
-                skipIcon.color = holdColor;
+                ct.ThrowIfCancellationRequested();
+
+                if (_isHolding)
+                {
+                    skipIcon.color = holdColor;
+                }
+                else
+                {
+                    float t = Mathf.PingPong(Time.time * blinkSpeed, 1f);
+                    skipIcon.color = Color.Lerp(baseColor, holdColor, t);
+                }
+
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
             }
-            else
-            {
-                // Мигание: плавно 0.3 → 1 → 0.3
-                float t = Mathf.PingPong(Time.time * blinkSpeed, 1f);
-                skipIcon.color = Color.Lerp(baseColor, holdColor, t);
-            }
-            yield return null;
+        }
+        catch (OperationCanceledException)
+        {
+            // Нормально — завершаем вместе с основным кроулом
         }
     }
 }

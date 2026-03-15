@@ -1,5 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ public class PaintingQuestManager : MonoBehaviour
 {
     public static PaintingQuestManager Instance { get; private set; }
 
-    [Header("Картины (все 4 интерактабла)")] 
+    [Header("Картины (все 4 интерактабла)")]
     [Tooltip("Назначи все 4 PaintingInteractable — нужны для сброса после reject")]
     public PaintingInteractable[] interactables = new PaintingInteractable[4];
 
@@ -86,6 +87,9 @@ public class PaintingQuestManager : MonoBehaviour
     public float ePromptShakeDuration  = 0.35f;
     private bool _ePromptShaking = false;
 
+    // CancellationTokenSource для основного потока квеста
+    private CancellationTokenSource _questCts;
+
     // ── lifecycle ─────────────────────────────────────────────────────────
 
     void Awake() => Instance = this;
@@ -108,6 +112,12 @@ public class PaintingQuestManager : MonoBehaviour
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
     }
 
+    void OnDestroy()
+    {
+        _questCts?.Cancel();
+        _questCts?.Dispose();
+    }
+
     private void OnNarratorCompleted(DialogueSequence completed)
     {
         // Когда пост-квест нарратив завершился — добавляем XP
@@ -123,6 +133,11 @@ public class PaintingQuestManager : MonoBehaviour
     public void DebugCompleteQuest()
     {
         if (!_questActive) StartQuest();
+
+        // Отменяем текущие задачи
+        _questCts?.Cancel();
+        _questCts?.Dispose();
+        _questCts = null;
 
         // Назначаем слоты по умолчанию и снапаем все картины
         for (int i = 0; i < interactables.Length && i < 4; i++)
@@ -147,8 +162,9 @@ public class PaintingQuestManager : MonoBehaviour
         _enteredCode  = correctCode;
         _resolved     = true;
         _questActive  = false;
-        StopAllCoroutines();
-        StartCoroutine(Resolve());
+
+        _questCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
+        ResolveAsync(_questCts.Token).Forget();
         Debug.Log("[DEBUG] Quest force-completed.");
     }
 #endif
@@ -167,7 +183,7 @@ public class PaintingQuestManager : MonoBehaviour
             if (triggerDialogue)
             {
                 if (!_ePromptShaking && ePrompt != null)
-                    StartCoroutine(ShakeEPrompt());
+                    ShakeEPromptAsync(destroyCancellationToken).Forget();
                 return;
             }
             _eBlockedUntil = Time.unscaledTime + ESpamCooldown;
@@ -256,79 +272,88 @@ public class PaintingQuestManager : MonoBehaviour
 
         // После 4-го нажатия — проверяем
         if (_pressCount >= 4)
-            StartCoroutine(Resolve());
+        {
+            _questCts?.Cancel();
+            _questCts?.Dispose();
+            _questCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
+            ResolveAsync(_questCts.Token).Forget();
+        }
     }
 
     // ── Resolve ───────────────────────────────────────────────────────────
 
-    private IEnumerator Resolve()
+    private async UniTask ResolveAsync(CancellationToken ct)
     {
         _resolved    = true;
         _questActive = false;
 
-        yield return new WaitForSeconds(0.3f);
-
-        bool accepted = _enteredCode == correctCode;
-        Debug.Log($"[PaintingQuestManager] Code '{_enteredCode}' vs '{correctCode}' → {(accepted ? "ACCEPT" : "REJECT")}");
-
-        Color resultColor = accepted ? colorAccept : colorReject;
-
-        foreach (var lbl in pictureLabels)
-            if (lbl != null)
-            {
-                lbl.color = resultColor;
-                lbl.fontStyle &= ~FontStyles.Strikethrough;
-            }
-
-        if (accepted)
+        try
         {
-            yield return StartCoroutine(PulseLabels());
+            await UniTask.Delay(System.TimeSpan.FromSeconds(0.3f), cancellationToken: ct);
 
-            // Запускаем пост-квест нарратив. XPLevelManager добавит XP когда нарратор
-            // дойдёт до нужной реплики (через activateObject или из XPLevelManager напрямую).
-            if (seqPostQuest != null)
-                narratorChannel?.Raise(seqPostQuest);
-            else
-                XPLevelManager.Instance?.AddXP(XPLevelManager.Instance != null ? XPLevelManager.Instance.questRewardXP : 1000);
-        }
-        else
-        {
-            yield return StartCoroutine(ShakeLabels());
+            bool accepted = _enteredCode == correctCode;
+            Debug.Log($"[PaintingQuestManager] Code '{_enteredCode}' vs '{correctCode}' → {(accepted ? "ACCEPT" : "REJECT")}");
 
-            _rejectCount++;
-            Debug.Log($"[PaintingQuestManager] Reject #{_rejectCount}");
+            Color resultColor = accepted ? colorAccept : colorReject;
 
-            // Реплика-подсказка рассказчика
-            int rejectIdx = _rejectCount - 1;
-            if (rejectDialogues != null && rejectIdx < rejectDialogues.Length && rejectDialogues[rejectIdx] != null)
-                narratorChannel?.Raise(rejectDialogues[rejectIdx]);
+            foreach (var lbl in pictureLabels)
+                if (lbl != null)
+                {
+                    lbl.color = resultColor;
+                    lbl.fontStyle &= ~FontStyles.Strikethrough;
+                }
 
-            if (_rejectCount >= 5)
+            if (accepted)
             {
-                // 5-й reject: рассказчик решает квест за игрока после диалога
-                StartCoroutine(AutoSolveAfterDialogue());
+                await PulseLabelsAsync(ct);
+
+                // Запускаем пост-квест нарратив. XPLevelManager добавит XP когда нарратор
+                // дойдёт до нужной реплики (через activateObject или из XPLevelManager напрямую).
+                if (seqPostQuest != null)
+                    narratorChannel?.Raise(seqPostQuest);
+                else
+                    XPLevelManager.Instance?.AddXP(XPLevelManager.Instance != null ? XPLevelManager.Instance.questRewardXP : 1000);
             }
             else
             {
-                yield return new WaitForSeconds(0.8f);
-                DoReset();
+                await ShakeLabelsAsync(ct);
+
+                _rejectCount++;
+                Debug.Log($"[PaintingQuestManager] Reject #{_rejectCount}");
+
+                // Реплика-подсказка рассказчика
+                int rejectIdx = _rejectCount - 1;
+                if (rejectDialogues != null && rejectIdx < rejectDialogues.Length && rejectDialogues[rejectIdx] != null)
+                    narratorChannel?.Raise(rejectDialogues[rejectIdx]);
+
+                if (_rejectCount >= 5)
+                {
+                    // 5-й reject: рассказчик решает квест за игрока после диалога
+                    await AutoSolveAfterDialogueAsync(ct);
+                }
+                else
+                {
+                    await UniTask.Delay(System.TimeSpan.FromSeconds(0.8f), cancellationToken: ct);
+                    DoReset();
+                }
             }
         }
+        catch (System.OperationCanceledException) { }
     }
 
     // ── Auto-solve on 5th reject ──────────────────────────────────────────
 
-    private IEnumerator AutoSolveAfterDialogue()
+    private async UniTask AutoSolveAfterDialogueAsync(CancellationToken ct)
     {
         // Ждём пока нарратор закончит реплику (5-й reject ~5 секунд)
-        yield return new WaitForSeconds(5f);
+        await UniTask.Delay(System.TimeSpan.FromSeconds(5f), cancellationToken: ct);
 
         // Возвращаем картины в наклонённое положение
         foreach (var interactable in interactables)
             if (interactable != null)
                 interactable.ResetPainting(0.4f);
 
-        yield return new WaitForSeconds(0.6f);
+        await UniTask.Delay(System.TimeSpan.FromSeconds(0.6f), cancellationToken: ct);
 
         // Сбрасываем состояние
         _resolved    = false;
@@ -372,53 +397,55 @@ public class PaintingQuestManager : MonoBehaviour
 
     // ── Animations ────────────────────────────────────────────────────────
 
-    private IEnumerator ShakeLabels()
+    private async UniTask ShakeLabelsAsync(CancellationToken ct)
     {
-        if (pictureLabels.Length == 0 || pictureLabels[0] == null) yield break;
+        if (pictureLabels.Length == 0 || pictureLabels[0] == null) return;
         var groupRT = pictureLabels[0].transform.parent as RectTransform;
-        if (groupRT == null) yield break;
+        if (groupRT == null) return;
 
         Vector2 origin = groupRT.anchoredPosition;
         float elapsed  = 0f;
 
         while (elapsed < shakeDuration)
         {
+            ct.ThrowIfCancellationRequested();
             elapsed += Time.deltaTime;
             float x = Random.Range(-shakeMagnitude, shakeMagnitude) * (1f - elapsed / shakeDuration);
             groupRT.anchoredPosition = origin + new Vector2(x, 0f);
-            yield return null;
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }
         groupRT.anchoredPosition = origin;
     }
 
-    private IEnumerator PulseLabels()
+    private async UniTask PulseLabelsAsync(CancellationToken ct)
     {
-        if (pictureLabels.Length == 0 || pictureLabels[0] == null) yield break;
+        if (pictureLabels.Length == 0 || pictureLabels[0] == null) return;
         var groupRT = pictureLabels[0].transform.parent as RectTransform;
-        if (groupRT == null) yield break;
+        if (groupRT == null) return;
 
         Vector3 originScale = groupRT.localScale;
         float elapsed       = 0f;
 
         while (elapsed < pulseDuration)
         {
+            ct.ThrowIfCancellationRequested();
             elapsed += Time.deltaTime;
             float t  = Mathf.Sin(elapsed / pulseDuration * Mathf.PI);   // 0→1→0
             groupRT.localScale = originScale * (1f + 0.12f * t);
-            yield return null;
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }
         groupRT.localScale = originScale;
     }
 
     // ── Reject-встряска E-подсказки ───────────────────────────────────────
 
-    private IEnumerator ShakeEPrompt()
+    private async UniTask ShakeEPromptAsync(CancellationToken ct)
     {
-        if (ePrompt == null) yield break;
+        if (ePrompt == null) return;
         _ePromptShaking = true;
 
         var rt = ePrompt.GetComponent<RectTransform>();
-        if (rt == null) { _ePromptShaking = false; yield break; }
+        if (rt == null) { _ePromptShaking = false; return; }
 
         // Красим текст временно красным
         var txt = ePrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
@@ -428,14 +455,19 @@ public class PaintingQuestManager : MonoBehaviour
         Vector2 origin  = rt.anchoredPosition;
         float   elapsed = 0f;
 
-        while (elapsed < ePromptShakeDuration)
+        try
         {
-            elapsed += Time.deltaTime;
-            float x = Random.Range(-ePromptShakeMagnitude, ePromptShakeMagnitude) *
-                      (1f - elapsed / ePromptShakeDuration);
-            rt.anchoredPosition = origin + new Vector2(x, 0f);
-            yield return null;
+            while (elapsed < ePromptShakeDuration)
+            {
+                ct.ThrowIfCancellationRequested();
+                elapsed += Time.deltaTime;
+                float x = Random.Range(-ePromptShakeMagnitude, ePromptShakeMagnitude) *
+                          (1f - elapsed / ePromptShakeDuration);
+                rt.anchoredPosition = origin + new Vector2(x, 0f);
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
         }
+        catch (System.OperationCanceledException) { }
 
         rt.anchoredPosition = origin;
         if (txt != null) txt.color = originalColor;

@@ -1,4 +1,5 @@
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -39,7 +40,7 @@ public class PaintingShiftController : MonoBehaviour
     public void ForceShift()
     {
         _triggered = false;   // сбрасываем флаг
-        StartCoroutine(DoShift());
+        DoShiftAsync(destroyCancellationToken).Forget();
         _triggered = true;
     }
 
@@ -48,15 +49,15 @@ public class PaintingShiftController : MonoBehaviour
         Debug.Log($"[PaintingShift] OnEnable — triggered={_triggered}, entries={paintings?.Length}");
         if (_triggered) return;
         _triggered = true;
-        StartCoroutine(DoShift());
+        DoShiftAsync(destroyCancellationToken).Forget();
     }
 
-    private IEnumerator DoShift()
+    private async UniTask DoShiftAsync(CancellationToken ct)
     {
         if (paintings == null || paintings.Length == 0)
         {
             Debug.LogWarning("[PaintingShift] paintings array is empty — назначь в Inspector!");
-            yield break;
+            return;
         }
 
         Debug.Log($"[PaintingShift] Starting shift of {paintings.Length} paintings");
@@ -69,14 +70,14 @@ public class PaintingShiftController : MonoBehaviour
                 continue;
             }
             Debug.Log($"[PaintingShift] Rotating '{paintings[i].painting.name}' → {paintings[i].targetLocalEuler}");
-            StartCoroutine(RotatePainting(paintings[i].painting, paintings[i].targetLocalEuler));
+            RotatePaintingAsync(paintings[i].painting, paintings[i].targetLocalEuler, ct).Forget();
 
             if (stagger > 0f)
-                yield return new WaitForSeconds(stagger);
+                await UniTask.Delay(System.TimeSpan.FromSeconds(stagger), cancellationToken: ct);
         }
     }
 
-    private IEnumerator RotatePainting(Transform t, Vector3 targetEuler)
+    private async UniTask RotatePaintingAsync(Transform t, Vector3 targetEuler, CancellationToken ct)
     {
         Quaternion startRot = t.localRotation;
         Quaternion endRot   = Quaternion.Euler(targetEuler);
@@ -84,16 +85,17 @@ public class PaintingShiftController : MonoBehaviour
         if (duration <= 0f)
         {
             t.localRotation = endRot;
-            yield break;
+            return;
         }
 
         float elapsed = 0f;
         while (elapsed < duration)
         {
+            ct.ThrowIfCancellationRequested();
             elapsed += Time.deltaTime;
             float p = Mathf.SmoothStep(0f, 1f, elapsed / duration);
             t.localRotation = Quaternion.Slerp(startRot, endRot, p);
-            yield return null;
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }
         t.localRotation = endRot;
         Debug.Log($"[PaintingShift] Done rotating '{t.name}'");

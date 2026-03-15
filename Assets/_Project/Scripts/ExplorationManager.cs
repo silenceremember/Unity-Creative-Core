@@ -1,4 +1,5 @@
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
@@ -60,9 +61,8 @@ public class ExplorationManager : MonoBehaviour
     public bool TriggerDialoguePlaying => _triggerDialoguePlaying;
     private bool _triggerDialoguePlaying;
 
-    // Ambient: tracking for OnAmbientChainCompleted (no longer used for restoration)
-    // Decorative timer
-    private Coroutine        _decorativeCo;
+    // Decorative timer — CancellationTokenSource для перезапуска
+    private CancellationTokenSource _timerCts;
 
     // Clicker
     private bool             _clickerActive;
@@ -92,6 +92,12 @@ public class ExplorationManager : MonoBehaviour
             gameStateChannel.OnStateChanged -= OnStateChanged;
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
+    }
+
+    void OnDestroy()
+    {
+        _timerCts?.Cancel();
+        _timerCts?.Dispose();
     }
 
     void Update()
@@ -194,8 +200,11 @@ public class ExplorationManager : MonoBehaviour
         // Специальный сегмент: таймер появляется после его завершения
         if (completed == seqTimerTrigger && timerLabel != null)
         {
-            if (_decorativeCo != null) StopCoroutine(_decorativeCo);
-            _decorativeCo = StartCoroutine(DecorativeCountdown());
+            // Перезапускаем таймер с новым токеном
+            _timerCts?.Cancel();
+            _timerCts?.Dispose();
+            _timerCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
+            DecorativeCountdownAsync(_timerCts.Token).Forget();
         }
 
         // Специальный сегмент: кликер появляется после его завершения
@@ -231,25 +240,29 @@ public class ExplorationManager : MonoBehaviour
 
     // ── Decorative Countdown ─────────────────────────────────────────
 
-    private IEnumerator DecorativeCountdown()
+    private async UniTask DecorativeCountdownAsync(CancellationToken ct)
     {
         timerLabel.gameObject.SetActive(true);
         float elapsed = 0f;
 
-        while (true)
+        try
         {
-            float display = decorativeTimerDuration - elapsed;
-            bool negative = display < 0f;
-            float abs = Mathf.Abs(display);
-            int minutes = Mathf.FloorToInt(abs / 60f);
-            int seconds = Mathf.FloorToInt(abs % 60f);
-            timerLabel.text = negative
-                ? $"-{minutes:0}:{seconds:00}"
-                : $"{minutes:0}:{seconds:00}";
+            while (true)
+            {
+                float display = decorativeTimerDuration - elapsed;
+                bool negative = display < 0f;
+                float abs = Mathf.Abs(display);
+                int minutes = Mathf.FloorToInt(abs / 60f);
+                int seconds = Mathf.FloorToInt(abs % 60f);
+                timerLabel.text = negative
+                    ? $"-{minutes:0}:{seconds:00}"
+                    : $"{minutes:0}:{seconds:00}";
 
-            yield return new WaitForSeconds(1f);
-            elapsed += 1f;
+                await UniTask.Delay(System.TimeSpan.FromSeconds(1f), cancellationToken: ct);
+                elapsed += 1f;
+            }
         }
+        catch (System.OperationCanceledException) { }
     }
 
     // ── Clicker ───────────────────────────────────────────────────────
@@ -269,8 +282,10 @@ public class ExplorationManager : MonoBehaviour
     {
         if (timerLabel != null && !timerLabel.gameObject.activeSelf)
         {
-            if (_decorativeCo != null) StopCoroutine(_decorativeCo);
-            _decorativeCo = StartCoroutine(DecorativeCountdown());
+            _timerCts?.Cancel();
+            _timerCts?.Dispose();
+            _timerCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
+            DecorativeCountdownAsync(_timerCts.Token).Forget();
         }
 
         if (clickerLabel != null && !clickerLabel.gameObject.activeSelf)

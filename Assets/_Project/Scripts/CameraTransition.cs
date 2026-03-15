@@ -1,4 +1,5 @@
-using System.Collections;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 /// <summary>
@@ -22,7 +23,7 @@ public class CameraTransition : MonoBehaviour
 
     // ──────────────────────────────────────────
     private Transform _cam;
-    private Coroutine _current;
+    private CancellationTokenSource _currentCts;
     private Vector3 _mainPos;
     private Quaternion _mainRot;
 
@@ -43,6 +44,12 @@ public class CameraTransition : MonoBehaviour
         }
     }
 
+    void OnDestroy()
+    {
+        _currentCts?.Cancel();
+        _currentCts?.Dispose();
+    }
+
     // ──── Public API ────────────────────────────
 
     public void GoToSettings()
@@ -60,28 +67,36 @@ public class CameraTransition : MonoBehaviour
 
     private void StartTransition(Vector3 targetPos, Quaternion targetRot)
     {
-        if (_current != null) StopCoroutine(_current);
-        _current = StartCoroutine(DoTransition(targetPos, targetRot));
+        // Отменяем предыдущую анимацию
+        _currentCts?.Cancel();
+        _currentCts?.Dispose();
+        _currentCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
+
+        DoTransitionAsync(targetPos, targetRot, _currentCts.Token).Forget();
     }
 
-    private IEnumerator DoTransition(Vector3 targetPos, Quaternion targetRot)
+    private async UniTask DoTransitionAsync(Vector3 targetPos, Quaternion targetRot, CancellationToken ct)
     {
         Vector3 startPos = _cam.position;
         Quaternion startRot = _cam.rotation;
         float elapsed = 0f;
 
-        while (elapsed < duration)
+        try
         {
-            elapsed += Time.deltaTime;
-            float t = curve.Evaluate(Mathf.Clamp01(elapsed / duration));
-            _cam.position = Vector3.Lerp(startPos, targetPos, t);
-            _cam.rotation = Quaternion.Lerp(startRot, targetRot, t);
-            yield return null;
-        }
+            while (elapsed < duration)
+            {
+                ct.ThrowIfCancellationRequested();
+                elapsed += Time.deltaTime;
+                float t = curve.Evaluate(Mathf.Clamp01(elapsed / duration));
+                _cam.position = Vector3.Lerp(startPos, targetPos, t);
+                _cam.rotation = Quaternion.Lerp(startRot, targetRot, t);
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
 
-        // Финальный снэп, чтобы не было погрешности
-        _cam.position = targetPos;
-        _cam.rotation = targetRot;
-        _current = null;
+            // Финальный снэп, чтобы не было погрешности
+            _cam.position = targetPos;
+            _cam.rotation = targetRot;
+        }
+        catch (System.OperationCanceledException) { }
     }
 }

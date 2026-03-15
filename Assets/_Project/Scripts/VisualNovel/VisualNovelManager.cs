@@ -1,4 +1,6 @@
-using System.Collections;
+using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +15,8 @@ using UnityEngine.UI;
 ///     б) После рассказчика (или сразу если его нет) — плавно перейти к новому anchor если cameraIndex изменился, показать NovelCanvas, напечатать реплику
 ///     в) Повторять до конца списка
 ///  3. По окончании — скрыть NovelCanvas, вызвать NovelChannel.NotifyCompleted()
+///
+///  Поддерживает прерывание через CancellationToken (например из меню паузы).
 /// </summary>
 public class VisualNovelManager : MonoBehaviour
 {
@@ -66,8 +70,16 @@ public class VisualNovelManager : MonoBehaviour
     private int _lineIndex = -1;
     private bool _waitingForNarrator = false;
     private bool _typewriterRunning = false;
-    private Coroutine _typewriter;
-    private Coroutine _cameraBlend;
+
+    // UniTask cancellation
+    private CancellationTokenSource _cts;
+
+    // Сигнал нажатия «Далее» — UniTask ждёт этого флага
+    private bool _nextPressed = false;
+
+    // Ускорение typewriter — нажали «Далее» пока он ещё печатает
+    private bool _skipTypewriter = false;
+
     private int _currentCameraIndex = -1;
 
     // ─────────────────────────────────────────────────────────
@@ -82,12 +94,16 @@ public class VisualNovelManager : MonoBehaviour
     {
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
+        if (novelChannel != null)
+            novelChannel.OnNovelAbortRequested += AbortNovel;
     }
 
     void OnDisable()
     {
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
+        if (novelChannel != null)
+            novelChannel.OnNovelAbortRequested -= AbortNovel;
     }
 
     // ─── Public API ───────────────────────────────────────────
@@ -109,146 +125,140 @@ public class VisualNovelManager : MonoBehaviour
 
         Debug.Log("[VisualNovelManager] Novel started.");
 
+        // Отменяем предыдущий токен на случай повторного запуска
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = new CancellationTokenSource();
+
         _lineIndex = 0;
         _currentCameraIndex = -1;
+        _waitingForNarrator = false;
+        _nextPressed = false;
+        _skipTypewriter = false;
 
-        // Мгновенная телепортация к первому anchor
-        SnapCamera(sequence.lines[0].cameraIndex);
+        RunNovelAsync(_cts.Token).Forget();
+    }
 
-        // Если у первой строки есть пролог-рассказчик — сначала он
-        if (sequence.lines[0].narratorSequenceBefore != null)
-        {
-            HideNovelCanvas();
-            TriggerNarrator(sequence.lines[0].narratorSequenceBefore);
-            _waitingForNarrator = true;
-            // ShowCurrentLine будет вызван из OnNarratorCompleted
-        }
-        else
-        {
-            ShowCurrentLine();
-        }
+    /// <summary>Принудительно прерывает новеллу (вызывается из NovelChannel или напрямую).</summary>
+    public void AbortNovel()
+    {
+        _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = null;
+        HideNovelCanvas();
+        Debug.Log("[VisualNovelManager] Novel aborted.");
     }
 
     /// <summary>Кнопка «Далее»</summary>
     public void OnNextButton()
     {
-        // Если typewriter ещё не дописал — сразу показать весь текст
         if (_typewriterRunning)
         {
-            CompleteTypewriter();
+            _skipTypewriter = true;
             return;
         }
 
-        AdvanceLine();
+        _nextPressed = true;
     }
 
-    // ─── Line Logic ───────────────────────────────────────────
+    // ─── Main Loop ────────────────────────────────────────────
 
-    private void AdvanceLine()
+    private async UniTask RunNovelAsync(CancellationToken ct)
     {
-        _lineIndex++;
-
-        if (sequence == null || _lineIndex >= sequence.lines.Length)
+        try
         {
-            EndNovel();
-            return;
-        }
+            // Мгновенная телепортация к первому anchor
+            SnapCamera(sequence.lines[0].cameraIndex);
 
-        var line = sequence.lines[_lineIndex];
-
-        if (line.narratorSequenceBefore != null)
-        {
-            // Скрыть NovelCanvas
-            HideNovelCanvas();
-            _waitingForNarrator = true;
-
-            // Плавно сдвинуть камеру, затем запустить рассказчика
-            if (line.cameraIndex != _currentCameraIndex)
+            // Если у первой строки есть пролог-рассказчик — сначала он
+            if (sequence.lines[0].narratorSequenceBefore != null)
             {
-                StartCoroutine(BlendCamera(line.cameraIndex, () =>
+                HideNovelCanvas();
+                TriggerNarrator(sequence.lines[0].narratorSequenceBefore);
+                _waitingForNarrator = true;
+                await WaitForNarratorAsync(ct);
+            }
+
+            await ShowLineAndWaitAsync(ct);
+
+            // Основной цикл
+            while (true)
+            {
+                // Ждём нажатия «Далее»
+                _nextPressed = false;
+                await UniTask.WaitUntil(() => _nextPressed, cancellationToken: ct);
+                _nextPressed = false;
+
+                _lineIndex++;
+
+                if (sequence == null || _lineIndex >= sequence.lines.Length)
                 {
+                    EndNovel();
+                    return;
+                }
+
+                var line = sequence.lines[_lineIndex];
+
+                if (line.narratorSequenceBefore != null)
+                {
+                    HideNovelCanvas();
+                    _waitingForNarrator = true;
+
+                    // Плавный переход камеры до рассказчика
+                    if (line.cameraIndex != _currentCameraIndex)
+                        await BlendCameraAsync(line.cameraIndex, ct);
+
                     TriggerNarrator(line.narratorSequenceBefore);
-                }));
+                    await WaitForNarratorAsync(ct);
+                }
+
+                await ShowLineAndWaitAsync(ct);
             }
-            else
-            {
-                TriggerNarrator(line.narratorSequenceBefore);
-            }
-            // Продолжение — в OnNarratorCompleted → ShowCurrentLine (камера уже на месте)
         }
-        else
+        catch (OperationCanceledException)
         {
-            ShowCurrentLine();
+            // Нормальная отмена (AbortNovel или выход в меню) — ничего не делаем
+            Debug.Log("[VisualNovelManager] RunNovel cancelled.");
         }
     }
 
-    private void ShowCurrentLine()
+    /// <summary>Показывает текущую реплику (с переходом камеры если нужно).</summary>
+    private async UniTask ShowLineAndWaitAsync(CancellationToken ct)
     {
         if (sequence == null || _lineIndex < 0 || _lineIndex >= sequence.lines.Length) return;
 
         var line = sequence.lines[_lineIndex];
 
-        // Переход камеры: мгновенно если индекс тот же (или самый первый snap уже был)
+        // Переход камеры
         if (line.cameraIndex != _currentCameraIndex)
         {
-            // Если это самый первый вызов — snap уже был в StartNovel, просто обновим индекс
-            // Иначе — плавный блендинг
             if (_currentCameraIndex == -1)
             {
+                // Первый вызов — snap уже был в StartNovel
                 _currentCameraIndex = line.cameraIndex;
             }
             else
             {
-                StartCoroutine(BlendCamera(line.cameraIndex, () =>
-                {
-                    DisplayLine(line);
-                }));
-                return;
+                await BlendCameraAsync(line.cameraIndex, ct);
             }
         }
 
-        DisplayLine(line);
+        await DisplayLineAsync(line, ct);
     }
 
-    private void DisplayLine(NovelLine line)
+    // ─── Line Display ─────────────────────────────────────────
+
+    private async UniTask DisplayLineAsync(NovelLine line, CancellationToken ct)
     {
         ShowNovelCanvas();
 
         if (speakerText != null) speakerText.text = line.speaker;
         if (lineText != null) lineText.text = "";
 
-        // Запуск typewriter
-        if (_typewriter != null) StopCoroutine(_typewriter);
         _typewriterRunning = true;
-        _typewriter = StartCoroutine(TypewriterCoroutine(line.text, () =>
-        {
-            _typewriterRunning = false;
-        }));
-    }
-
-    private void CompleteTypewriter()
-    {
-        if (_typewriter != null)
-        {
-            StopCoroutine(_typewriter);
-            _typewriter = null;
-        }
+        _skipTypewriter = false;
+        await TypewriterAsync(line.text, ct);
         _typewriterRunning = false;
-
-        // Написать весь текст сразу
-        if (_lineIndex >= 0 && _lineIndex < sequence.lines.Length)
-        {
-            if (lineText != null)
-                lineText.text = sequence.lines[_lineIndex].text;
-        }
-    }
-
-    private void EndNovel()
-    {
-        HideNovelCanvas();
-        novelChannel?.NotifyCompleted();
-        gameStateChannel?.Raise(GameState.Gameplay);
-        Debug.Log("[VisualNovelManager] Novel complete.");
     }
 
     // ─── Narrator ─────────────────────────────────────────────
@@ -258,12 +268,30 @@ public class VisualNovelManager : MonoBehaviour
         narratorChannel?.Raise(seq);
     }
 
+    private UniTaskCompletionSource _narratorTcs;
+
+    private UniTask WaitForNarratorAsync(CancellationToken ct)
+    {
+        _narratorTcs = new UniTaskCompletionSource();
+        return _narratorTcs.Task.AttachExternalCancellation(ct);
+    }
+
     private void OnNarratorCompleted(DialogueSequence completed)
     {
         if (!_waitingForNarrator) return;
         _waitingForNarrator = false;
+        _narratorTcs?.TrySetResult();
+        _narratorTcs = null;
+    }
 
-        ShowCurrentLine();
+    // ─── End / Cleanup ────────────────────────────────────────
+
+    private void EndNovel()
+    {
+        HideNovelCanvas();
+        novelChannel?.NotifyCompleted();
+        gameStateChannel?.Raise(GameState.Gameplay);
+        Debug.Log("[VisualNovelManager] Novel complete.");
     }
 
     // ─── Canvas ───────────────────────────────────────────────
@@ -293,21 +321,13 @@ public class VisualNovelManager : MonoBehaviour
         _currentCameraIndex = anchorIndex;
     }
 
-    /// <summary>Плавный переход камеры, потом callback</summary>
-    private IEnumerator BlendCamera(int anchorIndex, System.Action onDone)
+    /// <summary>Плавный переход камеры (async UniTask)</summary>
+    private async UniTask BlendCameraAsync(int anchorIndex, CancellationToken ct)
     {
-        if (mainCamera == null || anchorIndex < 0 || anchorIndex >= cameraAnchors.Length)
-        {
-            onDone?.Invoke();
-            yield break;
-        }
+        if (mainCamera == null || anchorIndex < 0 || anchorIndex >= cameraAnchors.Length) return;
 
         var anchor = cameraAnchors[anchorIndex];
-        if (anchor == null)
-        {
-            onDone?.Invoke();
-            yield break;
-        }
+        if (anchor == null) return;
 
         Vector3 startPos = mainCamera.transform.position;
         Quaternion startRot = mainCamera.transform.rotation;
@@ -315,32 +335,41 @@ public class VisualNovelManager : MonoBehaviour
 
         while (elapsed < blendDuration)
         {
+            ct.ThrowIfCancellationRequested();
             elapsed += Time.deltaTime;
             float t = blendCurve.Evaluate(Mathf.Clamp01(elapsed / blendDuration));
             mainCamera.transform.position = Vector3.Lerp(startPos, anchor.position, t);
             mainCamera.transform.rotation = Quaternion.Lerp(startRot, anchor.rotation, t);
-            yield return null;
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }
 
         mainCamera.transform.position = anchor.position;
         mainCamera.transform.rotation = anchor.rotation;
         _currentCameraIndex = anchorIndex;
-
-        onDone?.Invoke();
     }
 
     // ─── Typewriter ───────────────────────────────────────────
 
-    private IEnumerator TypewriterCoroutine(string text, System.Action onDone)
+    private async UniTask TypewriterAsync(string text, CancellationToken ct)
     {
-        if (lineText == null) yield break;
+        if (lineText == null) return;
+
+        int delay = Mathf.RoundToInt(1000f / charsPerSecond);
 
         foreach (char c in text)
         {
-            lineText.text += c;
-            yield return new WaitForSeconds(1f / charsPerSecond);
-        }
+            if (_skipTypewriter)
+            {
+                // Мгновенно дописать весь текст
+                lineText.text = text;
+                _skipTypewriter = false;
+                _typewriterRunning = false;
+                return;
+            }
 
-        onDone?.Invoke();
+            ct.ThrowIfCancellationRequested();
+            lineText.text += c;
+            await UniTask.Delay(delay, cancellationToken: ct);
+        }
     }
 }
