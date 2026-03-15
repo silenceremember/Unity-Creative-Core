@@ -1,13 +1,11 @@
 using UnityEngine;
 
 /// <summary>
-/// Одна реплика рассказчика. Сериализуется инлайн внутри DialogueSequence.
+/// Одна реплика диалога. Сериализуется инлайн внутри DialogueSequence.
 /// </summary>
 [System.Serializable]
 public class DialogueLine
 {
-    [Tooltip("Имя говорящего (Narrator, Husband, Wife...)")]
-    public string speaker = "Narrator";
 
     [TextArea(2, 6)]
     [Tooltip("Текст реплики")]

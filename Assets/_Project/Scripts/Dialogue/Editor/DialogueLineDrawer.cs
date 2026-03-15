@@ -12,7 +12,6 @@ public class DialogueLineDrawer : PropertyDrawer
     {
         EditorGUI.BeginProperty(position, label, property);
 
-        var speakerProp  = property.FindPropertyRelative("speaker");
         var textProp     = property.FindPropertyRelative("text");
         var durationProp = property.FindPropertyRelative("duration");
         var pauseProp    = property.FindPropertyRelative("pauseAfter");
@@ -24,10 +23,6 @@ public class DialogueLineDrawer : PropertyDrawer
         float lineH = EditorGUIUtility.singleLineHeight;
         float pad  = 2f;
 
-        // Speaker
-        Rect r = new Rect(position.x, y, w, lineH);
-        EditorGUI.PropertyField(r, speakerProp, new GUIContent("Speaker"));
-        y += lineH + pad;
 
         // Text — красный фон если > 54
         string text     = textProp.stringValue ?? "";
@@ -73,9 +68,8 @@ public class DialogueLineDrawer : PropertyDrawer
     {
         float lineH = EditorGUIUtility.singleLineHeight;
         float pad   = 2f;
-        // Speaker + Text(x3) + Counter + Duration/Pause + Audio + ActivateObject
-        return lineH + pad  // speaker
-             + lineH * 3 + pad  // text
+        // Text(x3) + Counter + Duration/Pause + Audio + ActivateObject
+        return lineH * 3 + pad  // text
              + lineH + pad  // counter
              + lineH + pad  // duration/pause
              + lineH + pad  // audio

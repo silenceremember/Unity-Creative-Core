@@ -127,7 +127,6 @@ public class NarratorManager : MonoBehaviour
 
         // Очищаем текст чтобы не было наложений
         if (lineText != null) lineText.text = "";
-        if (speakerText != null) speakerText.text = "";
         if (subtitleRoot != null) subtitleRoot.SetActive(false);
     }
 
@@ -208,7 +207,7 @@ public class NarratorManager : MonoBehaviour
         }
 
         if (subtitleRoot != null) subtitleRoot.SetActive(true);
-        if (speakerText != null) speakerText.text = line.speaker;
+        if (speakerText != null) speakerText.text = "";
         if (lineText != null)    lineText.text = "";
 
         // Печатаем по символам (P — мгновенно допечатать)

@@ -37,13 +37,13 @@ public static class DialogueAssetFactory
 
         seq.lines = new DialogueLine[]
         {
-            new DialogueLine { speaker = "Narrator", text = "О. Привет.",                                 pauseAfter = 0.8f },
-            new DialogueLine { speaker = "Narrator", text = "Ты нажал Играть.",                          pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "Это не сработает. Игра не закончена.",      pauseAfter = 1.3f },
-            new DialogueLine { speaker = "Narrator", text = "И вряд ли будет...",                        pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "Хотя... незавершённость придаёт шарм.",     pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "Наверное.",                                  pauseAfter = 0.8f },
-            new DialogueLine { speaker = "Narrator", text = "Попробуй поискать в Настройках.",           pauseAfter = 0.0f },
+            new DialogueLine { text = "О. Привет.",                                 pauseAfter = 0.8f },
+            new DialogueLine { text = "Ты нажал Играть.",                          pauseAfter = 1.0f },
+            new DialogueLine { text = "Это не сработает. Игра не закончена.",      pauseAfter = 1.3f },
+            new DialogueLine { text = "И вряд ли будет...",                        pauseAfter = 1.0f },
+            new DialogueLine { text = "Хотя... незавершённость придаёт шарм.",     pauseAfter = 1.0f },
+            new DialogueLine { text = "Наверное.",                                  pauseAfter = 0.8f },
+            new DialogueLine { text = "Попробуй поискать в Настройках.",           pauseAfter = 0.0f },
         };
         EditorUtility.SetDirty(seq);
     }
@@ -55,7 +55,7 @@ public static class DialogueAssetFactory
 
         seq.lines = new DialogueLine[]
         {
-            new DialogueLine { speaker = "Narrator", text = "Всё ещё не работает.", pauseAfter = 1.0f },
+            new DialogueLine { text = "Всё ещё не работает.", pauseAfter = 1.0f },
         };
         EditorUtility.SetDirty(seq);
     }
@@ -89,9 +89,9 @@ public static class DialogueAssetFactory
         seq.priority = 2;
         seq.lines = new DialogueLine[]
         {
-            new DialogueLine { speaker = "Narrator", text = "Телевизор включён.",            pauseAfter = 0.8f },
-            new DialogueLine { speaker = "Narrator", text = "Программа — атмосферный шум.",  pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "Жильцы скорее всего довольны.", pauseAfter = 0f   },
+            new DialogueLine { text = "Телевизор включён.",            pauseAfter = 0.8f },
+            new DialogueLine { text = "Программа — атмосферный шум.",  pauseAfter = 1.0f },
+            new DialogueLine { text = "Жильцы скорее всего довольны.", pauseAfter = 0f   },
         };
         EditorUtility.SetDirty(seq);
     }
@@ -102,9 +102,9 @@ public static class DialogueAssetFactory
         seq.priority = 2;
         seq.lines = new DialogueLine[]
         {
-            new DialogueLine { speaker = "Narrator", text = "Телевизор выключен.",            pauseAfter = 0.8f },
-            new DialogueLine { speaker = "Narrator", text = "Жильцы чуть менее счастливы.",   pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "Может, и нет.",                  pauseAfter = 0f   },
+            new DialogueLine { text = "Телевизор выключен.",            pauseAfter = 0.8f },
+            new DialogueLine { text = "Жильцы чуть менее счастливы.",   pauseAfter = 1.0f },
+            new DialogueLine { text = "Может, и нет.",                  pauseAfter = 0f   },
         };
         EditorUtility.SetDirty(seq);
     }
@@ -115,12 +115,12 @@ public static class DialogueAssetFactory
         seq.priority = 2;
         seq.lines = new DialogueLine[]
         {
-            new DialogueLine { speaker = "Narrator", text = "Переключаемся.",                 pauseAfter = 0.8f },
-            new DialogueLine { speaker = "Narrator", text = "Сейчас я скажу...",              pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "Oh. That actually worked.",      pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "I sound different in English.",  pauseAfter = 1.2f },
-            new DialogueLine { speaker = "Narrator", text = "More professional. Less me.",    pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "Anyway.",                        pauseAfter = 0f   },
+            new DialogueLine { text = "Переключаемся.",                 pauseAfter = 0.8f },
+            new DialogueLine { text = "Сейчас я скажу...",              pauseAfter = 1.0f },
+            new DialogueLine { text = "Oh. That actually worked.",      pauseAfter = 1.0f },
+            new DialogueLine { text = "I sound different in English.",  pauseAfter = 1.2f },
+            new DialogueLine { text = "More professional. Less me.",    pauseAfter = 1.0f },
+            new DialogueLine { text = "Anyway.",                        pauseAfter = 0f   },
         };
         EditorUtility.SetDirty(seq);
     }
@@ -131,12 +131,12 @@ public static class DialogueAssetFactory
         seq.priority = 2;
         seq.lines = new DialogueLine[]
         {
-            new DialogueLine { speaker = "Narrator", text = "Switching language.",            pauseAfter = 0.8f },
-            new DialogueLine { speaker = "Narrator", text = "Back to Russian. Here goes.",    pauseAfter = 1.2f },
-            new DialogueLine { speaker = "Narrator", text = "О. Это снова я.",               pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "По-русски звучу по-другому.",    pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "Гораздо менее профессионально.", pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "По крайней мере, честно.",       pauseAfter = 0f   },
+            new DialogueLine { text = "Switching language.",            pauseAfter = 0.8f },
+            new DialogueLine { text = "Back to Russian. Here goes.",    pauseAfter = 1.2f },
+            new DialogueLine { text = "О. Это снова я.",               pauseAfter = 1.0f },
+            new DialogueLine { text = "По-русски звучу по-другому.",    pauseAfter = 1.0f },
+            new DialogueLine { text = "Гораздо менее профессионально.", pauseAfter = 1.0f },
+            new DialogueLine { text = "По крайней мере, честно.",       pauseAfter = 0f   },
         };
         EditorUtility.SetDirty(seq);
     }
@@ -147,10 +147,10 @@ public static class DialogueAssetFactory
         seq.priority = 3;
         seq.lines = new DialogueLine[]
         {
-            new DialogueLine { speaker = "Narrator", text = "О, отлично. Ты нашёл ещё одну кнопку.", pauseAfter = 1.4f },
-            new DialogueLine { speaker = "Narrator", text = "Похоже, она тоже не работает.",         pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "Разработчик совсем не старался.",       pauseAfter = 1.0f },
-            new DialogueLine { speaker = "Narrator", text = "Ладно. Я запущу нас сам.",              pauseAfter = 0f   },
+            new DialogueLine { text = "О, отлично. Ты нашёл ещё одну кнопку.", pauseAfter = 1.4f },
+            new DialogueLine { text = "Похоже, она тоже не работает.",         pauseAfter = 1.0f },
+            new DialogueLine { text = "Разработчик совсем не старался.",       pauseAfter = 1.0f },
+            new DialogueLine { text = "Ладно. Я запущу нас сам.",              pauseAfter = 0f   },
         };
         EditorUtility.SetDirty(seq);
     }
