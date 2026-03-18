@@ -12,3 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8227bd5a43759f4c8794847b36d0c71, type: 3}
   m_Name: NovelChannel
   m_EditorClassIdentifier: Assembly-CSharp::NovelChannel
+  wifeBlips:
+  - {fileID: 8300000, guid: 71376763a27a4f64db840fd943b64718, type: 3}
+  - {fileID: 8300000, guid: ce1180b964da1ca418220622587ce390, type: 3}
+  - {fileID: 8300000, guid: cf90f9bb620bc4344b0da04d56a48109, type: 3}
+  - {fileID: 8300000, guid: d0623ead4638176428a9c3fc9fd4ba09, type: 3}
+  - {fileID: 8300000, guid: a9949fe131b12b54a86fd31efaefdd5e, type: 3}
+  - {fileID: 8300000, guid: ff8fb7132d94acb468bd3663a3aa6ab2, type: 3}
+  husbandBlips:
+  - {fileID: 8300000, guid: 9b3838f35da65354dba54c10bd86f567, type: 3}
+  - {fileID: 8300000, guid: 362cd8a3c14ec894c94ef84c27844ea6, type: 3}
+  - {fileID: 8300000, guid: d9e300f1de422d844b6536f725557dc0, type: 3}
+  - {fileID: 8300000, guid: 0e4116527a5ce7c458387d1743dde897, type: 3}
+  - {fileID: 8300000, guid: 56daf821aff186446a152d90e0ec79db, type: 3}
+  - {fileID: 8300000, guid: 7d838fa68c481294281b4bccc957451c, type: 3}

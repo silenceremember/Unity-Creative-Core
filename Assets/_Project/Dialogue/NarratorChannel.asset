@@ -12,3 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a2be5ee71136194dbfadd585477f9a5, type: 3}
   m_Name: NarratorChannel
   m_EditorClassIdentifier: Assembly-CSharp::NarratorChannel
+  voiceBlip: {fileID: 8300000, guid: 9b3838f35da65354dba54c10bd86f567, type: 3}
+  pitches:
+  - 0.75
+  - 0.8

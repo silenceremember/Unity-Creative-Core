@@ -8,6 +8,7 @@ using UnityEngine;
 /// Воспроизводит DialogueSequence через NarratorChannel.
 /// Повесь на GameObject в сцене. Назначь channel и UI-элементы.
 /// </summary>
+[RequireComponent(typeof(AudioSource))]
 public class NarratorManager : MonoBehaviour
 {
     [Header("SO Channel")]
@@ -31,6 +32,7 @@ public class NarratorManager : MonoBehaviour
     public float fadeSpeed = 4f;
 
     // ──────────────────────────────
+    private AudioSource _audioSource;
     private CancellationTokenSource _cts;
     private DialogueSequence _currentSequence;
     private Dictionary<string, GameObject> _sceneObjectMap;
@@ -61,6 +63,7 @@ public class NarratorManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+        _audioSource = GetComponent<AudioSource>();
 
         _sceneObjectMap = new Dictionary<string, GameObject>(sceneObjects.Count);
         foreach (var entry in sceneObjects)
@@ -222,6 +225,9 @@ public class NarratorManager : MonoBehaviour
                     break;
                 }
                 lineText.text += c;
+                // Играем голосовой блип на каждый непробельный символ
+                if (!char.IsWhiteSpace(c))
+                    PlayVoiceBlip();
                 await UniTask.Delay(delayMs, cancellationToken: ct);
             }
         }
@@ -253,5 +259,12 @@ public class NarratorManager : MonoBehaviour
             lineText.text = lineText.text[..^1];
             await UniTask.Delay(delayMs, cancellationToken: ct);
         }
+    }
+
+    private void PlayVoiceBlip()
+    {
+        if (channel == null || _audioSource == null || channel.voiceBlip == null) return;
+        _audioSource.pitch = channel.GetRandomPitch();
+        _audioSource.PlayOneShot(channel.voiceBlip);
     }
 }

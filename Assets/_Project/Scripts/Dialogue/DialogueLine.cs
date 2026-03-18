@@ -17,9 +17,6 @@ public class DialogueLine
     [Tooltip("Пауза перед следующей репликой")]
     public float pauseAfter = 0.3f;
 
-    [Tooltip("Аудиоклип (опционально)")]
-    public AudioClip audioClip;
-
     [Tooltip("Имя GameObject для SetActive(true) в начале этой реплики (пусто = не трогать)")]
     public string activateObject = "";
 

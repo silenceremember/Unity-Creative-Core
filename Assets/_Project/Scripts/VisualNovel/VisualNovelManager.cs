@@ -18,6 +18,7 @@ using UnityEngine.UI;
 ///
 ///  Поддерживает прерывание через CancellationToken (например из меню паузы).
 /// </summary>
+[RequireComponent(typeof(AudioSource))]
 public class VisualNovelManager : MonoBehaviour
 {
     public static VisualNovelManager Instance { get; private set; }
@@ -81,12 +82,14 @@ public class VisualNovelManager : MonoBehaviour
     private bool _skipTypewriter = false;
 
     private int _currentCameraIndex = -1;
+    private AudioSource _audioSource;
 
     // ─────────────────────────────────────────────────────────
 
     void Awake()
     {
         Instance = this;
+        _audioSource = GetComponent<AudioSource>();
         if (novelCanvasRoot != null) novelCanvasRoot.SetActive(false);
     }
 
@@ -257,7 +260,7 @@ public class VisualNovelManager : MonoBehaviour
 
         _typewriterRunning = true;
         _skipTypewriter = false;
-        await TypewriterAsync(line.text, ct);
+        await TypewriterAsync(line.text, line.speaker, ct);
         _typewriterRunning = false;
     }
 
@@ -350,7 +353,7 @@ public class VisualNovelManager : MonoBehaviour
 
     // ─── Typewriter ───────────────────────────────────────────
 
-    private async UniTask TypewriterAsync(string text, CancellationToken ct)
+    private async UniTask TypewriterAsync(string text, string speaker, CancellationToken ct)
     {
         if (lineText == null) return;
 
@@ -369,7 +372,17 @@ public class VisualNovelManager : MonoBehaviour
 
             ct.ThrowIfCancellationRequested();
             lineText.text += c;
+            if (!char.IsWhiteSpace(c))
+                PlayVoiceBlip(speaker);
             await UniTask.Delay(delay, cancellationToken: ct);
         }
+    }
+
+    private void PlayVoiceBlip(string speaker)
+    {
+        if (_audioSource == null || novelChannel == null) return;
+        var clip = novelChannel.GetBlip(speaker);
+        if (clip == null) return;
+        _audioSource.PlayOneShot(clip);
     }
 }
