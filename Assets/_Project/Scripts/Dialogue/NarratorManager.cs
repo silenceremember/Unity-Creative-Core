@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 
 /// <summary>
 /// Воспроизводит DialogueSequence через NarratorChannel.
@@ -24,6 +25,10 @@ public class NarratorManager : MonoBehaviour
              "Перетащи GameObject сюда — работает даже если объект изначально неактивен.")]
     public List<SceneObjectEntry> sceneObjects = new();
 
+    [Header("Аудио")]
+    [Tooltip("AudioMixerGroup для голоса нарратора — управляет громкостью через микшер")]
+    public AudioMixerGroup mixerGroup;
+
     [Header("Настройки")]
     [Range(20, 200)]
     public float charsPerSecond = 50f;
@@ -31,11 +36,17 @@ public class NarratorManager : MonoBehaviour
     public float eraseSpeed = 1000f;  // быстрее чем печать
     public float fadeSpeed = 4f;
 
+    [Tooltip("Звук играет раз в N непробельных символов (Undertale-стиль).\n" +
+             "При 50 симв/сек: 2 = 25 блипов/сек, 4 = ~12, 6 = ~8.")]
+    [Range(1, 10)]
+    public int blipEveryNChars = 4;
+
     // ──────────────────────────────
     private AudioSource _audioSource;
     private CancellationTokenSource _cts;
     private DialogueSequence _currentSequence;
     private Dictionary<string, GameObject> _sceneObjectMap;
+    private int _blipCounter;  // считает непробельные символы между блипами
 
     // Debug skip
     private bool _skipLine;
@@ -64,6 +75,7 @@ public class NarratorManager : MonoBehaviour
     {
         Instance = this;
         _audioSource = GetComponent<AudioSource>();
+        _audioSource.outputAudioMixerGroup = mixerGroup;
 
         _sceneObjectMap = new Dictionary<string, GameObject>(sceneObjects.Count);
         foreach (var entry in sceneObjects)
@@ -212,6 +224,7 @@ public class NarratorManager : MonoBehaviour
         if (subtitleRoot != null) subtitleRoot.SetActive(true);
         if (speakerText != null) speakerText.text = "";
         if (lineText != null)    lineText.text = "";
+        _blipCounter = 0;  // сброс счётчика на каждую реплику
 
         // Печатаем по символам (P — мгновенно допечатать)
         if (lineText != null)
@@ -225,9 +238,16 @@ public class NarratorManager : MonoBehaviour
                     break;
                 }
                 lineText.text += c;
-                // Играем голосовой блип на каждый непробельный символ
+                // Undertale-стиль: блип раз в N непробельных символов
                 if (!char.IsWhiteSpace(c))
-                    PlayVoiceBlip();
+                {
+                    _blipCounter++;
+                    if (_blipCounter >= blipEveryNChars)
+                    {
+                        _blipCounter = 0;
+                        PlayVoiceBlip();
+                    }
+                }
                 await UniTask.Delay(delayMs, cancellationToken: ct);
             }
         }
@@ -263,8 +283,10 @@ public class NarratorManager : MonoBehaviour
 
     private void PlayVoiceBlip()
     {
-        if (channel == null || _audioSource == null || channel.voiceBlip == null) return;
+        if (channel == null || _audioSource == null) return;
+        var clip = channel.GetRandomBlip();
+        if (clip == null) return;
         _audioSource.pitch = channel.GetRandomPitch();
-        _audioSource.PlayOneShot(channel.voiceBlip);
+        _audioSource.PlayOneShot(clip);
     }
 }

@@ -3,6 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 
 /// <summary>
@@ -63,9 +64,18 @@ public class VisualNovelManager : MonoBehaviour
 
     public AnimationCurve blendCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
+    [Header("Аудио")]
+    [Tooltip("AudioMixerGroup для голосов новеллы — управляет громкостью через микшер")]
+    public AudioMixerGroup mixerGroup;
+
     [Header("Typewriter")]
     [Range(20, 200)]
     public float charsPerSecond = 60f;
+
+    [Tooltip("Звук играет раз в N непробельных символов (Undertale-стиль).\n" +
+             "При 60 симв/сек: 2 = 30 блипов/сек, 4 = ~15, 6 = ~10.")]
+    [Range(1, 10)]
+    public int blipEveryNChars = 4;
 
     // ─── State ───────────────────────────────────────────────
     private int _lineIndex = -1;
@@ -83,6 +93,7 @@ public class VisualNovelManager : MonoBehaviour
 
     private int _currentCameraIndex = -1;
     private AudioSource _audioSource;
+    private int _blipCounter;  // считает непробельные символы между блипами
 
     // ─────────────────────────────────────────────────────────
 
@@ -90,6 +101,7 @@ public class VisualNovelManager : MonoBehaviour
     {
         Instance = this;
         _audioSource = GetComponent<AudioSource>();
+        _audioSource.outputAudioMixerGroup = mixerGroup;
         if (novelCanvasRoot != null) novelCanvasRoot.SetActive(false);
     }
 
@@ -257,6 +269,7 @@ public class VisualNovelManager : MonoBehaviour
 
         if (speakerText != null) speakerText.text = line.speaker;
         if (lineText != null) lineText.text = "";
+        _blipCounter = 0;  // сброс на каждую реплику
 
         _typewriterRunning = true;
         _skipTypewriter = false;
@@ -372,8 +385,16 @@ public class VisualNovelManager : MonoBehaviour
 
             ct.ThrowIfCancellationRequested();
             lineText.text += c;
+            // Undertale-стиль: блип раз в N непробельных символов
             if (!char.IsWhiteSpace(c))
-                PlayVoiceBlip(speaker);
+            {
+                _blipCounter++;
+                if (_blipCounter >= blipEveryNChars)
+                {
+                    _blipCounter = 0;
+                    PlayVoiceBlip(speaker);
+                }
+            }
             await UniTask.Delay(delay, cancellationToken: ct);
         }
     }
@@ -383,6 +404,7 @@ public class VisualNovelManager : MonoBehaviour
         if (_audioSource == null || novelChannel == null) return;
         var clip = novelChannel.GetBlip(speaker);
         if (clip == null) return;
+        _audioSource.pitch = novelChannel.GetRandomPitch(speaker);
         _audioSource.PlayOneShot(clip);
     }
 }

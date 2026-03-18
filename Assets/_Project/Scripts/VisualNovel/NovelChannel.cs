@@ -12,8 +12,14 @@ public class NovelChannel : ScriptableObject
     [Tooltip("6 голосовых блипов жены")]
     public AudioClip[] wifeBlips = new AudioClip[6];
 
+    [Tooltip("Набор pitch-значений для жены. 1.0 = оригинал.")]
+    public float[] wifePitches = { 1.0f, 1.05f, 1.12f, 1.19f, 0.94f };
+
     [Tooltip("6 голосовых блипов мужа")]
     public AudioClip[] husbandBlips = new AudioClip[6];
+
+    [Tooltip("Набор pitch-значений для мужа. 1.0 = оригинал.")]
+    public float[] husbandPitches = { 1.0f, 0.94f, 0.89f, 0.84f, 1.05f };
 
     /// <summary>Возвращает случайный блип для указанного speaker ("Wife" / "Husband").</summary>
     public AudioClip GetBlip(string speaker)
@@ -33,6 +39,19 @@ public class NovelChannel : ScriptableObject
             attempts++;
         }
         return clip;
+    }
+
+    /// <summary>Возвращает случайный pitch для указанного speaker ("Wife" / "Husband").</summary>
+    public float GetRandomPitch(string speaker)
+    {
+        float[] arr = speaker switch
+        {
+            "Wife"    => wifePitches,
+            "Husband" => husbandPitches,
+            _         => null
+        };
+        if (arr == null || arr.Length == 0) return 1f;
+        return arr[UnityEngine.Random.Range(0, arr.Length)];
     }
 
     /// <summary>Вызови чтобы запустить новеллу</summary>

@@ -12,7 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a2be5ee71136194dbfadd585477f9a5, type: 3}
   m_Name: NarratorChannel
   m_EditorClassIdentifier: Assembly-CSharp::NarratorChannel
-  voiceBlip: {fileID: 8300000, guid: 9b3838f35da65354dba54c10bd86f567, type: 3}
+  voiceBlips:
+  - {fileID: 8300000, guid: dd13d1bbdee8904408276c2f20c3f00b, type: 3}
+  - {fileID: 8300000, guid: 14218daa3dd3d0142827eb0783321414, type: 3}
+  - {fileID: 8300000, guid: d4c1dfb72eefea04bb036f9d7ff1856b, type: 3}
+  - {fileID: 8300000, guid: bc0762f3cd9e7f4419fb45d470f59820, type: 3}
+  - {fileID: 8300000, guid: 7bf7352652d94734c8c9778d0473209b, type: 3}
+  - {fileID: 8300000, guid: 19f64019d015ef24aad82a736efc8f73, type: 3}
+  - {fileID: 8300000, guid: b8334bcb5a8d56d479181bd2f60d408a, type: 3}
+  - {fileID: 8300000, guid: 8259412e62479a04db95240b69839e14, type: 3}
+  - {fileID: 8300000, guid: 3e2087f616b6e0a47a9b7ad34bb94dd1, type: 3}
+  - {fileID: 8300000, guid: 5e0ee06daf1450540931678badef6325, type: 3}
+  - {fileID: 8300000, guid: ad5f51c4f6b9d0b468c0507f2052338f, type: 3}
+  - {fileID: 8300000, guid: 75f0915b69cf5bd44a03bfa755359890, type: 3}
+  - {fileID: 8300000, guid: c7abc43df3e3cf44eb2aeac651eb41c1, type: 3}
   pitches:
-  - 0.75
-  - 0.8
+  - 1
+  - 1.05
+  - 0.95

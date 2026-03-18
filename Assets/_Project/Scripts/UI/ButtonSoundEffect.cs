@@ -1,41 +1,53 @@
 using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
 /// Добавьте на любой GameObject с Button.
-/// Звук маршрутизируется через AudioMixerGroup — громкость управляется микшером.
+/// Звук воспроизводится через AudioSource на том же объекте — без спавна.
+/// hoverClip  — играет при наведении мыши.
+/// clickClip  — играет при нажатии.
 /// Работает при Time.timeScale = 0 (ignoreListenerPause).
 /// </summary>
 [RequireComponent(typeof(Button))]
-public class ButtonSoundEffect : MonoBehaviour
+[RequireComponent(typeof(AudioSource))]
+public class ButtonSoundEffect : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
 {
-    [Tooltip("Звуковой клип (напр. MenuButton.mp3)")]
-    public AudioClip clip;
+    [Header("Звуки")]
+    [Tooltip("Звук при наведении мыши")]
+    public AudioClip hoverClip;
 
-    [Tooltip("AudioMixerGroup (например Master или SFX) — громкость регулируется в нём")]
+    [Tooltip("Звук при нажатии")]
+    public AudioClip clickClip;
+
+    [Header("Настройки")]
+    [Tooltip("AudioMixerGroup (например Master или SFX)")]
     public AudioMixerGroup mixerGroup;
 
-    void Start()
+    private AudioSource _audioSource;
+
+    void Awake()
     {
-        GetComponent<Button>().onClick.AddListener(PlaySound);
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.playOnAwake             = false;
+        _audioSource.ignoreListenerPause     = true;
+        _audioSource.outputAudioMixerGroup   = mixerGroup;
     }
 
-    void OnDestroy()
+    public void OnPointerEnter(PointerEventData _)
     {
-        if (TryGetComponent<Button>(out var btn))
-            btn.onClick.RemoveListener(PlaySound);
+        Play(hoverClip);
     }
 
-    private void PlaySound()
+    public void OnPointerClick(PointerEventData _)
     {
-        if (clip == null) return;
+        Play(clickClip);
+    }
 
-        var go     = new GameObject("ButtonSFX");
-        var source = go.AddComponent<AudioSource>();
-        source.ignoreListenerPause   = true;
-        source.outputAudioMixerGroup = mixerGroup;
-        source.PlayOneShot(clip);
-        Destroy(go, clip.length + 0.1f);
+    private void Play(AudioClip clip)
+    {
+        if (clip == null || _audioSource == null) return;
+        _audioSource.PlayOneShot(clip);
     }
 }
