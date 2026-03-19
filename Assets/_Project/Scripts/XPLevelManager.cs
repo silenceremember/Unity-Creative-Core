@@ -46,6 +46,30 @@ public class XPLevelManager : MonoBehaviour
     public float levelLabelPunch = 1.35f;
     public float punchDuration   = 0.35f;
 
+    [Header("Звуки XP")]
+    [Tooltip("Короткий тик-звук — играет пока XP заполняется")]
+    public AudioClip xpTickSound;
+    [Tooltip("AudioSource для тик-звуков XP (оставь пустым — создастся автоматически)")]
+    public AudioSource xpTickAudioSource;
+    [Tooltip("Интервал между тик-звуками (сек)")]
+    public float tickInterval = 0.08f;
+    [Tooltip("Питч в начале заполнения бара")]
+    public float tickPitchMin = 0.8f;
+    [Tooltip("Питч в конце заполнения бара")]
+    public float tickPitchMax = 1.4f;
+
+    [Header("Звук Level Up")]
+    [Tooltip("Торжественный звук при повышении уровня")]
+    public AudioClip levelUpSound;
+    [Tooltip("AudioSource для звука повышения уровня (оставь пустым — создастся автоматически)")]
+    public AudioSource levelUpAudioSource;
+
+    [Header("Звук промпта X")]
+    [Tooltip("Звук когда появляется возможность нажать X (выбор апгрейда)")]
+    public AudioClip promptSound;
+    [Tooltip("AudioSource для звука промпта (оставь пустым — создастся автоматически)")]
+    public AudioSource promptAudioSource;
+
     [Header("Нарратор")]
     [Tooltip("Канал рассказчика")]
     public NarratorChannel narratorChannel;
@@ -95,7 +119,34 @@ public class XPLevelManager : MonoBehaviour
             ? xpRequirements[_level]
             : xpRequirements[xpRequirements.Length - 1];
 
-    void Awake() => Instance = this;
+    void Awake()
+    {
+        Instance = this;
+
+        // Создаём AudioSource для тиков если не назначен
+        if (xpTickAudioSource == null)
+        {
+            xpTickAudioSource = gameObject.AddComponent<AudioSource>();
+            xpTickAudioSource.playOnAwake = false;
+            xpTickAudioSource.spatialBlend = 0f;
+        }
+
+        // Создаём AudioSource для level up если не назначен
+        if (levelUpAudioSource == null)
+        {
+            levelUpAudioSource = gameObject.AddComponent<AudioSource>();
+            levelUpAudioSource.playOnAwake = false;
+            levelUpAudioSource.spatialBlend = 0f;
+        }
+
+        // Создаём AudioSource для промпта X
+        if (promptAudioSource == null)
+        {
+            promptAudioSource = gameObject.AddComponent<AudioSource>();
+            promptAudioSource.playOnAwake = false;
+            promptAudioSource.spatialBlend = 0f;
+        }
+    }
 
     void Start()
     {
@@ -242,6 +293,7 @@ public class XPLevelManager : MonoBehaviour
             float startXP = _currentXP;
             float dur     = fillDuration * Mathf.Max((float)fill / cap, 0.2f);
             float elapsed = 0f;
+            float nextTick = 0f; // время следующего тик-звука
 
             while (elapsed < dur)
             {
@@ -254,6 +306,14 @@ public class XPLevelManager : MonoBehaviour
                 _displayXP = Mathf.Lerp(startXP, endXP, curve);
                 if (xpSlider != null) xpSlider.value = _displayXP;
                 if (xpLabel  != null) xpLabel.text   = $"{Mathf.RoundToInt(_displayXP)} / {cap}";
+
+                // Тик-звук каждые tickInterval секунд, питч нарастает по мере заполнения
+                if (elapsed >= nextTick && xpTickSound != null && xpTickAudioSource != null)
+                {
+                    xpTickAudioSource.pitch = Mathf.Lerp(tickPitchMin, tickPitchMax, curve);
+                    xpTickAudioSource.PlayOneShot(xpTickSound);
+                    nextTick = elapsed + tickInterval;
+                }
 
                 // Награда убывает от rewardDisplay → rewardEnd плавно
                 if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
@@ -299,6 +359,13 @@ public class XPLevelManager : MonoBehaviour
         {
             // Мигание полоски перед сбросом
             await FlashFill(times: 3, interval: 0.12f, ct);
+
+            // Звук level up!
+            if (levelUpSound != null && levelUpAudioSource != null)
+            {
+                levelUpAudioSource.pitch = 1f;
+                levelUpAudioSource.PlayOneShot(levelUpSound);
+            }
 
             _level++;
             _currentXP = 0;
@@ -366,6 +433,9 @@ public class XPLevelManager : MonoBehaviour
     {
         _promptVisible = true;
         if (levelUpPrompt != null) levelUpPrompt.SetActive(true);
+
+        if (promptSound != null && promptAudioSource != null)
+            promptAudioSource.PlayOneShot(promptSound);
 
         _blinkCts?.Cancel();
         _blinkCts?.Dispose();

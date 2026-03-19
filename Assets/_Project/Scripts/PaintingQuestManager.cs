@@ -50,6 +50,16 @@ public class PaintingQuestManager : MonoBehaviour
     public Color colorAccept   = Color.green;
     public Color colorReject   = Color.red;
 
+    [Header("Звуки квеста")]
+    [Tooltip("Звук при взаимодействии с картиной по E (не reject)")]
+    public AudioClip interactSound;
+    [Tooltip("Звук при успешном завершении квеста (Accept / зелёный)")]
+    public AudioClip acceptSound;
+    [Tooltip("Звук при провале / reject (красный)")]
+    public AudioClip rejectSound;
+    [Tooltip("AudioSource для воспроизведения звуков квеста (если пусто — найдём на этом объекте)")]
+    public AudioSource questAudioSource;
+
     [Header("Нарратор")]
     [Tooltip("Канал рассказчика")]
     public NarratorChannel narratorChannel;
@@ -98,6 +108,10 @@ public class PaintingQuestManager : MonoBehaviour
     {
         if (questCanvas  != null) questCanvas .SetActive(false);
         if (ePrompt      != null) ePrompt     .SetActive(false);
+
+        // Если AudioSource не назначен — пробуем найти на этом же объекте
+        if (questAudioSource == null)
+            questAudioSource = GetComponent<AudioSource>();
     }
 
     void OnEnable()
@@ -183,7 +197,12 @@ public class PaintingQuestManager : MonoBehaviour
             if (triggerDialogue)
             {
                 if (!_ePromptShaking && ePrompt != null)
+                {
+                    // Звук reject — нельзя взаимодействовать во время диалога
+                    if (questAudioSource != null && rejectSound != null)
+                        questAudioSource.PlayOneShot(rejectSound);
                     ShakeEPromptAsync(destroyCancellationToken).Forget();
+                }
                 return;
             }
             _eBlockedUntil = Time.unscaledTime + ESpamCooldown;
@@ -237,6 +256,10 @@ public class PaintingQuestManager : MonoBehaviour
     private void InteractPainting(PaintingInteractable painting)
     {
         if (painting.IsUsed) return;
+
+        // Звук взаимодействия с картиной
+        if (questAudioSource != null && interactSound != null)
+            questAudioSource.PlayOneShot(interactSound);
 
         painting.SnapToCorrect();   // картина встаёт на место
 
@@ -305,6 +328,10 @@ public class PaintingQuestManager : MonoBehaviour
 
             if (accepted)
             {
+                // Звук победы
+                if (questAudioSource != null && acceptSound != null)
+                    questAudioSource.PlayOneShot(acceptSound);
+
                 await PulseLabelsAsync(ct);
 
                 // Запускаем пост-квест нарратив. XPLevelManager добавит XP когда нарратор
@@ -316,6 +343,10 @@ public class PaintingQuestManager : MonoBehaviour
             }
             else
             {
+                // Звук провала / reject
+                if (questAudioSource != null && rejectSound != null)
+                    questAudioSource.PlayOneShot(rejectSound);
+
                 await ShakeLabelsAsync(ct);
 
                 _rejectCount++;

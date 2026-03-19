@@ -1765,6 +1765,186 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &162033289
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 162033290}
+  - component: {fileID: 162033291}
+  - component: {fileID: 162033292}
+  m_Layer: 0
+  m_Name: PaintingQuestManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &162033290
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 162033289}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1867730422}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &162033291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 162033289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d565e4381e2107c41b72bf80b9ae5175, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PaintingQuestManager
+  interactables:
+  - {fileID: 1234435754}
+  - {fileID: 1261161167}
+  - {fileID: 1313184363}
+  - {fileID: 2142236343}
+  questCanvas: {fileID: 736020683}
+  pictureLabels:
+  - {fileID: 1774491780}
+  - {fileID: 71005394}
+  - {fileID: 1090520262}
+  - {fileID: 960201089}
+  ePrompt: {fileID: 1971993269}
+  correctCode: 1234
+  shakeDuration: 0.5
+  shakeMagnitude: 12
+  pulseDuration: 0.4
+  colorDefault: {r: 1, g: 1, b: 1, a: 1}
+  colorDone: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  colorAccept: {r: 0, g: 1, b: 0, a: 1}
+  colorReject: {r: 1, g: 0, b: 0, a: 1}
+  acceptSound: {fileID: 8300000, guid: c2729a6729423a844aa23aaa42d13bfb, type: 3}
+  rejectSound: {fileID: 8300000, guid: 1464521a0a13ce44f8ab29dd60ab687a, type: 3}
+  questAudioSource: {fileID: 162033292}
+  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  paintingClickDialogues:
+  - {fileID: 11400000, guid: 6d81f1451a2b11e42a91c53b5a6a5553, type: 2}
+  - {fileID: 11400000, guid: 5dac05609e73f854ab9d35d49f098386, type: 2}
+  - {fileID: 11400000, guid: 809c5bba8602eaf40af46c19fcfd3273, type: 2}
+  - {fileID: 11400000, guid: 70713951d30c1cf4f8192db243ba03b2, type: 2}
+  rejectDialogues:
+  - {fileID: 11400000, guid: a25b019c222b05743ba7834cfdf48185, type: 2}
+  - {fileID: 11400000, guid: be7b04804bd9320479aa55917094e28a, type: 2}
+  - {fileID: 11400000, guid: 2ec97f0d7fcc8504fa4dc1c23c9cc392, type: 2}
+  - {fileID: 11400000, guid: a0851e4d0a1cbd2489ca30e67aedfdda, type: 2}
+  - {fileID: 11400000, guid: 7639c3d97d6148044ae83d40291cac46, type: 2}
+  seqPostQuest: {fileID: 11400000, guid: 7297832cf12085247a5cd8ce1d6f1274, type: 2}
+  ePromptShakeMagnitude: 10
+  ePromptShakeDuration: 0.35
+--- !u!82 &162033292
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 162033289}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 8bd64c2065c534d499948a463e09f4a6, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 0
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &169809792
 GameObject:
   m_ObjectHideFlags: 0
@@ -5119,6 +5299,303 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 426589327}
   m_CullTransparentMesh: 1
+--- !u!1 &433521134
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 433521135}
+  - component: {fileID: 433521136}
+  - component: {fileID: 433521137}
+  - component: {fileID: 433521138}
+  m_Layer: 0
+  m_Name: XPLevelManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &433521135
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433521134}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1867730422}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &433521136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433521134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf129ced2e831a44780bef2e7c8148a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::XPLevelManager
+  xpRequirements: f4010000ee020000e8030000
+  fillDuration: 0.6
+  fillCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  levelBar: {fileID: 321859515}
+  levelLabel: {fileID: 169809794}
+  xpLabel: {fileID: 1982753618}
+  xpSlider: {fileID: 1383147485}
+  fillImage: {fileID: 426589329}
+  levelUpPrompt: {fileID: 208248950}
+  upgradeCanvas: {fileID: 308662747}
+  rewardLabel: {fileID: 1962149606}
+  rewardFormat: "\u041D\u0410\u0413\u0420\u0410\u0414\u0410: {0} XP"
+  questRewardXP: 1000
+  flashColor: {r: 1, g: 1, b: 0, a: 1}
+  levelLabelPunch: 1.35
+  punchDuration: 0.35
+  xpTickSound: {fileID: 8300000, guid: ae28dc20d3c14094e8452991aafee73d, type: 3}
+  xpTickAudioSource: {fileID: 433521137}
+  tickInterval: 0.08
+  tickPitchMin: 0.8
+  tickPitchMax: 1.4
+  levelUpSound: {fileID: 8300000, guid: 4b51cbec72c16d0499dfecc43da8726b, type: 3}
+  levelUpAudioSource: {fileID: 433521138}
+  promptSound: {fileID: 8300000, guid: 017f1980c41a5f2498c1cf54e6ede1fe, type: 3}
+  promptAudioSource: {fileID: 433521138}
+  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  seqXPBarActivated: {fileID: 11400000, guid: 69fcc969602ba1944b9cda484b16d8bb, type: 2}
+  seqLevelUp: {fileID: 11400000, guid: 6c235e945d86a5f45927bcc86b6f73a9, type: 2}
+  seqAbilityChosen: {fileID: 11400000, guid: 5778e444f1b2d0645926312db3ff288f, type: 2}
+  seqAbilityTried: {fileID: 11400000, guid: 725d69e38fe1e0e49833b9fe58238cc2, type: 2}
+  seqDoorUnlocked: {fileID: 11400000, guid: d8987695e569f9b45b2972d8ce9b77c9, type: 2}
+  doorObject: {fileID: 1705948113}
+  promptShakeMagnitude: 10
+  promptShakeDuration: 0.35
+--- !u!82 &433521137
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433521134}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 8bd64c2065c534d499948a463e09f4a6, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 0
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!82 &433521138
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433521134}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 8bd64c2065c534d499948a463e09f4a6, type: 2}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 0
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &449558339
 GameObject:
   m_ObjectHideFlags: 0
@@ -42188,8 +42665,6 @@ GameObject:
   - component: {fileID: 1867730425}
   - component: {fileID: 1867730426}
   - component: {fileID: 1867730427}
-  - component: {fileID: 1867730428}
-  - component: {fileID: 1867730429}
   - component: {fileID: 1867730430}
   - component: {fileID: 1867730431}
   - component: {fileID: 1867730432}
@@ -42213,6 +42688,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 162033290}
+  - {fileID: 433521135}
   - {fileID: 1792654393}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -42338,113 +42815,6 @@ MonoBehaviour:
   explorationCanvas: {fileID: 1822483910}
   clickerLabel: {fileID: 1673319463}
   clickerJuice: {fileID: 1673319465}
---- !u!114 &1867730428
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1867730421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d565e4381e2107c41b72bf80b9ae5175, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PaintingQuestManager
-  interactables:
-  - {fileID: 1234435754}
-  - {fileID: 1261161167}
-  - {fileID: 1313184363}
-  - {fileID: 2142236343}
-  questCanvas: {fileID: 736020683}
-  pictureLabels:
-  - {fileID: 1774491780}
-  - {fileID: 71005394}
-  - {fileID: 1090520262}
-  - {fileID: 960201089}
-  ePrompt: {fileID: 1971993269}
-  correctCode: 1234
-  shakeDuration: 0.5
-  shakeMagnitude: 12
-  pulseDuration: 0.4
-  colorDefault: {r: 1, g: 1, b: 1, a: 1}
-  colorDone: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  colorAccept: {r: 0, g: 1, b: 0, a: 1}
-  colorReject: {r: 1, g: 0, b: 0, a: 1}
-  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
-  paintingClickDialogues:
-  - {fileID: 11400000, guid: 6d81f1451a2b11e42a91c53b5a6a5553, type: 2}
-  - {fileID: 11400000, guid: 5dac05609e73f854ab9d35d49f098386, type: 2}
-  - {fileID: 11400000, guid: 809c5bba8602eaf40af46c19fcfd3273, type: 2}
-  - {fileID: 11400000, guid: 70713951d30c1cf4f8192db243ba03b2, type: 2}
-  rejectDialogues:
-  - {fileID: 11400000, guid: a25b019c222b05743ba7834cfdf48185, type: 2}
-  - {fileID: 11400000, guid: be7b04804bd9320479aa55917094e28a, type: 2}
-  - {fileID: 11400000, guid: 2ec97f0d7fcc8504fa4dc1c23c9cc392, type: 2}
-  - {fileID: 11400000, guid: a0851e4d0a1cbd2489ca30e67aedfdda, type: 2}
-  - {fileID: 11400000, guid: 7639c3d97d6148044ae83d40291cac46, type: 2}
-  seqPostQuest: {fileID: 11400000, guid: 7297832cf12085247a5cd8ce1d6f1274, type: 2}
-  ePromptShakeMagnitude: 10
-  ePromptShakeDuration: 0.35
---- !u!114 &1867730429
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1867730421}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf129ced2e831a44780bef2e7c8148a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::XPLevelManager
-  xpRequirements: f4010000ee020000e8030000
-  fillDuration: 0.6
-  fillCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  levelBar: {fileID: 321859515}
-  levelLabel: {fileID: 169809794}
-  xpLabel: {fileID: 1982753618}
-  xpSlider: {fileID: 1383147485}
-  fillImage: {fileID: 426589329}
-  levelUpPrompt: {fileID: 208248950}
-  upgradeCanvas: {fileID: 308662747}
-  rewardLabel: {fileID: 1962149606}
-  rewardFormat: "\u041D\u0410\u0413\u0420\u0410\u0414\u0410: {0} XP"
-  questRewardXP: 1000
-  flashColor: {r: 1, g: 1, b: 0, a: 1}
-  levelLabelPunch: 1.35
-  punchDuration: 0.35
-  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
-  seqXPBarActivated: {fileID: 11400000, guid: 69fcc969602ba1944b9cda484b16d8bb, type: 2}
-  seqLevelUp: {fileID: 11400000, guid: 6c235e945d86a5f45927bcc86b6f73a9, type: 2}
-  seqAbilityChosen: {fileID: 11400000, guid: 5778e444f1b2d0645926312db3ff288f, type: 2}
-  seqAbilityTried: {fileID: 11400000, guid: 725d69e38fe1e0e49833b9fe58238cc2, type: 2}
-  seqDoorUnlocked: {fileID: 11400000, guid: d8987695e569f9b45b2972d8ce9b77c9, type: 2}
-  doorObject: {fileID: 1705948113}
-  promptShakeMagnitude: 10
-  promptShakeDuration: 0.35
 --- !u!114 &1867730430
 MonoBehaviour:
   m_ObjectHideFlags: 0
