@@ -370,7 +370,11 @@ public class VisualNovelManager : MonoBehaviour
     {
         if (lineText == null) return;
 
-        int delay = Mathf.RoundToInt(1000f / charsPerSecond);
+        int delay        = Mathf.RoundToInt(1000f / charsPerSecond);
+        // Берём интервал по персонажу (Mary=3, John=4), fallback — глобальный blipEveryNChars
+        int blipInterval = novelChannel != null
+            ? novelChannel.GetBlipInterval(speaker)
+            : blipEveryNChars;
 
         foreach (char c in text)
         {
@@ -389,7 +393,7 @@ public class VisualNovelManager : MonoBehaviour
             if (!char.IsWhiteSpace(c))
             {
                 _blipCounter++;
-                if (_blipCounter >= blipEveryNChars)
+                if (_blipCounter >= blipInterval)
                 {
                     _blipCounter = 0;
                     PlayVoiceBlip(speaker);
@@ -401,9 +405,15 @@ public class VisualNovelManager : MonoBehaviour
 
     private void PlayVoiceBlip(string speaker)
     {
-        if (_audioSource == null || novelChannel == null) return;
+        if (_audioSource == null) { Debug.LogWarning("[VisualNovelManager] AudioSource is null!"); return; }
+        if (novelChannel == null) { Debug.LogWarning("[VisualNovelManager] NovelChannel is null!"); return; }
         var clip = novelChannel.GetBlip(speaker);
-        if (clip == null) return;
+        if (clip == null)
+        {
+            Debug.LogWarning($"[VisualNovelManager] No blip clip for speaker='{speaker}'. " +
+                             $"Check NovelChannel maryBlips/johnBlips are assigned in Inspector.");
+            return;
+        }
         _audioSource.pitch = novelChannel.GetRandomPitch(speaker);
         _audioSource.PlayOneShot(clip);
     }

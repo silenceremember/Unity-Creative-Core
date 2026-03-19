@@ -13,8 +13,11 @@ public class NarratorChannel : ScriptableObject
     [Tooltip("Набор голосовых блипов. На каждый символ берётся случайный клип.")]
     public AudioClip[] voiceBlips;
 
-    [Tooltip("Набор значений pitch. На каждый символ берётся случайный.\n1.0 = оригинал, 1.12 = +2 полутона, 1.19 = +3 полутона, 0.94 = -1, 0.89 = -2.")]
-    public float[] pitches = { 1.0f, 1.05f, 1.12f, 1.19f, 0.94f, 0.89f };
+    [Tooltip("Минимальный pitch (нижняя граница диапазона). 1.0 = оригинал, 0.89 ≈ -2 полутона.")]
+    public float pitchMin = 0.89f;
+
+    [Tooltip("Максимальный pitch (верхняя граница диапазона). 1.19 ≈ +3 полутона.")]
+    public float pitchMax = 1.19f;
 
     /// <summary>Подпишись чтобы получать последовательности</summary>
     public event Action<DialogueSequence> OnSequenceRequested;
@@ -49,10 +52,9 @@ public class NarratorChannel : ScriptableObject
         return clip;
     }
 
-    /// <summary>Возвращает случайный pitch из массива pitches (1.0 если массив пуст).</summary>
+    /// <summary>Возвращает случайный pitch из диапазона [pitchMin, pitchMax].</summary>
     public float GetRandomPitch()
     {
-        if (pitches == null || pitches.Length == 0) return 1f;
-        return pitches[UnityEngine.Random.Range(0, pitches.Length)];
+        return UnityEngine.Random.Range(pitchMin, pitchMax);
     }
 }

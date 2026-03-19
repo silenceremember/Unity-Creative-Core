@@ -26,7 +26,5 @@ MonoBehaviour:
   - {fileID: 8300000, guid: ad5f51c4f6b9d0b468c0507f2052338f, type: 3}
   - {fileID: 8300000, guid: 75f0915b69cf5bd44a03bfa755359890, type: 3}
   - {fileID: 8300000, guid: c7abc43df3e3cf44eb2aeac651eb41c1, type: 3}
-  pitches:
-  - 1
-  - 1.05
-  - 0.95
+  pitchMin: 0.95
+  pitchMax: 1.05

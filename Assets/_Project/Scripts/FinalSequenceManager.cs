@@ -150,7 +150,7 @@ public class FinalSequenceManager : MonoBehaviour
             if (playerTransform != null)
             {
                 var pc = playerTransform.GetComponent<PlayerController>();
-                if (pc != null) pc.lockMovement = true;
+                if (pc != null) pc.LockXZ();   // мгновенно обнуляет X/Z, только Y
             }
 
             FadeHDRI(this.GetCancellationTokenOnDestroy()).Forget();

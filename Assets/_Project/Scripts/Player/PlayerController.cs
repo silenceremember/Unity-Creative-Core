@@ -69,6 +69,22 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public bool lockMovement = false;
 
+    /// <summary>
+    /// Полная заморозка X/Z: мгновенно обнуляет горизонтальную скорость
+    /// и не даёт ей накапливаться. Игрок летит строго вниз по Y.
+    /// Устанавливается FinalSequenceManager при триггере 0.
+    /// </summary>
+    public bool lockXZ = false;
+
+    /// <summary>Включить режим строго-вертикального падения.</summary>
+    public void LockXZ()
+    {
+        lockMovement = true;   // тоже блокируем ввод WASD
+        lockXZ       = true;
+        _currentVelocityXZ  = Vector3.zero;
+        _smoothDampVelocity = Vector3.zero;
+    }
+
     // ─────────────────────────────────────────────────────────
 
     void Awake()
@@ -161,9 +177,18 @@ public class PlayerController : MonoBehaviour
         Vector3 targetVelocity = wishDir * moveSpeed;
 
         // Плавно интерполируем горизонтальную скорость
-        float smoothTime = wishDir.sqrMagnitude > 0.01f ? acceleration : deceleration;
-        _currentVelocityXZ = Vector3.SmoothDamp(
-            _currentVelocityXZ, targetVelocity, ref _smoothDampVelocity, smoothTime);
+        if (lockXZ)
+        {
+            // Строгое вертикальное падение: X/Z всегда 0
+            _currentVelocityXZ  = Vector3.zero;
+            _smoothDampVelocity = Vector3.zero;
+        }
+        else
+        {
+            float smoothTime = wishDir.sqrMagnitude > 0.01f ? acceleration : deceleration;
+            _currentVelocityXZ = Vector3.SmoothDamp(
+                _currentVelocityXZ, targetVelocity, ref _smoothDampVelocity, smoothTime);
+        }
 
         // Гравитация
         if (_cc.isGrounded && _verticalVelocity < 0f)

@@ -9,27 +9,39 @@ using UnityEngine;
 public class NovelChannel : ScriptableObject
 {
     [Header("Голоса персонажей")]
-    [Tooltip("6 голосовых блипов жены")]
-    public AudioClip[] wifeBlips = new AudioClip[6];
+    [Tooltip("Голосовые блипы Мэри (Mary)")]
+    public AudioClip[] maryBlips = new AudioClip[6];
 
-    [Tooltip("Набор pitch-значений для жены. 1.0 = оригинал.")]
-    public float[] wifePitches = { 1.0f, 1.05f, 1.12f, 1.19f, 0.94f };
+    [Tooltip("Минимальный pitch для Мэри. 1.0 = оригинал.")]
+    public float maryPitchMin = 0.94f;
 
-    [Tooltip("6 голосовых блипов мужа")]
-    public AudioClip[] husbandBlips = new AudioClip[6];
+    [Tooltip("Максимальный pitch для Мэри.")]
+    public float maryPitchMax = 1.19f;
 
-    [Tooltip("Набор pitch-значений для мужа. 1.0 = оригинал.")]
-    public float[] husbandPitches = { 1.0f, 0.94f, 0.89f, 0.84f, 1.05f };
+    [Tooltip("Блип каждые N непробельных символов для Мэри (Undertale-стиль).")]
+    [Range(1, 10)]
+    public int maryBlipInterval = 3;
 
-    /// <summary>Возвращает случайный блип для указанного speaker ("Wife" / "Husband").</summary>
+    [Tooltip("Голосовые блипы Джона (John)")]
+    public AudioClip[] johnBlips = new AudioClip[6];
+
+    [Tooltip("Минимальный pitch для Джона. 1.0 = оригинал.")]
+    public float johnPitchMin = 0.84f;
+
+    [Tooltip("Максимальный pitch для Джона.")]
+    public float johnPitchMax = 1.05f;
+
+    [Tooltip("Блип каждые N непробельных символов для Джона (Undertale-стиль).")]
+    [Range(1, 10)]
+    public int johnBlipInterval = 4;
+
+    /// <summary>
+    /// Возвращает случайный блип для указанного speaker.
+    /// Распознаёт: "Mary"/"Мэри"/"Wife" и "John"/"Джон"/"Husband" (без учёта регистра).
+    /// </summary>
     public AudioClip GetBlip(string speaker)
     {
-        AudioClip[] arr = speaker switch
-        {
-            "Wife"    => wifeBlips,
-            "Husband" => husbandBlips,
-            _         => null
-        };
+        AudioClip[] arr = ResolveSpeaker(speaker);
         if (arr == null || arr.Length == 0) return null;
         int attempts = 0;
         AudioClip clip = null;
@@ -41,18 +53,45 @@ public class NovelChannel : ScriptableObject
         return clip;
     }
 
-    /// <summary>Возвращает случайный pitch для указанного speaker ("Wife" / "Husband").</summary>
+    /// <summary>
+    /// Возвращает случайный pitch для указанного speaker.
+    /// </summary>
     public float GetRandomPitch(string speaker)
     {
-        float[] arr = speaker switch
-        {
-            "Wife"    => wifePitches,
-            "Husband" => husbandPitches,
-            _         => null
-        };
-        if (arr == null || arr.Length == 0) return 1f;
-        return arr[UnityEngine.Random.Range(0, arr.Length)];
+        var key = speaker?.Trim();
+        if (IsMary(key)) return UnityEngine.Random.Range(maryPitchMin, maryPitchMax);
+        if (IsJohn(key)) return UnityEngine.Random.Range(johnPitchMin, johnPitchMax);
+        return 1f;
     }
+
+    /// <summary>Возвращает блип-интервал (каждые N символов) для speaker. Fallback = 4.</summary>
+    public int GetBlipInterval(string speaker)
+    {
+        var key = speaker?.Trim();
+        if (IsMary(key)) return maryBlipInterval;
+        if (IsJohn(key)) return johnBlipInterval;
+        return 4;
+    }
+
+    // ── Internal helpers ──────────────────────────────────────
+    private bool IsMary(string key) =>
+        string.Equals(key, "Mary",    StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(key, "Мэри",   StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(key, "Wife",    StringComparison.OrdinalIgnoreCase);
+
+    private bool IsJohn(string key) =>
+        string.Equals(key, "John",    StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(key, "Джон",   StringComparison.OrdinalIgnoreCase) ||
+        string.Equals(key, "Husband", StringComparison.OrdinalIgnoreCase);
+
+    private AudioClip[] ResolveSpeaker(string speaker)
+    {
+        var key = speaker?.Trim();
+        if (IsMary(key))    return maryBlips;
+        if (IsJohn(key))    return johnBlips;
+        return null;
+    }
+
 
     /// <summary>Вызови чтобы запустить новеллу</summary>
     public event Action OnNovelStartRequested;

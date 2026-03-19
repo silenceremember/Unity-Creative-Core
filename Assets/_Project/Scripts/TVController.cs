@@ -16,6 +16,10 @@ public class TVController : MonoBehaviour
     [Header("Audio")]
     public AudioSource tvAudio;
 
+    [Header("Sound Effect")]
+    [Tooltip("TvSoundController на объекте ТВ для звука вкл/выкл")]
+    public TvSoundController soundController;
+
     [Header("Light")]
     public Light tvLight;
 
@@ -24,6 +28,8 @@ public class TVController : MonoBehaviour
 
     void Start()
     {
+        // Синхронизируем звуковой контроллер без воспроизведения
+        soundController?.SyncState(true);
         // TV изначально включён всегда
         SetState(true);
     }
@@ -70,5 +76,8 @@ public class TVController : MonoBehaviour
         // Свет
         if (tvLight != null)
             tvLight.enabled = on;
+
+        // Звук вкл/выкл
+        soundController?.SetOn(on);
     }
 }
