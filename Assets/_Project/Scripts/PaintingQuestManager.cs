@@ -51,7 +51,7 @@ public class PaintingQuestManager : MonoBehaviour
     public Color colorReject   = Color.red;
 
     [Header("Звуки квеста")]
-    [Tooltip("Звук при взаимодействии с картиной по E (не reject)")]
+    [Tooltip("Звук при нажатии E на картину (2D, не reject)")]
     public AudioClip interactSound;
     [Tooltip("Звук при успешном завершении квеста (Accept / зелёный)")]
     public AudioClip acceptSound;
@@ -257,11 +257,11 @@ public class PaintingQuestManager : MonoBehaviour
     {
         if (painting.IsUsed) return;
 
-        // Звук взаимодействия с картиной
+        // Мгновенный 2D звук нажатия E (обратная связь)
         if (questAudioSource != null && interactSound != null)
             questAudioSource.PlayOneShot(interactSound);
 
-        painting.SnapToCorrect();   // картина встаёт на место
+        painting.SnapToCorrect();   // картина встаёт на место (PlaySlideSound 3D внутри)
 
         // Назначаем слот ОДИН РАЗ навсегда (при первом нажатии)
         if (painting.AssignedSlotIndex == -1)

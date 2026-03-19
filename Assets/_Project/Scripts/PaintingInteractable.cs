@@ -25,6 +25,10 @@ public class PaintingInteractable : MonoBehaviour
     [Header("Анимация")]
     public float snapDuration = 0.5f;
 
+    [Header("Звуки слайда (3D)")]
+    [Tooltip("1–4 клипа. При каждом повороте картины выбирается рандомный.")]
+    public AudioClip[] slideClips;
+
     // ── state ─────────────────────────────────────────────────────────────
 
     public bool IsUsed          { get; private set; }
@@ -36,8 +40,9 @@ public class PaintingInteractable : MonoBehaviour
     public int  AssignedSlotIndex { get; set; } = -1;
 
 
-    private Collider   _col;
-    private Quaternion _initialRotation;  // поворот при старте — нужен для reset после reject
+    private Collider     _col;
+    private Quaternion   _initialRotation;  // поворот при старте — нужен для reset после reject
+    private AudioSource  _audioSource;
 
     void Awake()
     {
@@ -45,6 +50,18 @@ public class PaintingInteractable : MonoBehaviour
         _col.isTrigger = true;
         // ВАЖНО: НЕ захватываем здесь — PaintingShiftController ещё не наклонил картины.
         // Захват делается через CaptureQuestStart() из PaintingQuestManager.StartQuest().
+
+        // 3D AudioSource — вешается на сам объект картины (игрок слышит откуда именно)
+        _audioSource = paintingTransform != null
+            ? paintingTransform.gameObject.GetComponent<AudioSource>()
+              ?? paintingTransform.gameObject.AddComponent<AudioSource>()
+            : gameObject.GetComponent<AudioSource>()
+              ?? gameObject.AddComponent<AudioSource>();
+
+        _audioSource.playOnAwake  = false;
+        _audioSource.spatialBlend = 1f;   // полностью 3D
+        _audioSource.rolloffMode  = AudioRolloffMode.Logarithmic;
+        _audioSource.maxDistance  = 10f;
     }
 
     /// <summary>
@@ -82,6 +99,8 @@ public class PaintingInteractable : MonoBehaviour
         IsUsed = true;
         _col.enabled = false;
 
+        PlaySlideSound();
+
         if (paintingTransform != null)
             SnapToAsync(Quaternion.Euler(correctLocalEuler), snapDuration, destroyCancellationToken).Forget();
     }
@@ -91,8 +110,19 @@ public class PaintingInteractable : MonoBehaviour
     {
         IsUsed = false;
         _col.enabled = true;
+
+        PlaySlideSound();
+
         if (paintingTransform != null)
             SnapToAsync(_initialRotation, duration, destroyCancellationToken).Forget();
+    }
+
+    /// <summary>Играет рандомный звук слайда картины (3D, из позиции самой картины).</summary>
+    public void PlaySlideSound()
+    {
+        if (_audioSource == null || slideClips == null || slideClips.Length == 0) return;
+        var clip = slideClips[Random.Range(0, slideClips.Length)];
+        if (clip != null) _audioSource.PlayOneShot(clip);
     }
 
     private async UniTask SnapToAsync(Quaternion target, float dur, CancellationToken ct)
