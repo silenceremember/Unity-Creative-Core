@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour
     [Tooltip("Сила гравитации")]
     public float gravity = -18f;   // реалистичнее чем -9.81
 
+    [Tooltip("Максимальная скорость падения (м/с). Ограничивает чтобы не пролетать тонкие триггеры.")]
+    public float maxFallSpeed = 10f;
+
     // ─── Look ────────────────────────────────────────────────
     [Header("Look")]
     [Tooltip("Чувствительность мыши")]
@@ -195,6 +198,9 @@ public class PlayerController : MonoBehaviour
             _verticalVelocity = -4f;   // прижимаем к земле чтобы isGrounded не мигал
 
         _verticalVelocity += gravity * Time.deltaTime;
+        // Ограничиваем максимальную скорость падения — иначе при длинном
+        // падении можно пролететь триггер за один кадр
+        _verticalVelocity = Mathf.Max(_verticalVelocity, -maxFallSpeed);
 
         // Итоговый вектор движения
         Vector3 move = _currentVelocityXZ;

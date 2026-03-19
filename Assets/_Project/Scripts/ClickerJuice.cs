@@ -3,14 +3,23 @@ using TMPro;
 using UnityEngine;
 
 /// <summary>
-/// Сочный кликер с DOTween-анимациями.
-/// Повесь на GameObject с TextMeshProUGUI.
-/// Вызывай RegisterClick() при каждом клике.
+/// Сочный кликер с heat-системой.
+///
+/// Heat (0-1) — непрерывно убывает со временем. Каждый клик добавляет
+/// небольшую порцию тепла, мега-клик — в megaHeatMultiplier раз больше.
+/// Цвет и питч звуков зависят от текущего heat, а не от комбо-счётчика.
+///
+/// Звуки:
+///  - popClips[0..N]  → рандомный pop при каждом клике (через popSource)
+///  - coinClip        → играет вместе с pop на мега-клике (через coinSource)
+///  Питч popSource повышается с heat от pitchMin до pitchMax.
+///
+/// Вызывай RegisterClick() при каждом клике ЛКМ.
 /// </summary>
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class ClickerJuice : MonoBehaviour
 {
-    // ── Tune ─────────────────────────────────────────────────────────
+    // ── Visual ────────────────────────────────────────────────────────
 
     [Header("Punch (основной удар)")]
     [Tooltip("Сила punch-scale при обычном клике")]
@@ -28,51 +37,92 @@ public class ClickerJuice : MonoBehaviour
     public float megaDuration = 0.5f;
     public float megaRotation = 12f;
 
-    [Header("Combo-тайм-аут (сек без кликов → сбросить комбо)")]
-    public float comboResetTime = 1.2f;
+    [Header("Цвета (по heat)")]
+    public Color colorCold = new Color(0.7f, 0.9f, 1.0f);
+    public Color colorWarm = new Color(1.0f, 0.85f, 0.3f);
+    public Color colorHot  = new Color(1.0f, 0.35f, 0.1f);
+    public Color colorMega = new Color(1.0f, 1.0f, 1.0f);
 
-    [Header("Цвета (по комбо)")]
-    public Color colorCold = new Color(0.7f, 0.9f, 1.0f);  // редкие клики
-    public Color colorWarm = new Color(1.0f, 0.85f, 0.3f); // средний темп
-    public Color colorHot  = new Color(1.0f, 0.35f, 0.1f); // быстрые клики
-    public Color colorMega = new Color(1.0f, 1.0f, 1.0f);  // мега-клик flash
+    // ── Heat ──────────────────────────────────────────────────────────
+
+    [Header("Heat (интенсивность)")]
+    [Tooltip("Сколько heat даёт один обычный клик (0-1)")]
+    public float heatPerClick    = 0.08f;
+    [Tooltip("Мега-клик даёт heat = heatPerClick × megaHeatMultiplier")]
+    public float megaHeatMultiplier = 5f;
+    [Tooltip("Скорость убывания heat в секунду (heat/sec)")]
+    public float heatDecayRate   = 0.18f;
+    [Tooltip("Порог heat для Warm")]
+    [Range(0f, 1f)]
+    public float heatWarmThreshold = 0.35f;
+    [Tooltip("Порог heat для Hot")]
+    [Range(0f, 1f)]
+    public float heatHotThreshold  = 0.70f;
+
+    // ── Audio — Pop ───────────────────────────────────────────────────
+
+    [Header("Звук Pop (кликер)")]
+    [Tooltip("1-15 клипов — рандомный при каждом клике")]
+    public AudioClip[] popClips;
+    [Tooltip("AudioSource для pop-звуков (2D, создаётся автоматически если пусто)")]
+    public AudioSource popSource;
+    [Tooltip("Питч при cold (минимальный)")]
+    public float pitchMin = 0.85f;
+    [Tooltip("Питч при hot (максимальный)")]
+    public float pitchMax = 1.35f;
+
+    // ── Audio — Coin ──────────────────────────────────────────────────
+
+    [Header("Звук Coin (мега-клик)")]
+    [Tooltip("Звук монеты — играет вместе с pop на каждом мега-клике")]
+    public AudioClip coinClip;
+    [Tooltip("AudioSource для coin-звука (создаётся автоматически если пусто)")]
+    public AudioSource coinSource;
 
     // ── State ─────────────────────────────────────────────────────────
 
     private TextMeshProUGUI _label;
     private RectTransform   _rect;
+    private Vector3         _baseScale;
 
     private int   _count;
-    private int   _combo;
-    private float _lastClickTime = -999f;
-    private bool  _megaFlashing; // true пока идёт белая вспышка
+    private float _heat;           // текущее тепло 0-1
+    private bool  _megaFlashing;
 
     private Tween _colorTween;
     private Tween _rollTween;
-
-    private Vector3 _baseScale;
 
     // ── Lifecycle ─────────────────────────────────────────────────────
 
     void Awake()
     {
-        _label     = GetComponent<TextMeshProUGUI>();
-        _rect      = GetComponent<RectTransform>();
-
-        // Pivot должен быть в центре объекта, иначе DOPunchScale
-        // будет масштабировать от чужой точки (например, центра канваса)
+        _label      = GetComponent<TextMeshProUGUI>();
+        _rect       = GetComponent<RectTransform>();
         _rect.pivot = new Vector2(0.5f, 0.5f);
+        _baseScale  = _rect.localScale;
 
-        _baseScale = _rect.localScale;
+        // PopSource
+        if (popSource == null)
+        {
+            popSource = gameObject.AddComponent<AudioSource>();
+            popSource.playOnAwake  = false;
+            popSource.spatialBlend = 0f;
+        }
+
+        // CoinSource
+        if (coinSource == null)
+        {
+            coinSource = gameObject.AddComponent<AudioSource>();
+            coinSource.playOnAwake  = false;
+            coinSource.spatialBlend = 0f;
+        }
     }
 
     void OnEnable()
     {
-        // Сбрасываем состояние при повторном включении
-        _combo        = 0;
+        _heat         = 0f;
         _megaFlashing = false;
-        _lastClickTime = -999f;
-        ApplyComboColor(instant: true);
+        ApplyHeatColor(instant: true);
     }
 
     void OnDisable()
@@ -86,13 +136,14 @@ public class ClickerJuice : MonoBehaviour
 
     void Update()
     {
-        // Остывание: если прошло comboResetTime без кликов — сбрасываем комбо
-        // и плавно возвращаем холодный цвет
-        if (_combo > 0 && !_megaFlashing &&
-            Time.unscaledTime - _lastClickTime >= comboResetTime)
+        // Убываем heat со временем
+        if (_heat > 0f)
         {
-            _combo = 0;
-            ApplyComboColor(instant: false);
+            _heat = Mathf.Max(0f, _heat - heatDecayRate * Time.unscaledDeltaTime);
+
+            // Обновляем цвет только вне mega-вспышки
+            if (!_megaFlashing)
+                ApplyHeatColor(instant: false);
         }
     }
 
@@ -103,37 +154,68 @@ public class ClickerJuice : MonoBehaviour
     {
         _count++;
 
-        // — Обновление комбо —
-        float now = Time.unscaledTime;
-        if (now - _lastClickTime < comboResetTime)
-            _combo++;
-        else
-            _combo = 1;
-        _lastClickTime = now;
+        // Мега работает только со второй фазы (Warm / Hot)
+        bool isMega = (_count % megaEvery == 0) && CurrentHeatState != HeatState.Cold;
 
-        // — Обновить текст с roll-эффектом —
+        // — Добавляем heat —
+        float heatGain = isMega
+            ? heatPerClick * megaHeatMultiplier
+            : heatPerClick;
+        _heat = Mathf.Clamp01(_heat + heatGain);
+
+        // — Число —
         RollNumber(_count);
 
-        bool isMega = (_count % megaEvery == 0);
+        // — Звук —
+        PlayPopSound();
+        if (isMega) PlayCoinSound();
+
+        // — Анимация —
         if (isMega)
             PlayMegaPunch();
         else
         {
-            // Цвет обновляем только вне mega-вспышки
-            if (!_megaFlashing)
-                ApplyComboColor(instant: false);
+            if (!_megaFlashing) ApplyHeatColor(instant: false);
             PlayPunch();
         }
     }
 
-    // ── Анимации ──────────────────────────────────────────────────────
+    // ── Sound ─────────────────────────────────────────────────────────
+
+    private void PlayPopSound()
+    {
+        if (popSource == null || popClips == null || popClips.Length == 0) return;
+        var clip = popClips[Random.Range(0, popClips.Length)];
+        if (clip == null) return;
+
+        popSource.pitch = Mathf.Lerp(pitchMin, pitchMax, _heat);
+        popSource.PlayOneShot(clip);
+    }
+
+    private void PlayCoinSound()
+    {
+        if (coinSource == null || coinClip == null) return;
+        coinSource.PlayOneShot(coinClip);
+    }
+
+    // ── Heat helpers ──────────────────────────────────────────────────
+
+    /// <summary>Состояние тепла по текущему heat.</summary>
+    private enum HeatState { Cold, Warm, Hot }
+
+    private HeatState CurrentHeatState =>
+        _heat >= heatHotThreshold  ? HeatState.Hot  :
+        _heat >= heatWarmThreshold ? HeatState.Warm :
+                                     HeatState.Cold;
+
+    // ── Visual ────────────────────────────────────────────────────────
 
     private void PlayPunch()
     {
         DOTween.Kill(_rect, complete: false);
         _rect.localScale = _baseScale;
 
-        float boost = 1f + Mathf.Clamp01((_combo - 1) * 0.04f);
+        float boost = 1f + Mathf.Clamp01(_heat * 0.5f);
         _rect.DOPunchScale(
             Vector3.one * punchStrength * boost,
             punchDuration / boost,
@@ -148,7 +230,6 @@ public class ClickerJuice : MonoBehaviour
         _rect.localScale    = _baseScale;
         _rect.localRotation = Quaternion.identity;
 
-        // Вспышка белым → потом возврат к текущему комбо-цвету
         _megaFlashing = true;
         _colorTween?.Kill();
         _colorTween = _label.DOColor(colorMega, 0.05f)
@@ -156,7 +237,7 @@ public class ClickerJuice : MonoBehaviour
             .OnComplete(() =>
             {
                 _megaFlashing = false;
-                ApplyComboColor(instant: false);
+                ApplyHeatColor(instant: false);
             });
 
         Sequence s = DOTween.Sequence().SetUpdate(true);
@@ -169,8 +250,6 @@ public class ClickerJuice : MonoBehaviour
         });
     }
 
-    // ── Число с прокруткой ────────────────────────────────────────────
-
     private void RollNumber(int target)
     {
         _rollTween?.Kill();
@@ -180,22 +259,22 @@ public class ClickerJuice : MonoBehaviour
             () => displayed,
             v =>
             {
-                displayed    = v;
-                _label.text  = v.ToString();
+                displayed   = v;
+                _label.text = v.ToString();
             },
             target,
             0.12f
         ).SetEase(Ease.OutExpo).SetUpdate(true);
     }
 
-    // ── Цвет по комбо ─────────────────────────────────────────────────
-
-    private void ApplyComboColor(bool instant)
+    private void ApplyHeatColor(bool instant)
     {
-        Color target;
-        if      (_combo >= 8) target = colorHot;
-        else if (_combo >= 4) target = colorWarm;
-        else                  target = colorCold;
+        Color target = CurrentHeatState switch
+        {
+            HeatState.Hot  => colorHot,
+            HeatState.Warm => colorWarm,
+            _              => colorCold,
+        };
 
         _colorTween?.Kill();
         if (instant)
