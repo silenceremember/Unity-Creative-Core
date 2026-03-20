@@ -66,6 +66,22 @@ public static class QuestDialogueBuilder
                 L("I see...", "Понятно...", 3.5f))
         };
 
+        var rejects = new[] {
+            CreateSeq(folder, "QuestReject_0", 5, null,
+                L("Looks like the paintings need to be clicked in the right order.", "Похоже, картины надо нажать в правильном порядке.", 3.5f)),
+            CreateSeq(folder, "QuestReject_1", 5, null,
+                L("You need to click the paintings in order: 1-2-3-4.", "Картины нужно нажать в порядке 1-2-3-4.", 3.5f)),
+            CreateSeq(folder, "QuestReject_2", 5, null,
+                L("Order 1-2-3-4. Just. Click. Them. In. Sequence.", "Порядок 1-2-3-4. Просто. Нажмите. Их. По. Очереди.", 3.5f)),
+            CreateSeq(folder, "QuestReject_3", 5, null,
+                L("I'm starting to question your cognitive abilities.", "Я начинаю сомневаться в Ваших когнитивных способностях.", 3.5f)),
+            CreateSeq(folder, "QuestReject_4", 5, null,
+                L("Good grief.", "Господи.", 1.5f),
+                L("You're not even trying, are you?", "Вы ведь даже не стараетесь, да?", 2.5f),
+                L("Fine. I'll handle this deeply complex task for you.", "Ладно. Я выполню эту сложнейшую задачу за Вас.", 3.5f),
+                L("Watch and learn.", "Смотрите и учитесь.", 2.0f))
+        };
+
         // Post-quest chain (transitions managed by XPLevelManager)
         var postQuest = CreateSeq(folder, "QuestDone_PostQuest", 5, null,
             L("And there you have it. Quest completed.", "Ну вот. Вы выполнили квест.", 2.5f),
