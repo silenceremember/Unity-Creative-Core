@@ -13,14 +13,16 @@ MonoBehaviour:
   m_Name: Seq_Ambient_41
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
-    text: "\u041F\u043E\u043C\u043E\u0433\u0438 \u0436\u0438\u043B\u044C\u0446\u0430\u043C
-      \u0440\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C\u0441\u044F \u0441 \u044D\u0442\u043E\u0439
-      \u043D\u0435\u043F\u0440\u043E\u0441\u0442\u043E\u0439 \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u043E\u0439."
-    duration: 0
-    pauseAfter: 4
-    audioClip: {fileID: 0}
-    activateObject: QuestCanvas
-  nextSequence: {fileID: 0}
+  - text: "\u041B\u0430\u0434\u043D\u043E."
+    pauseAfter: 1.5
+    activateObject: 
+  - text: "\u041F\u043E\u0445\u043E\u0436\u0435, \u043A\u043B\u0438\u043A\u0435\u0440
+      \u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0441\u044F \u0441\u043A\u0443\u0447\u043D\u043E\u0432\u0430\u0442."
+    pauseAfter: 3
+    activateObject: 
+  - text: "\u041A\u0430\u043A \u0438 \u0442\u0430\u0439\u043C\u0435\u0440."
+    pauseAfter: 2
+    activateObject: 
+  nextSequence: {fileID: 11400000, guid: d28e7830a69732e40ad1b6a03251fca3, type: 2}
   priority: 0
   restoreInterrupted: 0

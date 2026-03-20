@@ -84,10 +84,10 @@ public static class QuestDialogueBuilder
             postQuest, xpBar, levelUp, abilityChosen, abilityTried, doorUnlocked);
 
         string autoMsg = assigned > 0
-            ? $"Managers updated automatically ({assigned} fields)."
-            : "⚠ Managers not found — assign manually.";
-        EditorUtility.DisplayDialog("Done!",
-            $"Created 15 assets in {folder}.\n\n{autoMsg}", "OK");
+            ? "Scene references updated."
+            : "⚠ Manager not found in scene — assign manually.";
+        EditorUtility.DisplayDialog("Build Quest",
+            $"Assets updated in {folder}.\n{autoMsg}", "OK");
     }
 
     private static int AutoAssign(

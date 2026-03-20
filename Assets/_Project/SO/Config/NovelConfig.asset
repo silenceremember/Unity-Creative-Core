@@ -14,7 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NovelConfig
   blendDuration: 0.8
   charsPerSecond: 60
-  blipEveryNChars: 4
   blendCurve:
     serializedVersion: 2
     m_Curve:
@@ -40,3 +39,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   mixerGroup: {fileID: 24300002, guid: 8bd64c2065c534d499948a463e09f4a6, type: 2}
+  voices: []

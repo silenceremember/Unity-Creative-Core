@@ -13,11 +13,8 @@ MonoBehaviour:
   m_Name: QuestClick_2
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
-    text: "\u0425\u043C. \u0423\u0432\u0435\u0440\u0435\u043D?"
-    duration: 0
+  - text: "\u0425\u043C. \u0423\u0432\u0435\u0440\u0435\u043D\u044B?"
     pauseAfter: 2
-    audioClip: {fileID: 0}
     activateObject: 
   nextSequence: {fileID: 0}
   priority: 5

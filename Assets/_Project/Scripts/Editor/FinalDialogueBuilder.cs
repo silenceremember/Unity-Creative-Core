@@ -39,10 +39,10 @@ public static class FinalDialogueBuilder
 
         int assigned = AutoAssign(part1, part2);
         string autoMsg = assigned > 0
-            ? $"FinalSequenceManager updated ({assigned} fields)."
-            : "⚠ FinalSequenceManager not found — assign manually.";
-        EditorUtility.DisplayDialog("Done!",
-            $"Created/updated 3 assets in {folder}.\n\n{autoMsg}", "OK");
+            ? "Scene references updated."
+            : "⚠ Manager not found in scene — assign manually.";
+        EditorUtility.DisplayDialog("Build Final",
+            $"Assets updated in {folder}.\n{autoMsg}", "OK");
     }
 
     private static DialogueSequence CreatePart2(string folder)

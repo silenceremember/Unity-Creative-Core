@@ -1,35 +1,25 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Run via menu: Game → Dialogue → Build Menu Dialogues
-/// Creates all starting .asset files in Assets/_Project/Dialogue/
+/// Creates all DialogueSequence assets for the main menu narrator reactions.
+/// Menu: Game → Dialogue → Build Menu Dialogues
 /// </summary>
-public static class DialogueAssetFactory
+public static class MenuDialogueBuilder
 {
-    private const string FOLDER = "Assets/_Project/SO/Dialogue";
-
     [MenuItem("Game/Dialogue/Build Menu Dialogues")]
-    public static void CreateAll()
+    public static void Build()
     {
-        CreateAsset<NarratorChannel>("NarratorChannel");
+        const string folder = "Assets/_Project/SO/Dialogue/Menu";
 
-        CreateSeqBrokenPlay();
-        CreateSeqBrokenRepeat();
-        CreateSeqTVOn();
-        CreateSeqTVOff();
-        CreateSeqLangToEnglish();
-        CreateSeqLangToRussian();
-        CreateSeqSettingsPlay();
+        if (!AssetDatabase.IsValidFolder("Assets/_Project/SO/Dialogue"))
+            AssetDatabase.CreateFolder("Assets/_Project/SO", "Dialogue");
+        if (!AssetDatabase.IsValidFolder(folder))
+            AssetDatabase.CreateFolder("Assets/_Project/SO/Dialogue", "Menu");
 
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
 
-    }
-
-    private static void CreateSeqBrokenPlay()
-    {
-        CreateSeq("Seq_BrokenPlay", 1,
+        CreateSeq(folder, "Seq_BrokenPlay", 1, null,
             L("О. Привет.",                                 0.8f),
             L("Ты нажал Играть.",                          1.0f),
             L("Это не сработает. Игра не закончена.",      1.3f),
@@ -37,85 +27,53 @@ public static class DialogueAssetFactory
             L("Хотя... незавершённость придаёт шарм.",     1.0f),
             L("Наверное.",                                  0.8f),
             L("Попробуй поискать в Настройках.",           0.0f));
-    }
 
-    private static void CreateSeqBrokenRepeat()
-    {
-        CreateSeq("Seq_BrokenPlay_Repeat", 0,
+        CreateSeq(folder, "Seq_BrokenPlay_Repeat", 0, null,
             L("Всё ещё не работает.", 1.0f));
-    }
 
-
-    private static T CreateAsset<T>(string assetName) where T : ScriptableObject
-    {
-        string path = $"{FOLDER}/{assetName}.asset";
-
-        var existing = AssetDatabase.LoadAssetAtPath<T>(path);
-        if (existing != null)
-        {
-            // Overwrite data — GUID preserved, scene refs stay intact
-            var fresh = ScriptableObject.CreateInstance<T>();
-            EditorUtility.CopySerialized(fresh, existing);
-            EditorUtility.SetDirty(existing);
-            Object.DestroyImmediate(fresh);
-            return existing;
-        }
-
-        var asset = ScriptableObject.CreateInstance<T>();
-        AssetDatabase.CreateAsset(asset, path);
-        return asset;
-    }
-
-    private static void CreateSeqTVOn()
-    {
-        CreateSeq("Seq_TVOn", 2,
+        CreateSeq(folder, "Seq_TVOn", 2, null,
             L("Телевизор включён.",            0.8f),
             L("Программа — атмосферный шум.",  1.0f),
             L("Жильцы скорее всего довольны.", 0f));
-    }
 
-    private static void CreateSeqTVOff()
-    {
-        CreateSeq("Seq_TVOff", 2,
+        CreateSeq(folder, "Seq_TVOff", 2, null,
             L("Телевизор выключен.",            0.8f),
             L("Жильцы чуть менее счастливы.",   1.0f),
             L("Может, и нет.",                  0f));
-    }
 
-    private static void CreateSeqLangToEnglish()
-    {
-        CreateSeq("Seq_LangToEnglish", 2,
+        CreateSeq(folder, "Seq_LangToEnglish", 2, null,
             L("Переключаемся.",                 0.8f),
             L("Сейчас я скажу...",              1.0f),
             L("Oh. That actually worked.",      1.0f),
             L("I sound different in English.",  1.2f),
             L("More professional. Less me.",    1.0f),
             L("Anyway.",                        0f));
-    }
 
-    private static void CreateSeqLangToRussian()
-    {
-        CreateSeq("Seq_LangToRussian", 2,
+        CreateSeq(folder, "Seq_LangToRussian", 2, null,
             L("Switching language.",            0.8f),
             L("Back to Russian. Here goes.",    1.2f),
             L("О. Это снова я.",               1.0f),
             L("По-русски звучу по-другому.",    1.0f),
             L("Гораздо менее профессионально.", 1.0f),
             L("По крайней мере, честно.",       0f));
-    }
 
-    private static void CreateSeqSettingsPlay()
-    {
-        CreateSeq("Seq_SettingsPlay", 3,
+        CreateSeq(folder, "Seq_SettingsPlay", 3, null,
             L("О, отлично. Ты нашёл ещё одну кнопку.", 1.4f),
             L("Похоже, она тоже не работает.",         1.0f),
             L("Разработчик совсем не старался.",       1.0f),
             L("Ладно. Я запущу нас сам.",              0f));
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        EditorUtility.DisplayDialog("Build Menu Dialogues",
+            $"Assets updated in {folder}.", "OK");
     }
 
-    private static void CreateSeq(string assetName, int priority, params DialogueLine[] lines)
+    private static DialogueSequence CreateSeq(string folder, string name, int priority,
+        DialogueSequence next, params DialogueLine[] lines)
     {
-        string path = $"{FOLDER}/{assetName}.asset";
+        string path = $"{folder}/{name}.asset";
         var asset = AssetDatabase.LoadAssetAtPath<DialogueSequence>(path);
 
         if (asset == null)
@@ -125,7 +83,8 @@ public static class DialogueAssetFactory
         }
 
         var so = new SerializedObject(asset);
-        so.FindProperty("priority").intValue = priority;
+        so.FindProperty("priority").intValue                 = priority;
+        so.FindProperty("nextSequence").objectReferenceValue = next;
 
         var linesProp = so.FindProperty("lines");
         linesProp.arraySize = lines.Length;
@@ -139,16 +98,18 @@ public static class DialogueAssetFactory
 
         so.ApplyModifiedProperties();
         EditorUtility.SetDirty(asset);
+        return asset;
     }
 
-    private static DialogueLine L(string text, float pause)
+    private static DialogueLine L(string text, float pause, string activateObject = "")
     {
         string json = JsonUtility.ToJson(new DialogueLineData
         {
             text = text,
             pauseAfter = pause,
-            activateObject = ""
+            activateObject = activateObject
         });
         return JsonUtility.FromJson<DialogueLine>(json);
     }
 }
+#endif

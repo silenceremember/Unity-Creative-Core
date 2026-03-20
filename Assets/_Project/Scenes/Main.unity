@@ -666,9 +666,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BrokenPlayButton
   channel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
-  brokenSequence: {fileID: 11400000, guid: c54ca6182e3d2db4bbb4ca42d0fbb89d, type: 2}
+  brokenSequence: {fileID: 11400000, guid: b47f46a940786914ba5b048191cdecd7, type: 2}
   repeatSequences:
-  - {fileID: 11400000, guid: 607cd8dcad14b524dace33720d8c5d2c, type: 2}
+  - {fileID: 11400000, guid: 466fbd504b831be4ca69e1af2c8b4f76, type: 2}
   settingsButton: {fileID: 1258788235}
 --- !u!114 &87551610
 MonoBehaviour:
@@ -1868,7 +1868,7 @@ MonoBehaviour:
         m_MethodName: Play
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: d7fb405c26548ee4d9e9cd21ea59bb20, type: 2}
+          m_ObjectArgument: {fileID: 11400000, guid: 702e39f87b571884b84ffc97ce06ea44, type: 2}
           m_ObjectArgumentAssemblyTypeName: DialogueSequence, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -5428,7 +5428,7 @@ MonoBehaviour:
         m_MethodName: Play
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 92d880eadc41c474186392baf80783e9, type: 2}
+          m_ObjectArgument: {fileID: 11400000, guid: 2d645e141535ef14998c7f1962cfd2fe, type: 2}
           m_ObjectArgumentAssemblyTypeName: DialogueSequence, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -6364,7 +6364,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1341826916}
         m_TargetAssemblyTypeName: VisualNovelManager, Assembly-CSharp
         m_MethodName: OnNextButton
         m_Mode: 1
@@ -15094,8 +15094,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanguageButton
   channel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
-  seqToEnglish: {fileID: 11400000, guid: 6ab3c138f24573243a6f0b9b1d9bc933, type: 2}
-  seqToRussian: {fileID: 11400000, guid: 78e5c5756d7773f4aa5ca6cff9c909a9, type: 2}
+  seqToEnglish: {fileID: 11400000, guid: db9a9897c81bd1748b238261cf26907b, type: 2}
+  seqToRussian: {fileID: 11400000, guid: 6d85219ef6ebd9f45ba22ece8a0404f1, type: 2}
 --- !u!114 &1701505390
 MonoBehaviour:
   m_ObjectHideFlags: 0

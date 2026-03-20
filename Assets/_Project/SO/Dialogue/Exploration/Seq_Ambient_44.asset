@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5dbbf1088378ae04aa7e3620b494a8f5, type: 3}
-  m_Name: Seq_BrokenPlay_Repeat
+  m_Name: Seq_Ambient_44
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u0412\u0441\u0451 \u0435\u0449\u0451 \u043D\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442."
-    duration: 0
-    pauseAfter: 1
-    activateObject: 
+  - text: "\u041F\u043E\u043C\u043E\u0433\u0438\u0442\u0435 \u0436\u0438\u043B\u044C\u0446\u0430\u043C
+      \u0440\u0430\u0437\u043E\u0431\u0440\u0430\u0442\u044C\u0441\u044F \u0441 \u044D\u0442\u0438\u043C."
+    pauseAfter: 4
+    activateObject: QuestCanvas
   nextSequence: {fileID: 0}
   priority: 0
   restoreInterrupted: 0

@@ -13,30 +13,18 @@ MonoBehaviour:
   m_Name: Seq_Ambient_10
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
-    text: "\u0412\u043E\u043E\u0431\u0449\u0435, \u043C\u043E\u044F \u0440\u043E\u043B\u044C..."
-    duration: 0
+  - text: "\u0412\u043E\u043E\u0431\u0449\u0435, \u043C\u043E\u044F \u0440\u043E\u043B\u044C..."
     pauseAfter: 3
-    audioClip: {fileID: 0}
     activateObject: 
-  - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
-    text: "\u041F\u0440\u043E\u0441\u0442\u043E \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C,
-      \u043F\u043E\u043A\u0430 \u0442\u044B \u0445\u043E\u0434\u0438\u0448\u044C."
-    duration: 0
+  - text: "\u041F\u0440\u043E\u0441\u0442\u043E \u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C,
+      \u043F\u043E\u043A\u0430 \u0412\u044B \u0445\u043E\u0434\u0438\u0442\u0435."
     pauseAfter: 2
-    audioClip: {fileID: 0}
     activateObject: 
-  - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
-    text: "\u041E\u0431\u044A\u044F\u0441\u043D\u044F\u0442\u044C \u043E\u0447\u0435\u0432\u0438\u0434\u043D\u043E\u0435."
-    duration: 0
+  - text: "\u041E\u0431\u044A\u044F\u0441\u043D\u044F\u0442\u044C \u043E\u0447\u0435\u0432\u0438\u0434\u043D\u043E\u0435."
     pauseAfter: 1.5
-    audioClip: {fileID: 0}
     activateObject: 
-  - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
-    text: "\u0414\u0430, \u0442\u044F\u0436\u0451\u043B\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430."
-    duration: 0
+  - text: "\u0414\u0430, \u0442\u044F\u0436\u0451\u043B\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430."
     pauseAfter: 3
-    audioClip: {fileID: 0}
     activateObject: 
   nextSequence: {fileID: 11400000, guid: 780ab3108e64b714ab8d4b7808ac3fa4, type: 2}
   priority: 0

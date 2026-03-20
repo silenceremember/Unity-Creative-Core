@@ -3,7 +3,6 @@
 /// </summary>
 public enum Speaker
 {
-    None,
     John,
     Mary,
     Player

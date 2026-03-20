@@ -15,7 +15,6 @@ MonoBehaviour:
   lines:
   - text: "\u042D\u0442\u043E \u043D\u0435 \u0442\u0430\u043A \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442,
       \u0414\u0436\u043E\u043D."
-    duration: 0
     pauseAfter: 1.2
     activateObject: 
   nextSequence: {fileID: 0}

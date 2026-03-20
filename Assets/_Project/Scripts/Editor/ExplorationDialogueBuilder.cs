@@ -287,11 +287,10 @@ public static class ExplorationDialogueBuilder
 
 
         string autoMsg = assignedCount > 0
-            ? $"ExplorationManager in scene updated automatically ({assignedCount} fields)."
-            : "⚠ ExplorationManager not found in open scene — assign manually.";
-        EditorUtility.DisplayDialog("Done!",
-            $"Updated {segmentLines.Length} ambient segments + 2 triggers.\n\n{autoMsg}",
-            "OK");
+            ? "Scene references updated."
+            : "⚠ Manager not found in scene — assign manually.";
+        EditorUtility.DisplayDialog("Build Exploration",
+            $"Assets updated in {folder}.\n{autoMsg}", "OK");
     }
 
     /// <summary>
