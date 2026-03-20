@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Seq_Ambient_42
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u0427\u0442\u043E \u043D\u0430\u0441\u0447\u0451\u0442 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0433\u043E
+  - textEn: How about a little quest?
+    text: "\u0427\u0442\u043E \u043D\u0430\u0441\u0447\u0451\u0442 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0433\u043E
       \u043A\u0432\u0435\u0441\u0442\u0430?"
     pauseAfter: 3
     activateObject: 
-  - text: ...
+  - textEn: ...
+    text: ...
     pauseAfter: 1
     activateObject: 
   nextSequence: {fileID: 11400000, guid: 84b1f2287de559d40881244fef27d3f9, type: 2}

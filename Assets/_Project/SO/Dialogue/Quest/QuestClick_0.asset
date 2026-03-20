@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: QuestClick_0
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u0418\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0439 \u0432\u044B\u0431\u043E\u0440."
+  - textEn: Interesting choice.
+    text: "\u0418\u043D\u0442\u0435\u0440\u0435\u0441\u043D\u044B\u0439 \u0432\u044B\u0431\u043E\u0440."
     pauseAfter: 2
     activateObject: 
   nextSequence: {fileID: 0}

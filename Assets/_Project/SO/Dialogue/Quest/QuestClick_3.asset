@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: QuestClick_3
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u041D\u0443 \u0447\u0442\u043E \u0436."
+  - textEn: Well then...
+    text: "\u041D\u0443 \u0447\u0442\u043E \u0436..."
     pauseAfter: 2
     activateObject: 
   nextSequence: {fileID: 0}

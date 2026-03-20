@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: Seq_TVOff
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u0422\u0435\u043B\u0435\u0432\u0438\u0437\u043E\u0440 \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D."
+  - textEn: The TV is off.
+    text: "\u0422\u0435\u043B\u0435\u0432\u0438\u0437\u043E\u0440 \u0432\u044B\u043A\u043B\u044E\u0447\u0435\u043D."
     pauseAfter: 0.8
     activateObject: 
-  - text: "\u0416\u0438\u043B\u044C\u0446\u044B \u0447\u0443\u0442\u044C \u043C\u0435\u043D\u0435\u0435
+  - textEn: The tenants are slightly less happy.
+    text: "\u0416\u0438\u043B\u044C\u0446\u044B \u0447\u0443\u0442\u044C \u043C\u0435\u043D\u0435\u0435
       \u0441\u0447\u0430\u0441\u0442\u043B\u0438\u0432\u044B."
     pauseAfter: 1
     activateObject: 
-  - text: "\u041C\u043E\u0436\u0435\u0442, \u0438 \u043D\u0435\u0442."
+  - textEn: Or maybe not.
+    text: "\u041C\u043E\u0436\u0435\u0442, \u0438 \u043D\u0435\u0442."
     pauseAfter: 0
     activateObject: 
   nextSequence: {fileID: 0}

@@ -13,13 +13,16 @@ MonoBehaviour:
   m_Name: Seq_Ambient_29
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u0427\u0442\u043E-\u0442\u043E \u0432 \u044D\u0442\u043E\u043C \u0435\u0441\u0442\u044C."
+  - textEn: There's something to it.
+    text: "\u0427\u0442\u043E-\u0442\u043E \u0432 \u044D\u0442\u043E\u043C \u0435\u0441\u0442\u044C."
     pauseAfter: 2
     activateObject: 
-  - text: "\u041F\u0440\u0438\u043C\u0438\u0442\u0438\u0432\u043D\u044B\u0439 \u0440\u0438\u0442\u043C."
+  - textEn: A primitive rhythm.
+    text: "\u041F\u0440\u0438\u043C\u0438\u0442\u0438\u0432\u043D\u044B\u0439 \u0440\u0438\u0442\u043C."
     pauseAfter: 2
     activateObject: 
-  - text: "\u041A\u043B\u0438\u043A. \u0417\u0432\u0443\u043A. \u0427\u0438\u0441\u043B\u043E
+  - textEn: Click. Sound. Number goes up.
+    text: "\u041A\u043B\u0438\u043A. \u0417\u0432\u0443\u043A. \u0427\u0438\u0441\u043B\u043E
       \u0440\u0430\u0441\u0442\u0451\u0442."
     pauseAfter: 2.5
     activateObject: 

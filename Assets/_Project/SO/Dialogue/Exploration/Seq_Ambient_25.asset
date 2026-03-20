@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Seq_Ambient_25
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u041B\u0430\u0434\u043D\u043E. \u041F\u043E\u0445\u043E\u0436\u0435,
+  - textEn: Fine. The timer didn't impress you, it seems.
+    text: "\u041B\u0430\u0434\u043D\u043E. \u041F\u043E\u0445\u043E\u0436\u0435,
       \u0442\u0430\u0439\u043C\u0435\u0440 \u0412\u0430\u0441 \u043D\u0435 \u0432\u043F\u0435\u0447\u0430\u0442\u043B\u0438\u043B."
     pauseAfter: 3
     activateObject: 
-  - text: "\u0410 \u0447\u0442\u043E \u043D\u0430\u0441\u0447\u0451\u0442 \u043A\u043B\u0438\u043A\u0435\u0440\u0430?"
+  - textEn: How about a clicker?
+    text: "\u0410 \u0447\u0442\u043E \u043D\u0430\u0441\u0447\u0451\u0442 \u043A\u043B\u0438\u043A\u0435\u0440\u0430?"
     pauseAfter: 2
     activateObject: Clicker
   nextSequence: {fileID: 11400000, guid: d183d518c0cfbb944bb4718875fadc26, type: 2}

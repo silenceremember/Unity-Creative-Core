@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Narr_JohnExchange3
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u0422\u044B \u0440\u0430\u0437\u0433\u043E\u0432\u0430\u0440\u0438\u0432\u0430\u0435\u0448\u044C."
+  - textEn: You're talking.
+    text: "\u0422\u044B \u0440\u0430\u0437\u0433\u043E\u0432\u0430\u0440\u0438\u0432\u0430\u0435\u0448\u044C."
     pauseAfter: 1.5
     activateObject: 
   nextSequence: {fileID: 0}

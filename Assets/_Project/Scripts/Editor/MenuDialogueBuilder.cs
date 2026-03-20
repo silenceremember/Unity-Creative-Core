@@ -19,25 +19,25 @@ public static class MenuDialogueBuilder
             AssetDatabase.CreateFolder("Assets/_Project/SO/Dialogue", "Menu");
 
         CreateSeq(folder, "Seq_BrokenPlay", 1, null,
-            L("", "О. Привет.", 0.8f),
-            L("", "Вы нажали «Играть».", 1.0f),
-            L("", "Это не сработает. Игра не закончена.", 1.5f),
-            L("", "И вряд ли когда-нибудь будет...", 1.2f),
-            L("", "Хотя сейчас это называют «Ранний доступ».", 1.8f),
-            L("", "Так что всё по стандартам индустрии.", 1.5f),
-            L("", "Попробуйте покопаться в Настройках.", 0.0f));
+            L("Oh. Hello.", "О. Привет.", 0.8f),
+            L("You pressed 'Play'.", "Вы нажали «Играть».", 1.0f),
+            L("It won't work. The game isn't finished.", "Это не сработает. Игра не закончена.", 1.5f),
+            L("And it probably never will be...", "И вряд ли когда-нибудь будет...", 1.2f),
+            L("Although nowadays they call it 'Early Access'.", "Хотя сейчас это называют «Ранний доступ».", 1.8f),
+            L("So it's all up to industry standards.", "Так что всё по стандартам индустрии.", 1.5f),
+            L("Try poking around in the Settings.", "Попробуйте покопаться в Настройках.", 0.0f));
 
         CreateSeq(folder, "Seq_BrokenPlay_Repeat", 0, null,
-            L("", "Всё ещё не работает. Я же говорил.", 1.2f));
+            L("Still doesn't work. Told you.", "Всё ещё не работает. Я же говорил.", 1.2f));
 
         CreateSeq(folder, "Seq_TVOn", 2, null,
-            L("", "Телевизор включён.", 0.8f),
-            L("", "Жильцы, скорее всего, довольны.", 0f));
+            L("The TV is on.", "Телевизор включён.", 0.8f),
+            L("The tenants are most likely pleased.", "Жильцы, скорее всего, довольны.", 0f));
 
         CreateSeq(folder, "Seq_TVOff", 2, null,
-            L("", "Телевизор выключен.", 0.8f),
-            L("", "Жильцы чуть менее счастливы.", 1.0f),
-            L("", "Может, и нет.", 0f));
+            L("The TV is off.", "Телевизор выключен.", 0.8f),
+            L("The tenants are slightly less happy.", "Жильцы чуть менее счастливы.", 1.0f),
+            L("Or maybe not.", "Может, и нет.", 0f));
 
         CreateSeq(folder, "Seq_LangTransition", 2, null,
             L("Переключаюсь...", "Switching...", 0.8f),
@@ -48,10 +48,10 @@ public static class MenuDialogueBuilder
             L("Anyway.", "Наверное.", 0f));
 
         CreateSeq(folder, "Seq_SettingsPlay", 3, null,
-            L("", "Отлично. Вы нашли ещё одну кнопку.", 1.4f),
-            L("", "Но, похоже, она тоже не работает.", 1.0f),
-            L("", "Разработчик совсем не старался.", 1.0f),
-            L("", "Ладно. Я запущу нас сам.", 0f));
+            L("Great. You found another button.", "Отлично. Вы нашли ещё одну кнопку.", 1.4f),
+            L("But it doesn't seem to work either.", "Но, похоже, она тоже не работает.", 1.0f),
+            L("The Developer didn't try very hard.", "Разработчик совсем не старался.", 1.0f),
+            L("Fine. I'll launch us myself.", "Ладно. Я запущу нас сам.", 0f));
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();

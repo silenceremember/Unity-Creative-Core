@@ -13,16 +13,20 @@ MonoBehaviour:
   m_Name: QuestDone_LevelUp
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u041E\u0442\u043B\u0438\u0447\u043D\u043E, \u0412\u044B \u043F\u043E\u0432\u044B\u0441\u0438\u043B\u0438
+  - textEn: Wow! You've leveled up!
+    text: "\u041E\u0433\u043E! \u0412\u044B \u043F\u043E\u0432\u044B\u0441\u0438\u043B\u0438
       \u0443\u0440\u043E\u0432\u0435\u043D\u044C!"
+    pauseAfter: 2
+    activateObject: 
+  - textEn: Let's see...
+    text: "\u0414\u0430\u0432\u0430\u0439\u0442\u0435 \u043F\u043E\u0441\u043C\u043E\u0442\u0440\u0438\u043C..."
     pauseAfter: 1.5
     activateObject: 
-  - text: "\u0414\u0430\u0432\u0430\u0439\u0442\u0435 \u043F\u043E\u0441\u043C\u043E\u0442\u0440\u0438\u043C..."
-    pauseAfter: 1
-    activateObject: 
-  - text: "\u0427\u0442\u043E \u0436\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u043B
-      \u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A."
-    pauseAfter: 2.5
+  - textEn: What amazing skills has the Developer to offer?
+    text: "\u041A\u0430\u043A\u0438\u0435 \u0436\u0435 \u043F\u043E\u0442\u0440\u044F\u0441\u0430\u044E\u0449\u0438\u0435
+      \u043D\u0430\u0432\u044B\u043A\u0438 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442
+      \u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A?"
+    pauseAfter: 3.5
     activateObject: 
   nextSequence: {fileID: 0}
   priority: 5

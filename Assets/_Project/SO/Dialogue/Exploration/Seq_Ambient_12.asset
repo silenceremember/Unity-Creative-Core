@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: Seq_Ambient_12
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u0422\u0438\u0448\u0438\u043D\u0430, \u043A\u0441\u0442\u0430\u0442\u0438,
+  - textEn: Silence, by the way, is also narrative.
+    text: "\u0422\u0438\u0448\u0438\u043D\u0430, \u043A\u0441\u0442\u0430\u0442\u0438,
       \u0442\u043E\u0436\u0435 \u043D\u0430\u0440\u0440\u0430\u0442\u0438\u0432."
     pauseAfter: 2
     activateObject: 
-  - text: "\u041D\u043E \u0435\u0441\u043B\u0438 \u044F \u0437\u0430\u043C\u043E\u043B\u0447\u0443..."
+  - textEn: But if I go quiet...
+    text: "\u041D\u043E \u0435\u0441\u043B\u0438 \u044F \u0437\u0430\u043C\u043E\u043B\u0447\u0443..."
     pauseAfter: 1.5
     activateObject: 
-  - text: "\u0412\u0430\u043C \u0441\u0442\u0430\u043D\u0435\u0442 \u0441\u043B\u0438\u0448\u043A\u043E\u043C
+  - textEn: You'll get too bored.
+    text: "\u0412\u0430\u043C \u0441\u0442\u0430\u043D\u0435\u0442 \u0441\u043B\u0438\u0448\u043A\u043E\u043C
       \u0441\u043A\u0443\u0447\u043D\u043E."
     pauseAfter: 5
     activateObject: 

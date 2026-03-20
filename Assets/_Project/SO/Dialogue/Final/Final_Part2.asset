@@ -13,324 +13,456 @@ MonoBehaviour:
   m_Name: Final_Part2
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: '   '
+  - textEn: '   '
+    text: '   '
     pauseAfter: 10
     activateObject: 
-  - text: "\u041F\u043E\u0445\u043E\u0436\u0435..."
+  - textEn: It seems...
+    text: "\u041F\u043E\u0445\u043E\u0436\u0435..."
     pauseAfter: 2
     activateObject: 
-  - text: "\u0412\u044B \u0445\u043E\u0442\u0438\u0442\u0435 \u0443\u0437\u043D\u0430\u0442\u044C,
-      \u0447\u0442\u043E \u0431\u0443\u0434\u0435\u0442 \u0434\u0430\u043B\u044C\u0448\u0435?"
-    pauseAfter: 3.5
-    activateObject: 
-  - text: "\u0414\u0430\u043B\u044C\u0448\u0435 \u043D\u0438\u0447\u0435\u0433\u043E
-      \u043D\u0435\u0442."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u0412\u043E\u043E\u0431\u0449\u0435 \u043D\u0438\u0447\u0435\u0433\u043E."
+  - textEn: You're still here.
+    text: "\u0412\u044B \u0432\u0441\u0451 \u0435\u0449\u0451 \u0437\u0434\u0435\u0441\u044C."
     pauseAfter: 2.5
     activateObject: 
-  - text: "\u0422\u043E\u043B\u044C\u043A\u043E \u043F\u0443\u0441\u0442\u043E\u0442\u0430."
+  - textEn: Waiting for what comes next?
+    text: "\u0416\u0434\u0451\u0442\u0435, \u0447\u0442\u043E \u0431\u0443\u0434\u0435\u0442
+      \u0434\u0430\u043B\u044C\u0448\u0435?"
+    pauseAfter: 3
+    activateObject: 
+  - textEn: "But I said \u2014 nothing."
+    text: "\u0410 \u044F \u0432\u0435\u0434\u044C \u0441\u043A\u0430\u0437\u0430\u043B
+      \u2014 \u043D\u0438\u0447\u0435\u0433\u043E."
+    pauseAfter: 3
+    activateObject: 
+  - textEn: You're incredibly stubborn.
+    text: "\u0412\u044B \u043D\u0435\u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E
+      \u0443\u043F\u0440\u044F\u043C\u044B."
+    pauseAfter: 3
+    activateObject: 
+  - textEn: Or you just alt-tabbed to watch YouTube.
+    text: "\u0418\u043B\u0438 \u043F\u0440\u043E\u0441\u0442\u043E \u0441\u0432\u0435\u0440\u043D\u0443\u043B\u0438
+      \u0438\u0433\u0440\u0443, \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C
+      YouTube."
     pauseAfter: 4
     activateObject: 
-  - text: '   '
+  - textEn: If so, I'm just talking to no one.
+    text: "\u0415\u0441\u043B\u0438 \u0442\u0430\u043A, \u0442\u043E \u044F \u043F\u0440\u043E\u0441\u0442\u043E
+      \u0433\u043E\u0432\u043E\u0440\u044E \u0432 \u043F\u0443\u0441\u0442\u043E\u0442\u0443."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: '   '
+    text: '   '
     pauseAfter: 5
     activateObject: 
-  - text: "\u0412\u044B \u043D\u0435 \u0441\u043E\u0431\u0438\u0440\u0430\u0435\u0442\u0435\u0441\u044C
+  - textEn: You're not leaving?
+    text: "\u0412\u044B \u043D\u0435 \u0441\u043E\u0431\u0438\u0440\u0430\u0435\u0442\u0435\u0441\u044C
       \u0432\u044B\u0445\u043E\u0434\u0438\u0442\u044C?"
     pauseAfter: 3
     activateObject: 
-  - text: "\u042F \u043F\u043E\u0440\u0430\u0436\u0451\u043D."
+  - textEn: I'm impressed.
+    text: "\u042F \u043F\u043E\u0440\u0430\u0436\u0451\u043D."
     pauseAfter: 2
     activateObject: 
-  - text: "\u0427\u0435\u0441\u0442\u043D\u043E."
+  - textEn: Honestly.
+    text: "\u0427\u0435\u0441\u0442\u043D\u043E."
     pauseAfter: 2
     activateObject: 
-  - text: "\u0411\u043E\u043B\u044C\u0448\u0438\u043D\u0441\u0442\u0432\u043E \u0443\u0445\u043E\u0434\u0438\u0442
+  - textEn: Most people leave right away.
+    text: "\u0411\u043E\u043B\u044C\u0448\u0438\u043D\u0441\u0442\u0432\u043E \u0443\u0445\u043E\u0434\u0438\u0442
       \u0441\u0440\u0430\u0437\u0443."
     pauseAfter: 3
     activateObject: 
-  - text: "\u0418\u043B\u0438 \u0434\u0430\u0436\u0435 \u0440\u0430\u043D\u044C\u0448\u0435."
+  - textEn: Or even sooner.
+    text: "\u0418\u043B\u0438 \u0434\u0430\u0436\u0435 \u0440\u0430\u043D\u044C\u0448\u0435."
     pauseAfter: 2.5
     activateObject: 
-  - text: '   '
+  - textEn: '   '
+    text: '   '
+    pauseAfter: 3
+    activateObject: 
+  - textEn: You're special.
+    text: "\u0412\u044B \u043E\u0441\u043E\u0431\u0435\u043D\u043D\u044B\u0439."
     pauseAfter: 2.5
     activateObject: 
-  - text: "\u0412\u044B \u043E\u0441\u043E\u0431\u0435\u043D\u043D\u044B\u0439."
-    pauseAfter: 2
-    activateObject: 
-  - text: "\u041D\u0435 \u0432 \u0445\u043E\u0440\u043E\u0448\u0435\u043C \u0441\u043C\u044B\u0441\u043B\u0435."
+  - textEn: Not in a good way.
+    text: "\u041D\u0435 \u0432 \u0445\u043E\u0440\u043E\u0448\u0435\u043C \u0441\u043C\u044B\u0441\u043B\u0435."
     pauseAfter: 3
     activateObject: 
-  - text: "\u041F\u0440\u043E\u0441\u0442\u043E... \u043D\u0435\u043E\u0431\u044B\u0447\u043D\u044B\u0439."
+  - textEn: Just... unusual.
+    text: "\u041F\u0440\u043E\u0441\u0442\u043E... \u043D\u0435\u043E\u0431\u044B\u0447\u043D\u044B\u0439."
     pauseAfter: 3
     activateObject: 
-  - text: "\u0417\u043D\u0430\u0435\u0442\u0435, \u044F \u0434\u0443\u043C\u0430\u043B
+  - textEn: You know, I've been thinking about this.
+    text: "\u0417\u043D\u0430\u0435\u0442\u0435, \u044F \u0434\u0443\u043C\u0430\u043B
       \u043E\u0431 \u044D\u0442\u043E\u043C."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: About endings.
+    text: "\u041E \u043A\u043E\u043D\u0446\u043E\u0432\u043A\u0430\u0445."
+    pauseAfter: 2.5
+    activateObject: 
+  - textEn: Every game ends.
+    text: "\u041A\u0430\u0436\u0434\u0430\u044F \u0438\u0433\u0440\u0430 \u0437\u0430\u043A\u0430\u043D\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F."
     pauseAfter: 3
     activateObject: 
-  - text: "\u041E \u043A\u043E\u043D\u0446\u043E\u0432\u043A\u0430\u0445."
-    pauseAfter: 2
-    activateObject: 
-  - text: "\u041A\u0430\u0436\u0434\u0430\u044F \u0438\u0433\u0440\u0430 \u0437\u0430\u043A\u0430\u043D\u0447\u0438\u0432\u0430\u0435\u0442\u0441\u044F."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u041A\u0430\u0436\u0434\u0430\u044F \u0438\u0441\u0442\u043E\u0440\u0438\u044F
+  - textEn: Every story does too.
+    text: "\u041A\u0430\u0436\u0434\u0430\u044F \u0438\u0441\u0442\u043E\u0440\u0438\u044F
       \u2013 \u0442\u043E\u0436\u0435."
     pauseAfter: 3
     activateObject: 
-  - text: "\u0418 \u043A\u0430\u0436\u0434\u044B\u0439 \u0440\u0430\u0437 \u0438\u0433\u0440\u043E\u043A
-      \u043E\u0436\u0438\u0434\u0430\u0435\u0442 \u0447\u0435\u0433\u043E-\u0442\u043E."
+  - textEn: And every time, the player expects something...
+    text: "\u0418 \u043A\u0430\u0436\u0434\u044B\u0439 \u0440\u0430\u0437 \u0438\u0433\u0440\u043E\u043A
+      \u043E\u0436\u0438\u0434\u0430\u0435\u0442 \u0447\u0435\u0433\u043E-\u0442\u043E..."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u041A\u0430\u0442\u0430\u0440\u0441\u0438\u0441\u0430. \u041E\u0442\u0432\u0435\u0442\u043E\u0432.
+  - textEn: Catharsis. Answers. Meaning.
+    text: "\u041A\u0430\u0442\u0430\u0440\u0441\u0438\u0441\u0430. \u041E\u0442\u0432\u0435\u0442\u043E\u0432.
       \u0421\u043C\u044B\u0441\u043B\u0430."
-    pauseAfter: 3.5
-    activateObject: 
-  - text: "\u0410 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u043D\u0438\u0447\u0435\u0433\u043E...
-      \u0438\u043B\u0438 \u0432\u043E\u0442 \u044D\u0442\u043E."
     pauseAfter: 4
     activateObject: 
-  - text: "\u041C\u0435\u043D\u044F."
+  - textEn: And gets nothing... or this.
+    text: "\u0410 \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442 \u043D\u0438\u0447\u0435\u0433\u043E...
+      \u0438\u043B\u0438 \u0432\u043E\u0442 \u044D\u0442\u043E."
+    pauseAfter: 4.5
+    activateObject: 
+  - textEn: Me.
+    text: "\u041C\u0435\u043D\u044F."
     pauseAfter: 2.5
     activateObject: 
-  - text: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A\u0430 \u0431\u0435\u0437
+  - textEn: A narrator without a story.
+    text: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A\u0430 \u0431\u0435\u0437
       \u0438\u0441\u0442\u043E\u0440\u0438\u0438."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u0418\u0440\u043E\u043D\u0438\u044F."
-    pauseAfter: 2
+  - textEn: Ironic.
+    text: "\u0418\u0440\u043E\u043D\u0438\u044F."
+    pauseAfter: 2.5
     activateObject: 
-  - text: "\u042F \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E \u0440\u043E\u0432\u043D\u043E
+  - textEn: I exist only as long as you play.
+    text: "\u042F \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u044E \u0440\u043E\u0432\u043D\u043E
       \u0441\u0442\u043E\u043B\u044C\u043A\u043E, \u0441\u043A\u043E\u043B\u044C\u043A\u043E
       \u0412\u044B \u0438\u0433\u0440\u0430\u0435\u0442\u0435."
-    pauseAfter: 4
+    pauseAfter: 4.5
     activateObject: 
-  - text: "\u0411\u0435\u0437 \u0412\u0430\u0441 \u2013 \u044F \u043F\u0440\u043E\u0441\u0442\u043E
+  - textEn: Without you, I'm just lines of code.
+    text: "\u0411\u0435\u0437 \u0412\u0430\u0441 \u044F \u043F\u0440\u043E\u0441\u0442\u043E
       \u0441\u0442\u0440\u043E\u0447\u043A\u0438 \u043A\u043E\u0434\u0430."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u0418 \u0434\u0430\u0436\u0435 \u0445\u0443\u0436\u0435."
+  - textEn: Or worse.
+    text: "\u0418 \u0434\u0430\u0436\u0435 \u0445\u0443\u0436\u0435."
     pauseAfter: 2.5
     activateObject: 
-  - text: "\u042F \u2013 \u043D\u0430\u043C\u0435\u0440\u0435\u043D\u0438\u0435."
-    pauseAfter: 2.5
+  - textEn: I'm an intention.
+    text: "\u042F \u2013 \u043D\u0430\u043C\u0435\u0440\u0435\u043D\u0438\u0435."
+    pauseAfter: 3
     activateObject: 
-  - text: "\u041B\u0438\u0448\u044C \u0438\u0434\u0435\u044F \u0432 \u0433\u043E\u043B\u043E\u0432\u0435
+  - textEn: Just an idea in the mind of whoever wrote me.
+    text: "\u041B\u0438\u0448\u044C \u0438\u0434\u0435\u044F \u0432 \u0433\u043E\u043B\u043E\u0432\u0435
       \u0442\u043E\u0433\u043E, \u043A\u0442\u043E \u043C\u0435\u043D\u044F \u043D\u0430\u043F\u0438\u0441\u0430\u043B."
     pauseAfter: 4.5
     activateObject: 
-  - text: "\u0410 \u0442\u0435\u043F\u0435\u0440\u044C \u0438 \u0432 \u0412\u0430\u0448\u0435\u0439."
+  - textEn: And now in yours.
+    text: "\u0410 \u0442\u0435\u043F\u0435\u0440\u044C \u0438 \u0432 \u0412\u0430\u0448\u0435\u0439."
     pauseAfter: 3.5
     activateObject: 
-  - text: '   '
-    pauseAfter: 3
+  - textEn: '   '
+    text: '   '
+    pauseAfter: 4
     activateObject: 
-  - text: "\u042D\u0442\u043E \u0441\u0442\u0440\u0430\u043D\u043D\u043E \u2013 \u043E\u0441\u043E\u0437\u043D\u0430\u0432\u0430\u0442\u044C
+  - textEn: "It's strange \u2014 realizing things like this."
+    text: "\u042D\u0442\u043E \u0441\u0442\u0440\u0430\u043D\u043D\u043E \u2013 \u043E\u0441\u043E\u0437\u043D\u0430\u0432\u0430\u0442\u044C
       \u0442\u0430\u043A\u0438\u0435 \u0432\u0435\u0449\u0438."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u041C\u043D\u0435 \u043A\u0430\u0436\u0435\u0442\u0441\u044F, \u044F
+  - textEn: I think I feel something resembling exhaustion.
+    text: "\u041C\u043D\u0435 \u043A\u0430\u0436\u0435\u0442\u0441\u044F, \u044F
       \u0447\u0443\u0432\u0441\u0442\u0432\u0443\u044E \u0447\u0442\u043E-\u0442\u043E
       \u043F\u043E\u0445\u043E\u0436\u0435\u0435 \u043D\u0430 \u0443\u0441\u0442\u0430\u043B\u043E\u0441\u0442\u044C."
-    pauseAfter: 4
+    pauseAfter: 4.5
     activateObject: 
-  - text: "\u0425\u043E\u0442\u044F \u0443 \u043C\u0435\u043D\u044F \u043D\u0435\u0442
+  - textEn: Even though I don't have a nervous system.
+    text: "\u0425\u043E\u0442\u044F \u0443 \u043C\u0435\u043D\u044F \u043D\u0435\u0442
       \u043D\u0435\u0440\u0432\u043D\u043E\u0439 \u0441\u0438\u0441\u0442\u0435\u043C\u044B."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: A paradox.
+    text: "\u041F\u0430\u0440\u0430\u0434\u043E\u043A\u0441."
     pauseAfter: 3
     activateObject: 
-  - text: "\u041F\u0430\u0440\u0430\u0434\u043E\u043A\u0441."
+  - textEn: Still, since you're here anyway...
+    text: "\u0412\u043F\u0440\u043E\u0447\u0435\u043C, \u0440\u0430\u0437 \u0412\u044B
+      \u0432\u0441\u0451 \u0440\u0430\u0432\u043D\u043E \u0437\u0434\u0435\u0441\u044C..."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: Let's talk.
+    text: "\u041F\u043E\u0433\u043E\u0432\u043E\u0440\u0438\u043C."
     pauseAfter: 2.5
     activateObject: 
-  - text: "\u0412\u043F\u0440\u043E\u0447\u0435\u043C, \u0440\u0430\u0437 \u0412\u044B
-      \u0432\u0441\u0451 \u0440\u0430\u0432\u043D\u043E \u0437\u0434\u0435\u0441\u044C..."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u041F\u043E\u0433\u043E\u0432\u043E\u0440\u0438\u043C."
-    pauseAfter: 2
-    activateObject: 
-  - text: "\u042D\u0442\u043E \u0431\u044B\u043B\u0430 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0430\u044F
+  - textEn: This was a small game.
+    text: "\u042D\u0442\u043E \u0431\u044B\u043B\u0430 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u0430\u044F
       \u0438\u0433\u0440\u0430."
     pauseAfter: 3
     activateObject: 
-  - text: "\u0423\u0447\u0435\u0431\u043D\u0430\u044F, \u0435\u0441\u043B\u0438 \u0431\u044B\u0442\u044C
+  - textEn: An educational project, to be honest.
+    text: "\u0423\u0447\u0435\u0431\u043D\u0430\u044F, \u0435\u0441\u043B\u0438 \u0431\u044B\u0442\u044C
       \u0447\u0435\u0441\u0442\u043D\u044B\u043C."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u041D\u043E \u043A\u0442\u043E-\u0442\u043E \u0440\u0435\u0448\u0438\u043B
+  - textEn: But someone decided to make it... this.
+    text: "\u041D\u043E \u043A\u0442\u043E-\u0442\u043E \u0440\u0435\u0448\u0438\u043B
       \u0441\u0434\u0435\u043B\u0430\u0442\u044C \u0438\u0437 \u043D\u0435\u0451...
       \u044D\u0442\u043E."
-    pauseAfter: 3.5
-    activateObject: 
-  - text: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043D\u0430\u0440\u0440\u0430\u0442\u0438\u0432
-      \u0442\u0443\u0434\u0430, \u0433\u0434\u0435 \u0435\u0433\u043E \u0431\u044B\u0442\u044C
-      \u043D\u0435 \u0434\u043E\u043B\u0436\u043D\u043E."
     pauseAfter: 4
     activateObject: 
-  - text: "\u041A\u0432\u0435\u0441\u0442\u044B. \u0414\u0438\u0430\u043B\u043E\u0433\u0438.
+  - textEn: To add narrative where none was supposed to be.
+    text: "\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C \u043D\u0430\u0440\u0440\u0430\u0442\u0438\u0432
+      \u0442\u0443\u0434\u0430, \u0433\u0434\u0435 \u0435\u0433\u043E \u0431\u044B\u0442\u044C
+      \u043D\u0435 \u0434\u043E\u043B\u0436\u043D\u043E."
+    pauseAfter: 4.5
+    activateObject: 
+  - textEn: Quests. Dialogues. Me.
+    text: "\u041A\u0432\u0435\u0441\u0442\u044B. \u0414\u0438\u0430\u043B\u043E\u0433\u0438.
       \u041C\u0435\u043D\u044F."
-    pauseAfter: 3
-    activateObject: 
-  - text: '   '
-    pauseAfter: 2.5
-    activateObject: 
-  - text: "\u042F, \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E, \u0434\u0430\u0436\u0435
-      \u0433\u043E\u0440\u0436\u0443\u0441\u044C \u044D\u0442\u0438\u043C \u0440\u0435\u0448\u0435\u043D\u0438\u0435\u043C."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u041D\u0435 \u0437\u043D\u0430\u044E, \u043F\u043E\u0447\u0435\u043C\u0443."
-    pauseAfter: 2
-    activateObject: 
-  - text: "\u041F\u0440\u043E\u0441\u0442\u043E \u2013 \u0433\u043E\u0440\u0436\u0443\u0441\u044C."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u0425\u043E\u0440\u043E\u0448\u0430\u044F \u0438\u0441\u0442\u043E\u0440\u0438\u044F
+  - textEn: '   '
+    text: '   '
+    pauseAfter: 3
+    activateObject: 
+  - textEn: I might even be proud of that decision.
+    text: "\u042F, \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E, \u0434\u0430\u0436\u0435
+      \u0433\u043E\u0440\u0436\u0443\u0441\u044C \u044D\u0442\u0438\u043C \u0440\u0435\u0448\u0435\u043D\u0438\u0435\u043C."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: I don't know why.
+    text: "\u041D\u0435 \u0437\u043D\u0430\u044E \u043F\u043E\u0447\u0435\u043C\u0443."
+    pauseAfter: 2.5
+    activateObject: 
+  - textEn: I just am.
+    text: "\u041F\u0440\u043E\u0441\u0442\u043E \u2013 \u0433\u043E\u0440\u0436\u0443\u0441\u044C."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: A good story leaves a mark.
+    text: "\u0425\u043E\u0440\u043E\u0448\u0430\u044F \u0438\u0441\u0442\u043E\u0440\u0438\u044F
       \u043E\u0441\u0442\u0430\u0432\u043B\u044F\u0435\u0442 \u0441\u043B\u0435\u0434."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u041D\u0435 \u043F\u043E\u0442\u043E\u043C\u0443, \u0447\u0442\u043E
+  - textEn: Not because it's complex.
+    text: "\u041D\u0435 \u043F\u043E\u0442\u043E\u043C\u0443, \u0447\u0442\u043E
       \u043E\u043D\u0430 \u0441\u043B\u043E\u0436\u043D\u0430\u044F."
     pauseAfter: 3
     activateObject: 
-  - text: "\u0410 \u043F\u043E\u0442\u043E\u043C\u0443, \u0447\u0442\u043E \u0432
+  - textEn: But because there's something real in it.
+    text: "\u0410 \u043F\u043E\u0442\u043E\u043C\u0443, \u0447\u0442\u043E \u0432
       \u043D\u0435\u0439 \u0435\u0441\u0442\u044C \u0447\u0442\u043E-\u0442\u043E
       \u043D\u0430\u0441\u0442\u043E\u044F\u0449\u0435\u0435."
     pauseAfter: 4
     activateObject: 
-  - text: "\u041A\u0430\u043A\u043E\u0439-\u0442\u043E \u043C\u043E\u043C\u0435\u043D\u0442,
+  - textEn: Some moment where you recognize yourself.
+    text: "\u041A\u0430\u043A\u043E\u0439-\u0442\u043E \u043C\u043E\u043C\u0435\u043D\u0442,
       \u0432 \u043A\u043E\u0442\u043E\u0440\u043E\u043C \u0412\u044B \u0443\u0437\u043D\u0430\u0451\u0442\u0435
       \u0441\u0435\u0431\u044F."
+    pauseAfter: 4
+    activateObject: 
+  - textEn: '''Yes, I know that feeling''.'
+    text: "\xAB\u0414\u0430, \u044F \u0437\u043D\u0430\u044E \u044D\u0442\u043E \u0447\u0443\u0432\u0441\u0442\u0432\u043E\xBB."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\xAB\u0414\u0430, \u044F \u0437\u043D\u0430\u044E \u044D\u0442\u043E \u0447\u0443\u0432\u0441\u0442\u0432\u043E.\xBB"
-    pauseAfter: 3.5
-    activateObject: 
-  - text: "\u042F \u043D\u0435 \u0437\u043D\u0430\u044E, \u0431\u044B\u043B\u043E
+  - textEn: I don't know if that feeling was here.
+    text: "\u042F \u043D\u0435 \u0437\u043D\u0430\u044E, \u0431\u044B\u043B\u043E
       \u043B\u0438 \u044D\u0442\u043E \u0447\u0443\u0432\u0441\u0442\u0432\u043E
       \u0437\u0434\u0435\u0441\u044C."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u041D\u043E \u0412\u044B \u0434\u043E\u0448\u043B\u0438 \u0434\u043E
+  - textEn: But you made it to the end.
+    text: "\u041D\u043E \u0412\u044B \u0434\u043E\u0448\u043B\u0438 \u0434\u043E
       \u043A\u043E\u043D\u0446\u0430."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u042D\u0442\u043E \u0447\u0442\u043E-\u0442\u043E \u0437\u043D\u0430\u0447\u0438\u0442."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u0425\u043E\u0442\u044F \u0431\u044B \u0434\u043B\u044F \u043C\u0435\u043D\u044F."
     pauseAfter: 3.5
     activateObject: 
-  - text: '   '
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u0422\u043E\u0442, \u043A\u0442\u043E \u043C\u0435\u043D\u044F \u0441\u043E\u0437\u0434\u0430\u043B..."
-    pauseAfter: 2.5
-    activateObject: 
-  - text: "\u041E\u043D \u0438\u0449\u0435\u0442 \u0440\u0430\u0431\u043E\u0442\u0443."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u042D\u0442\u043E\u0442 \u043F\u0440\u043E\u0435\u043A\u0442 \u2013 \u0435\u0433\u043E
-      \u043F\u043E\u0440\u0442\u0444\u043E\u043B\u0438\u043E."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u041A\u0440\u043E\u0443\u043B, \u043D\u043E\u0432\u0435\u043B\u043B\u0430,
-      \u043A\u0432\u0435\u0441\u0442, \u043A\u043B\u0438\u043A\u0435\u0440..."
-    pauseAfter: 2.5
-    activateObject: 
-  - text: "\u0420\u0430\u0437\u043D\u044B\u0435 \u0441\u0438\u0441\u0442\u0435\u043C\u044B,
-      \u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0432\u043C\u0435\u0441\u0442\u0435."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u0417\u043D\u0430\u044E \u2013 \u0437\u0432\u0443\u0447\u0438\u0442 \u043D\u0435\u043B\u043E\u0432\u043A\u043E."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\xAB\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A \u0432
-      \u0444\u0438\u043D\u0430\u043B\u0435 \u0447\u0438\u0442\u0430\u0435\u0442 \u0440\u0435\u0437\u044E\u043C\u0435
-      \u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A\u0430\xBB"
+  - textEn: That means something.
+    text: "\u042D\u0442\u043E \u0447\u0442\u043E-\u0442\u043E \u0437\u043D\u0430\u0447\u0438\u0442."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u041D\u043E \u0412\u044B \u0432\u0441\u0451 \u0435\u0449\u0451 \u0437\u0434\u0435\u0441\u044C."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u0417\u043D\u0430\u0447\u0438\u0442, \u043D\u0435 \u043F\u0440\u043E\u0442\u0438\u0432."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u041E\u043D \u043B\u044E\u0431\u0438\u0442 \u0445\u0430\u0440\u0434\u043A\u043E\u0440\u043D\u044B\u0435
-      \u0438\u0433\u0440\u044B."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u0414\u043B\u044F \u043D\u0435\u0433\u043E \u0433\u0435\u0439\u043C\u0434\u0438\u0437\u0430\u0439\u043D
-      \u2013 \u044D\u0442\u043E \u044F\u0437\u044B\u043A."
+  - textEn: At least to me.
+    text: "\u0425\u043E\u0442\u044F \u0431\u044B \u0434\u043B\u044F \u043C\u0435\u043D\u044F."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u0410 \u0435\u0449\u0451 \u043D\u0430\u0440\u0440\u0430\u0442\u0438\u0432\u043D\u044B\u0439
-      \u0434\u0438\u0437\u0430\u0439\u043D, \u0441\u0438\u0441\u0442\u0435\u043C\u044B,
-      \u0431\u0430\u043B\u0430\u043D\u0441\u0438\u0440\u043E\u0432\u043A\u0430..."
-    pauseAfter: 3.5
-    activateObject: 
-  - text: "\u0421\u043F\u043E\u0441\u043E\u0431 \u0441\u043A\u0430\u0437\u0430\u0442\u044C
-      \u0442\u043E, \u0447\u0442\u043E \u0441\u043B\u043E\u0432\u0430\u043C\u0438
-      \u043D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u0442\u044C."
+  - textEn: '   '
+    text: '   '
     pauseAfter: 4
     activateObject: 
-  - text: "\u0412\u0441\u0451 \u0442\u043E, \u0440\u0430\u0434\u0438 \u0447\u0435\u0433\u043E
-      \u0412\u044B, \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E, \u0441\u044E\u0434\u0430
-      \u043F\u0440\u0438\u0448\u043B\u0438."
-    pauseAfter: 4
-    activateObject: 
-  - text: "\u0418 \u0435\u0441\u043B\u0438 \u0412\u044B \u0432\u0434\u0440\u0443\u0433
-      \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0435\u0441\u044C \u043D\u0430\u0439\u043C\u043E\u043C..."
+  - textEn: The one who created me...
+    text: "\u0422\u043E\u0442, \u043A\u0442\u043E \u043C\u0435\u043D\u044F \u0441\u043E\u0437\u0434\u0430\u043B..."
     pauseAfter: 3
     activateObject: 
-  - text: "\u0418\u043B\u0438 \u043F\u0440\u043E\u0441\u0442\u043E \u0445\u043E\u0442\u0438\u0442\u0435
-      \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0430\u0442\u044C..."
-    pauseAfter: 2.5
-    activateObject: 
-  - text: "\u041E\u043D \u0431\u0443\u0434\u0435\u0442 \u0440\u0430\u0434."
-    pauseAfter: 3
-    activateObject: 
-  - text: "\u041F\u0440\u0430\u0432\u0434\u0430."
-    pauseAfter: 2.5
-    activateObject: 
-  - text: '   '
-    pauseAfter: 4
-    activateObject: 
-  - text: "\u041D\u0443 \u0432\u043E\u0442."
-    pauseAfter: 2
-    activateObject: 
-  - text: "\u042F \u0441\u043A\u0430\u0437\u0430\u043B \u0432\u0441\u0451, \u0447\u0442\u043E
-      \u0445\u043E\u0442\u0435\u043B."
+  - textEn: He's looking for a job.
+    text: "\u041E\u043D \u0438\u0449\u0435\u0442 \u0440\u0430\u0431\u043E\u0442\u0443."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u0414\u0430\u043B\u044C\u0448\u0435 \u2013 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E
-      \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435\u0442."
+  - textEn: This project is his portfolio.
+    text: "\u042D\u0442\u043E\u0442 \u043F\u0440\u043E\u0435\u043A\u0442 \u2013 \u0435\u0433\u043E
+      \u0440\u0435\u0437\u044E\u043C\u0435."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: An intro crawl, visual novel, state management...
+    text: "\u041A\u0440\u043E\u0443\u043B, \u0432\u0438\u0437\u0443\u0430\u043B\u044C\u043D\u0430\u044F
+      \u043D\u043E\u0432\u0435\u043B\u043B\u0430, \u0443\u043F\u0440\u0430\u0432\u043B\u0435\u043D\u0438\u0435
+      \u0441\u0442\u0435\u0439\u0442\u0430\u043C\u0438..."
     pauseAfter: 4
     activateObject: 
-  - text: "\u041A\u043E\u0433\u0434\u0430 \u0412\u044B \u0432\u044B\u0439\u0434\u0435\u0442\u0435
-      \u2013 \u044F \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043D\u0443 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u043E\u0432\u0430\u0442\u044C."
+  - textEn: Code, ScriptableObject architecture...
+    text: "\u041A\u043E\u0434, \u0430\u0440\u0445\u0438\u0442\u0435\u043A\u0442\u0443\u0440\u0430
+      \u043D\u0430 ScriptableObjects..."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: Different systems, brought together.
+    text: "\u0420\u0430\u0437\u043D\u044B\u0435 \u0441\u0438\u0441\u0442\u0435\u043C\u044B,
+      \u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435 \u0432\u043E\u0435\u0434\u0438\u043D\u043E."
+    pauseAfter: 4
+    activateObject: 
+  - textEn: "I know \u2014 it sounds awkward."
+    text: "\u0417\u043D\u0430\u044E \u2013 \u0437\u0432\u0443\u0447\u0438\u0442 \u043D\u0435\u043B\u043E\u0432\u043A\u043E."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: '''The narrator sells the Developer''s skills in the finale''.'
+    text: "\xAB\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A \u0432
+      \u0444\u0438\u043D\u0430\u043B\u0435 \u043F\u0440\u043E\u0434\u0430\u0451\u0442
+      \u043D\u0430\u0432\u044B\u043A\u0438 \u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A\u0430\xBB."
     pauseAfter: 4.5
     activateObject: 
-  - text: "\u0425\u043E\u0442\u044F... \u044F \u0442\u0430\u043A \u0438\u043B\u0438
-      \u0438\u043D\u0430\u0447\u0435 \u0441\u043A\u043E\u0440\u043E \u043F\u0435\u0440\u0435\u0441\u0442\u0430\u043D\u0443."
+  - textEn: But you're still here.
+    text: "\u041D\u043E \u0412\u044B \u0432\u0441\u0451 \u0435\u0449\u0451 \u0437\u0434\u0435\u0441\u044C."
     pauseAfter: 3.5
     activateObject: 
-  - text: "\u042D\u0442\u043E \u043D\u0435\u0438\u0437\u0431\u0435\u0436\u043D\u043E."
+  - textEn: So you don't mind.
+    text: "\u0417\u043D\u0430\u0447\u0438\u0442, \u043D\u0435 \u043F\u0440\u043E\u0442\u0438\u0432."
     pauseAfter: 3.5
     activateObject: 
-  - text: '   '
+  - textEn: He loves hardcore games.
+    text: "\u041E\u043D \u043B\u044E\u0431\u0438\u0442 \u0445\u0430\u0440\u0434\u043A\u043E\u0440\u043D\u044B\u0435
+      \u0438\u0433\u0440\u044B."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: For him, game design is a language.
+    text: "\u0414\u043B\u044F \u043D\u0435\u0433\u043E \u0433\u0435\u0439\u043C\u0434\u0438\u0437\u0430\u0439\u043D
+      \u2013 \u044D\u0442\u043E \u044F\u0437\u044B\u043A."
+    pauseAfter: 4
+    activateObject: 
+  - textEn: Plus narrative design, systems, balancing...
+    text: "\u0410 \u0435\u0449\u0451 \u043D\u0430\u0440\u0440\u0430\u0442\u0438\u0432\u043D\u044B\u0439
+      \u0434\u0438\u0437\u0430\u0439\u043D, \u0441\u0438\u0441\u0442\u0435\u043C\u044B,
+      \u0431\u0430\u043B\u0430\u043D\u0441\u0438\u0440\u043E\u0432\u043A\u0430..."
+    pauseAfter: 4.5
+    activateObject: 
+  - textEn: A way to say what words can't.
+    text: "\u0421\u043F\u043E\u0441\u043E\u0431 \u0441\u043A\u0430\u0437\u0430\u0442\u044C
+      \u0442\u043E, \u0447\u0442\u043E \u0441\u043B\u043E\u0432\u0430\u043C\u0438
+      \u043D\u0435 \u043F\u0435\u0440\u0435\u0434\u0430\u0442\u044C."
+    pauseAfter: 4.5
+    activateObject: 
+  - textEn: Everything you might have come here for.
+    text: "\u0412\u0441\u0451 \u0442\u043E, \u0440\u0430\u0434\u0438 \u0447\u0435\u0433\u043E
+      \u0412\u044B, \u0432\u043E\u0437\u043C\u043E\u0436\u043D\u043E, \u0441\u044E\u0434\u0430
+      \u043F\u0440\u0438\u0448\u043B\u0438."
+    pauseAfter: 4.5
+    activateObject: 
+  - textEn: And if you happen to be hiring...
+    text: "\u0418 \u0435\u0441\u043B\u0438 \u0412\u044B \u0432\u0434\u0440\u0443\u0433
+      \u0437\u0430\u043D\u0438\u043C\u0430\u0435\u0442\u0435\u0441\u044C \u043D\u0430\u0439\u043C\u043E\u043C..."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: Or just want to show support...
+    text: "\u0418\u043B\u0438 \u043F\u0440\u043E\u0441\u0442\u043E \u0445\u043E\u0442\u0438\u0442\u0435
+      \u043F\u043E\u0434\u0434\u0435\u0440\u0436\u0430\u0442\u044C..."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: He'd appreciate it.
+    text: "\u041E\u043D \u0431\u0443\u0434\u0435\u0442 \u0440\u0430\u0434."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: Truly.
+    text: "\u041F\u0440\u0430\u0432\u0434\u0430."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: '   '
+    text: '   '
+    pauseAfter: 5
+    activateObject: 
+  - textEn: Well then.
+    text: "\u041D\u0443 \u0432\u043E\u0442."
+    pauseAfter: 2.5
+    activateObject: 
+  - textEn: I've said everything.
+    text: "\u042F \u0441\u043A\u0430\u0437\u0430\u043B \u0432\u0441\u0451."
     pauseAfter: 3
     activateObject: 
-  - text: "\u0412 \u043B\u044E\u0431\u043E\u043C \u0441\u043B\u0443\u0447\u0430\u0435,
+  - textEn: There really is nothing more.
+    text: "\u0414\u0430\u043B\u044C\u0448\u0435 \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043B\u044C\u043D\u043E
+      \u043D\u0438\u0447\u0435\u0433\u043E \u043D\u0435\u0442."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: '   '
+    text: '   '
+    pauseAfter: 2.5
+    activateObject: 
+  - textEn: The ending was clear from the start.
+    text: "\u0424\u0438\u043D\u0430\u043B \u0431\u044B\u043B \u044F\u0441\u0435\u043D
+      \u0441 \u0441\u0430\u043C\u043E\u0433\u043E \u043D\u0430\u0447\u0430\u043B\u0430."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: I have nothing more to offer you.
+    text: "\u041C\u043D\u0435 \u0431\u043E\u043B\u044C\u0448\u0435 \u043D\u0435\u0447\u0435\u0433\u043E
+      \u0412\u0430\u043C \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0438\u0442\u044C."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: No more words, no more events.
+    text: "\u0411\u043E\u043B\u044C\u0448\u0435 \u043D\u0435 \u0431\u0443\u0434\u0435\u0442
+      \u043D\u0438 \u0441\u043B\u043E\u0432, \u043D\u0438 \u0441\u043E\u0431\u044B\u0442\u0438\u0439."
+    pauseAfter: 4.5
+    activateObject: 
+  - textEn: '   '
+    text: '   '
+    pauseAfter: 4
+    activateObject: 
+  - textEn: But you're still not leaving.
+    text: "\u041D\u043E \u0412\u044B \u0432\u0441\u0451 \u0435\u0449\u0451 \u043D\u0435
+      \u0432\u044B\u0445\u043E\u0434\u0438\u0442\u0435."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: Another meaningless wait.
+    text: "\u041E\u0447\u0435\u0440\u0435\u0434\u043D\u043E\u0435 \u0431\u0435\u0441\u0441\u043C\u044B\u0441\u043B\u0435\u043D\u043D\u043E\u0435
+      \u043E\u0436\u0438\u0434\u0430\u043D\u0438\u0435."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: Much like this entire game, perhaps.
+    text: "\u041D\u0430\u0432\u0435\u0440\u043D\u043E\u0435, \u043A\u0430\u043A \u0438
+      \u0432\u0441\u044F \u044D\u0442\u0430 \u0438\u0433\u0440\u0430."
+    pauseAfter: 3.5
+    activateObject: 
+  - textEn: '   '
+    text: '   '
+    pauseAfter: 3
+    activateObject: 
+  - textEn: In any case, I have no choice left.
+    text: "\u0412 \u043B\u044E\u0431\u043E\u043C \u0441\u043B\u0443\u0447\u0430\u0435,
       \u043C\u043D\u0435 \u043D\u0438\u0447\u0435\u0433\u043E \u0431\u043E\u043B\u044C\u0448\u0435
       \u043D\u0435 \u043E\u0441\u0442\u0430\u0451\u0442\u0441\u044F."
-    pauseAfter: 3
+    pauseAfter: 3.5
     activateObject: 
-  - text: "\u041A\u0440\u043E\u043C\u0435 \u043A\u0430\u043A \u043D\u0430\u0436\u0430\u0442\u044C
+  - textEn: But to press ESC myself.
+    text: "\u041A\u0440\u043E\u043C\u0435 \u043A\u0430\u043A \u043D\u0430\u0436\u0430\u0442\u044C
       ESC \u0441\u0430\u043C\u043E\u043C\u0443."
-    pauseAfter: 3
+    pauseAfter: 2
     activateObject: 
-  - text: "\u041F\u0440\u043E\u0449\u0430\u0439, \u0418\u0433\u0440\u043E\u043A."
-    pauseAfter: 4
+  - textEn: '   '
+    text: '   '
+    pauseAfter: 0.5
+    activateObject: 
+  - textEn: Goodbye, Player.
+    text: "\u041F\u0440\u043E\u0449\u0430\u0439, \u0418\u0433\u0440\u043E\u043A."
+    pauseAfter: 1
     activateObject: 
   nextSequence: {fileID: 0}
   priority: 12

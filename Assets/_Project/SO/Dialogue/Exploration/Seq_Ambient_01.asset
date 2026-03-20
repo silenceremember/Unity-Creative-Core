@@ -13,15 +13,18 @@ MonoBehaviour:
   m_Name: Seq_Ambient_01
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u0412\u043F\u0440\u043E\u0447\u0435\u043C, \u0432 \u0442\u0430\u043A\u0438\u0445
+  - textEn: Then again, it's always like this in these games.
+    text: "\u0412\u043F\u0440\u043E\u0447\u0435\u043C, \u0432 \u0442\u0430\u043A\u0438\u0445
       \u0438\u0433\u0440\u0430\u0445 \u0432\u0441\u0435\u0433\u0434\u0430 \u0442\u0430\u043A."
     pauseAfter: 3
     activateObject: 
-  - text: "\u041F\u0440\u043E\u0441\u0442\u043E \u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442\u0435\u0441\u044C
+  - textEn: You just appear and look around.
+    text: "\u041F\u0440\u043E\u0441\u0442\u043E \u043E\u043A\u0430\u0437\u044B\u0432\u0430\u0435\u0442\u0435\u0441\u044C
       \u0438 \u0441\u043C\u043E\u0442\u0440\u0438\u0442\u0435."
     pauseAfter: 2
     activateObject: 
-  - text: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0442\u0440\u043E\u0433\u0430\u0435\u0442\u0435."
+  - textEn: You don't touch anything.
+    text: "\u041D\u0438\u0447\u0435\u0433\u043E \u043D\u0435 \u0442\u0440\u043E\u0433\u0430\u0435\u0442\u0435."
     pauseAfter: 2
     activateObject: 
   nextSequence: {fileID: 11400000, guid: dd476be0c905ed147bf72aa7d9dea808, type: 2}

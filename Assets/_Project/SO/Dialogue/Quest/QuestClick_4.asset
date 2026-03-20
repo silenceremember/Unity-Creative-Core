@@ -10,14 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5dbbf1088378ae04aa7e3620b494a8f5, type: 3}
-  m_Name: Seq_Ambient_33
+  m_Name: QuestClick_4
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - textEn: By the way, how's the clicker?
-    text: "\u041A\u0441\u0442\u0430\u0442\u0438, \u043A\u0430\u043A \u0412\u0430\u043C
-      \u043A\u043B\u0438\u043A\u0435\u0440?"
-    pauseAfter: 2.5
+  - textEn: Bold decision.
+    text: "\u0421\u043C\u0435\u043B\u043E\u0435 \u0440\u0435\u0448\u0435\u043D\u0438\u0435."
+    pauseAfter: 2
     activateObject: 
-  nextSequence: {fileID: 11400000, guid: b7c81465d6bcb6c48a759615e350a5ff, type: 2}
-  priority: 0
+  nextSequence: {fileID: 0}
+  priority: 5
   restoreInterrupted: 0

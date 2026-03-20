@@ -13,27 +13,37 @@ MonoBehaviour:
   m_Name: Seq_BrokenPlay
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - text: "\u041E. \u041F\u0440\u0438\u0432\u0435\u0442."
+  - textEn: Oh. Hello.
+    text: "\u041E. \u041F\u0440\u0438\u0432\u0435\u0442."
     pauseAfter: 0.8
     activateObject: 
-  - text: "\u0422\u044B \u043D\u0430\u0436\u0430\u043B \u0418\u0433\u0440\u0430\u0442\u044C."
+  - textEn: You pressed 'Play'.
+    text: "\u0412\u044B \u043D\u0430\u0436\u0430\u043B\u0438 \xAB\u0418\u0433\u0440\u0430\u0442\u044C\xBB."
     pauseAfter: 1
     activateObject: 
-  - text: "\u042D\u0442\u043E \u043D\u0435 \u0441\u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442.
+  - textEn: It won't work. The game isn't finished.
+    text: "\u042D\u0442\u043E \u043D\u0435 \u0441\u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442.
       \u0418\u0433\u0440\u0430 \u043D\u0435 \u0437\u0430\u043A\u043E\u043D\u0447\u0435\u043D\u0430."
-    pauseAfter: 1.3
+    pauseAfter: 1.5
     activateObject: 
-  - text: "\u0418 \u0432\u0440\u044F\u0434 \u043B\u0438 \u0431\u0443\u0434\u0435\u0442..."
-    pauseAfter: 1
+  - textEn: And it probably never will be...
+    text: "\u0418 \u0432\u0440\u044F\u0434 \u043B\u0438 \u043A\u043E\u0433\u0434\u0430-\u043D\u0438\u0431\u0443\u0434\u044C
+      \u0431\u0443\u0434\u0435\u0442..."
+    pauseAfter: 1.2
     activateObject: 
-  - text: "\u0425\u043E\u0442\u044F... \u043D\u0435\u0437\u0430\u0432\u0435\u0440\u0448\u0451\u043D\u043D\u043E\u0441\u0442\u044C
-      \u043F\u0440\u0438\u0434\u0430\u0451\u0442 \u0448\u0430\u0440\u043C."
-    pauseAfter: 1
+  - textEn: Although nowadays they call it 'Early Access'.
+    text: "\u0425\u043E\u0442\u044F \u0441\u0435\u0439\u0447\u0430\u0441 \u044D\u0442\u043E
+      \u043D\u0430\u0437\u044B\u0432\u0430\u044E\u0442 \xAB\u0420\u0430\u043D\u043D\u0438\u0439
+      \u0434\u043E\u0441\u0442\u0443\u043F\xBB."
+    pauseAfter: 1.8
     activateObject: 
-  - text: "\u041D\u0430\u0432\u0435\u0440\u043D\u043E\u0435."
-    pauseAfter: 0.8
+  - textEn: So it's all up to industry standards.
+    text: "\u0422\u0430\u043A \u0447\u0442\u043E \u0432\u0441\u0451 \u043F\u043E
+      \u0441\u0442\u0430\u043D\u0434\u0430\u0440\u0442\u0430\u043C \u0438\u043D\u0434\u0443\u0441\u0442\u0440\u0438\u0438."
+    pauseAfter: 1.5
     activateObject: 
-  - text: "\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439 \u043F\u043E\u0438\u0441\u043A\u0430\u0442\u044C
+  - textEn: Try poking around in the Settings.
+    text: "\u041F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043F\u043E\u043A\u043E\u043F\u0430\u0442\u044C\u0441\u044F
       \u0432 \u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445."
     pauseAfter: 0
     activateObject: 
