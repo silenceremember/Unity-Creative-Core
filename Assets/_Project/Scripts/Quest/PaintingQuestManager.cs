@@ -45,10 +45,10 @@ public class PaintingQuestManager : MonoBehaviour
     [Header("Narrator")]
     [SerializeField] private NarratorChannel narratorChannel;
 
-    [Tooltip("Dialogues on painting click (4 — cycled)")]
-    [SerializeField] private DialogueSequence[] paintingClickDialogues = new DialogueSequence[4];
+    [Tooltip("Dialogues on painting click (20)")]
+    [SerializeField] private DialogueSequence[] paintingClickDialogues = new DialogueSequence[20];
 
-    [Tooltip("Dialogues on reject (5: reject 1..5)")]
+    [Tooltip("Dialogues on reject (5)")]
     [SerializeField] private DialogueSequence[] rejectDialogues = new DialogueSequence[5];
 
     [Tooltip("Dialogue after successful quest completion")]
@@ -60,6 +60,7 @@ public class PaintingQuestManager : MonoBehaviour
     private bool           _resolved      = false;
     private int            _rejectCount   = 0;
     private bool           _pendingXPReward = false;
+    private int            _clickDialogueIndex = 0;
 
     private PaintingInteractable _nearPainting;
 
@@ -237,7 +238,8 @@ public class PaintingQuestManager : MonoBehaviour
 
         if (paintingClickDialogues != null && paintingClickDialogues.Length > 0)
         {
-            int idx = (_pressCount - 1) % paintingClickDialogues.Length;
+            int idx = _clickDialogueIndex % paintingClickDialogues.Length;
+            _clickDialogueIndex++;
             var seq = paintingClickDialogues[idx];
             if (seq != null) narratorChannel?.Raise(seq);
         }
