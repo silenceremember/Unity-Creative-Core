@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 459976eb1e17c134ab0ebff9754ac213, type: 3}
-  m_Name: LanguageVariable
-  m_EditorClassIdentifier: Assembly-CSharp::LanguageVariable
-  initialValue: 1
+  m_Script: {fileID: 11500000, guid: 406ab44afa38a024b9d9fa9c9408185a, type: 3}
+  m_Name: LocStr_Return
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedString
+  ru: "\u041D\u0430\u0437\u0430\u0434"
+  en: Return

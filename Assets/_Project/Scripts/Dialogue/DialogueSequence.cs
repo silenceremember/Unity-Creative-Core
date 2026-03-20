@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Game/Dialogue/Sequence", fileName = "Seq_New")]
 public class DialogueSequence : ScriptableObject
 {
-    public const int MAX_CHARS = 58;
+    public const int MAX_CHARS = 60;
 
     [Header("Lines")]
     [SerializeField] private DialogueLine[] lines;
