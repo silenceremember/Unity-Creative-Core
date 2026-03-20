@@ -40,6 +40,9 @@ public class VisualNovelManager : MonoBehaviour
     [Header("Config")]
     [SerializeField] private NovelConfig config;
 
+    [Header("Localization")]
+    [SerializeField] private LanguageVariable languageVar;
+
     private int _lineIndex = -1;
     private bool _waitingForNarrator = false;
     private bool _typewriterRunning = false;
@@ -195,6 +198,7 @@ public class VisualNovelManager : MonoBehaviour
     private async UniTask DisplayLineAsync(NovelLine line, CancellationToken ct)
     {
         ShowNovelCanvas();
+        var lang = languageVar != null ? languageVar.Value : GameLanguage.Russian;
 
         if (speakerText != null) speakerText.text = line.SpeakerDisplayName;
         if (lineText != null) lineText.text = "";
@@ -202,7 +206,7 @@ public class VisualNovelManager : MonoBehaviour
 
         _typewriterRunning = true;
         _skipTypewriter = false;
-        await TypewriterAsync(line.Text, line.Speaker, ct);
+        await TypewriterAsync(line.GetText(lang), line.Speaker, ct);
         _typewriterRunning = false;
     }
 

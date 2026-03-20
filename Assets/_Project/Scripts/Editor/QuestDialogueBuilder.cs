@@ -181,6 +181,7 @@ public static class QuestDialogueBuilder
         {
             var elem = linesProp.GetArrayElementAtIndex(i);
             elem.FindPropertyRelative("text").stringValue          = lines[i].Text;
+            elem.FindPropertyRelative("textEn").stringValue        = lines[i].TextEn ?? "";
             elem.FindPropertyRelative("pauseAfter").floatValue     = lines[i].PauseAfter;
             elem.FindPropertyRelative("activateObject").stringValue = lines[i].ActivateObject ?? "";
         }
@@ -190,11 +191,12 @@ public static class QuestDialogueBuilder
         return asset;
     }
 
-    private static DialogueLine L(string text, float pause, string activateObject = "")
+    private static DialogueLine L(string text, float pause, string textEn = "", string activateObject = "")
     {
         string json = JsonUtility.ToJson(new DialogueLineData
         {
             text = text,
+            textEn = textEn,
             pauseAfter = pause,
             activateObject = activateObject
         });

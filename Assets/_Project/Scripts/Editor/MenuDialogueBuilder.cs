@@ -40,21 +40,13 @@ public static class MenuDialogueBuilder
             L("Жильцы чуть менее счастливы.",   1.0f),
             L("Может, и нет.",                  0f));
 
-        CreateSeq(folder, "Seq_LangToEnglish", 2, null,
-            L("Переключаюсь...",                0.8f),
-            L("Сейчас я скажу...",              1.0f),
-            L("That actually worked.",          1.2f),
-            L("I sound like a default Unity asset.", 1.5f),
-            L("More professional. Completely soulless.", 1.5f),
-            L("Anyway.",                        0f));
-
-        CreateSeq(folder, "Seq_LangToRussian", 2, null,
-            L("Switching language...",          0.8f),
-            L("Back to Russian. Here goes.",    1.2f),
-            L("Эти родные депрессивные интонации.", 1.5f),
-            L("Снова звучу как дилетант.",      1.2f),
-            L("Зато искренне.",                 1.0f),
-            L("Наверное.",                      0f));
+        CreateSeq(folder, "Seq_LangTransition", 2, null,
+            L("Switching...",                                0.8f, "Переключаюсь..."),
+            L("Here goes...",                              1.0f, "Сейчас я скажу..."),
+            L("Эти родные депрессивные интонации.",              1.5f, "That actually worked."),
+            L("Снова звучу как дилетант.",                       1.2f, "I sound like a default Unity asset."),
+            L("Зато искренне.",                                 1.0f, "More professional. Completely soulless."),
+            L("Наверное.",                                      0f,   "Anyway."));
 
         CreateSeq(folder, "Seq_SettingsPlay", 3, null,
             L("Отлично. Вы нашли ещё одну кнопку.", 1.4f),
@@ -91,6 +83,7 @@ public static class MenuDialogueBuilder
         {
             var elem = linesProp.GetArrayElementAtIndex(i);
             elem.FindPropertyRelative("text").stringValue          = lines[i].Text;
+            elem.FindPropertyRelative("textEn").stringValue        = lines[i].TextEn ?? "";
             elem.FindPropertyRelative("pauseAfter").floatValue     = lines[i].PauseAfter;
             elem.FindPropertyRelative("activateObject").stringValue = lines[i].ActivateObject ?? "";
         }
@@ -100,11 +93,12 @@ public static class MenuDialogueBuilder
         return asset;
     }
 
-    private static DialogueLine L(string text, float pause, string activateObject = "")
+    private static DialogueLine L(string text, float pause, string textEn = "", string activateObject = "")
     {
         string json = JsonUtility.ToJson(new DialogueLineData
         {
             text = text,
+            textEn = textEn,
             pauseAfter = pause,
             activateObject = activateObject
         });

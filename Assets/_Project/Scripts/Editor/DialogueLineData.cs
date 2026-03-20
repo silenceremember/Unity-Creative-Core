@@ -8,6 +8,7 @@ using System;
 public struct DialogueLineData
 {
     public string text;
+    public string textEn;
     public float pauseAfter;
     public string activateObject;
 }

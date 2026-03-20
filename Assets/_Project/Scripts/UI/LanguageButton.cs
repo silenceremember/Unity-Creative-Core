@@ -1,27 +1,23 @@
 using UnityEngine;
 
 /// <summary>
-/// Language toggle button. Alternates between two sequences — RU to EN and back.
+/// Language toggle button. Switches LanguageVariable and plays a transition sequence.
 /// </summary>
 public class LanguageButton : MonoBehaviour
 {
+    [SerializeField] private LanguageVariable languageVar;
     [SerializeField] private NarratorChannel channel;
-
-    [Tooltip("RU → EN")]
-    [SerializeField] private DialogueSequence seqToEnglish;
-
-    [Tooltip("EN → RU")]
-    [SerializeField] private DialogueSequence seqToRussian;
-
-    private bool _isRussian = true;
+    [SerializeField] private DialogueSequence transitionSequence;
 
     public void OnClick()
     {
-        if (_isRussian)
-            channel?.Raise(seqToEnglish);
-        else
-            channel?.Raise(seqToRussian);
+        if (languageVar == null) return;
 
-        _isRussian = !_isRussian;
+        languageVar.Value = languageVar.Value == GameLanguage.Russian
+            ? GameLanguage.English
+            : GameLanguage.Russian;
+
+        if (channel != null && transitionSequence != null)
+            channel.Raise(transitionSequence);
     }
 }

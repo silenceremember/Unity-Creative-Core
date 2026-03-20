@@ -95,37 +95,37 @@ public static class NovelDialogueBuilder
 
         object[][] lineData = new object[][]
         {
-            new object[] { Speaker.John,   "Я стою у двери, потому что...",       CameraAnchor.John,      seqIntroJohn },
-            new object[] { Speaker.John,   "...потому что мне здесь хорошо.",    CameraAnchor.John,      null },
-            new object[] { Speaker.John,   "Слышу скепсис.",                     CameraAnchor.John,      seqNarrDisagrees },
-            new object[] { Speaker.Mary,   "Красиво здесь.",                     CameraAnchor.Mary,      seqIntroMary },
-            new object[] { Speaker.John,   "Мэри.",                              CameraAnchor.John,      null },
-            new object[] { Speaker.Mary,   "Что.",                               CameraAnchor.Mary,      null },
-            new object[] { Speaker.John,   "В гостиной кто-то есть.",            CameraAnchor.John,      null },
-            new object[] { Speaker.Mary,   "Ты уверен?",                        CameraAnchor.Mary,      null },
-            new object[] { Speaker.John,   "Я... чувствую. Там кто-то есть.",   CameraAnchor.John,      null },
-            new object[] { Speaker.Player, "...",                                 CameraAnchor.Player,    seqIntroYou },
-            new object[] { Speaker.Mary,   "Может, это мастер по телевизору?",   CameraAnchor.Mary,      null },
-            new object[] { Speaker.John,   "Я не вызывал мастера.",              CameraAnchor.John,      null },
-            new object[] { Speaker.Mary,   "Я вызывала.",                        CameraAnchor.Mary,      null },
-            new object[] { Speaker.John,   "Когда?",                             CameraAnchor.John,      null },
-            new object[] { Speaker.Mary,   "Не помню.",                          CameraAnchor.Mary,      null },
-            new object[] { Speaker.John,   "Эй. Ты кто?",                       CameraAnchor.JohnClose, seqAfterNotRemember },
-            new object[] { Speaker.Player, "...",                                 CameraAnchor.Player,    null },
-            new object[] { Speaker.John,   "Ты умеешь чинить телевизоры?",       CameraAnchor.JohnClose, seqAfterPlayerSilence },
-            new object[] { Speaker.Player, "...",                                 CameraAnchor.Player,    null },
-            new object[] { Speaker.John,   "Возможно, это знак согласия.",          CameraAnchor.JohnClose, null },
-            new object[] { Speaker.John,   "И как это работает?",                    CameraAnchor.John,      seqJohnNarr1 },
-            new object[] { Speaker.John,   "Я стою.",                            CameraAnchor.John,      seqJohnNarr2 },
-            new object[] { Speaker.John,   "Я стою и разговариваю.",             CameraAnchor.John,      seqJohnNarr3 },
-            new object[] { Speaker.John,   "Я невероятно многофункциональный.",   CameraAnchor.John,      null },
-            new object[] { Speaker.Mary,   "Джон.",                              CameraAnchor.Mary,      null },
-            new object[] { Speaker.Mary,   "Он вообще уйдёт?",                  CameraAnchor.Mary,      null },
-            new object[] { Speaker.John,   "Не знаю.",                           CameraAnchor.John,      null },
-            new object[] { Speaker.John,   "Спрашивать бесполезно, он молчит.", CameraAnchor.John,      null },
-            new object[] { Speaker.Mary,   "Понятно.",                           CameraAnchor.Mary,      null },
-            new object[] { Speaker.Mary,   "Подождём, пока сам разберётся.",      CameraAnchor.Mary,      null },
-            new object[] { Speaker.Player, "...",                                 CameraAnchor.Player,    seqEnding },
+            new object[] { Speaker.John,   "Я стою у двери, потому что...",       CameraAnchor.John,      seqIntroJohn,              "" },
+            new object[] { Speaker.John,   "...потому что мне здесь хорошо.",    CameraAnchor.John,      null,                      "" },
+            new object[] { Speaker.John,   "Слышу скепсис.",                     CameraAnchor.John,      seqNarrDisagrees,          "" },
+            new object[] { Speaker.Mary,   "Красиво здесь.",                     CameraAnchor.Mary,      seqIntroMary,              "" },
+            new object[] { Speaker.John,   "Мэри.",                              CameraAnchor.John,      null,                      "" },
+            new object[] { Speaker.Mary,   "Что.",                               CameraAnchor.Mary,      null,                      "" },
+            new object[] { Speaker.John,   "В гостиной кто-то есть.",            CameraAnchor.John,      null,                      "" },
+            new object[] { Speaker.Mary,   "Ты уверен?",                        CameraAnchor.Mary,      null,                      "" },
+            new object[] { Speaker.John,   "Я... чувствую. Там кто-то есть.",   CameraAnchor.John,      null,                      "" },
+            new object[] { Speaker.Player, "...",                                 CameraAnchor.Player,    seqIntroYou,               "" },
+            new object[] { Speaker.Mary,   "Может, это мастер по телевизору?",   CameraAnchor.Mary,      null,                      "" },
+            new object[] { Speaker.John,   "Я не вызывал мастера.",              CameraAnchor.John,      null,                      "" },
+            new object[] { Speaker.Mary,   "Я вызывала.",                        CameraAnchor.Mary,      null,                      "" },
+            new object[] { Speaker.John,   "Когда?",                             CameraAnchor.John,      null,                      "" },
+            new object[] { Speaker.Mary,   "Не помню.",                          CameraAnchor.Mary,      null,                      "" },
+            new object[] { Speaker.John,   "Эй. Ты кто?",                       CameraAnchor.JohnClose, seqAfterNotRemember,       "" },
+            new object[] { Speaker.Player, "...",                                 CameraAnchor.Player,    null,                      "" },
+            new object[] { Speaker.John,   "Ты умеешь чинить телевизоры?",       CameraAnchor.JohnClose, seqAfterPlayerSilence,     "" },
+            new object[] { Speaker.Player, "...",                                 CameraAnchor.Player,    null,                      "" },
+            new object[] { Speaker.John,   "Возможно, это знак согласия.",          CameraAnchor.JohnClose, null,                      "" },
+            new object[] { Speaker.John,   "И как это работает?",                    CameraAnchor.John,      seqJohnNarr1,              "" },
+            new object[] { Speaker.John,   "Я стою.",                            CameraAnchor.John,      seqJohnNarr2,              "" },
+            new object[] { Speaker.John,   "Я стою и разговариваю.",             CameraAnchor.John,      seqJohnNarr3,              "" },
+            new object[] { Speaker.John,   "Я невероятно многофункциональный.",   CameraAnchor.John,      null,                      "" },
+            new object[] { Speaker.Mary,   "Джон.",                              CameraAnchor.Mary,      null,                      "" },
+            new object[] { Speaker.Mary,   "Он вообще уйдёт?",                  CameraAnchor.Mary,      null,                      "" },
+            new object[] { Speaker.John,   "Не знаю.",                           CameraAnchor.John,      null,                      "" },
+            new object[] { Speaker.John,   "Спрашивать бесполезно, он молчит.", CameraAnchor.John,      null,                      "" },
+            new object[] { Speaker.Mary,   "Понятно.",                           CameraAnchor.Mary,      null,                      "" },
+            new object[] { Speaker.Mary,   "Подождём, пока сам разберётся.",      CameraAnchor.Mary,      null,                      "" },
+            new object[] { Speaker.Player, "...",                                 CameraAnchor.Player,    seqEnding,                 "" },
         };
 
         linesProp.arraySize = lineData.Length;
@@ -136,6 +136,7 @@ public static class NovelDialogueBuilder
             elem.FindPropertyRelative("text").stringValue = (string)lineData[i][1];
             elem.FindPropertyRelative("cameraAnchor").enumValueIndex = (int)(CameraAnchor)lineData[i][2];
             elem.FindPropertyRelative("narratorSequenceBefore").objectReferenceValue = (Object)lineData[i][3];
+            elem.FindPropertyRelative("textEn").stringValue = (string)lineData[i][4];
         }
         so.ApplyModifiedPropertiesWithoutUndo();
 
@@ -189,6 +190,7 @@ public static class NovelDialogueBuilder
         {
             var elem = linesProp.GetArrayElementAtIndex(i);
             elem.FindPropertyRelative("text").stringValue          = lines[i].Text;
+            elem.FindPropertyRelative("textEn").stringValue        = lines[i].TextEn ?? "";
             elem.FindPropertyRelative("pauseAfter").floatValue     = lines[i].PauseAfter;
             elem.FindPropertyRelative("activateObject").stringValue = lines[i].ActivateObject ?? "";
         }
@@ -198,11 +200,12 @@ public static class NovelDialogueBuilder
         return asset;
     }
 
-    private static DialogueLine L(string text, float pause, string activateObject = "")
+    private static DialogueLine L(string text, float pause, string textEn = "", string activateObject = "")
     {
         string json = JsonUtility.ToJson(new DialogueLineData
         {
             text = text,
+            textEn = textEn,
             pauseAfter = pause,
             activateObject = activateObject
         });

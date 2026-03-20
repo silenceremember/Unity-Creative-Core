@@ -115,7 +115,7 @@ segmentLines[6] = new[] {
             L("Но Разработчик выделил мне несколько инструментов.", 2.5f) };
         segmentLines[22] = new[] {
             L("Смотрите...", 1.5f),
-            L("Таймер!", 2.5f, "Timer") };
+            L("Таймер!", 2.5f, activateObject: "Timer") };
         segmentLines[23] = new[] {
             L("Это среднее время прохождения игры.", 2f),
             L("Точнее, её оставшейся части.", 2f),
@@ -131,7 +131,7 @@ segmentLines[6] = new[] {
             L("Так что не пытайтесь, смысла нет.", 2f) };
         segmentLines[25] = new[] {
             L("Ладно. Похоже, таймер Вас не впечатлил.", 3f),
-            L("А что насчёт кликера?", 2f, "Clicker") };
+            L("А что насчёт кликера?", 2f, activateObject: "Clicker") };
         segmentLines[26] = new[] {
             L("Это обычный счётчик.", 2f),
             L("При нажатии ЛКМ издаёт приятный звук.", 2f),
@@ -207,12 +207,12 @@ segmentLines[6] = new[] {
             L("Что насчёт небольшого квеста?", 3f),
             L("...", 1f) };
         segmentLines[43] = new[] {
-            L("...Какой кошмар.", 2.5f, "PaintingShift"),
+            L("...Какой кошмар.", 2.5f, activateObject: "PaintingShift"),
             L("Картины магическим образом наклонились.", 3.0f),
             L("Крайне драматичный поворот сюжета.", 3.0f),
             L("Их надо срочно вернуть на место.", 3.0f) };
         segmentLines[44] = new[] {
-            L("Помогите жильцам с этой невыполнимой задачей.", 4f, "QuestCanvas") };
+            L("Помогите жильцам с этой невыполнимой задачей.", 4f, activateObject: "QuestCanvas") };
 
         // Pass 1: create/overwrite assets to disk, write lines via SerializedObject
         var disk = new DialogueSequence[segmentLines.Length];
@@ -258,7 +258,7 @@ segmentLines[6] = new[] {
             L("Только здесь нет разветвлённого нарратива.", 3.0f),
             L("И за Вашу выдающуюся наблюдательность...", 3.0f),
             L("Игра торжественно награждает Вас...", 3.0f),
-            L("Бетонной стеной в окне.", 2.5f, "SecretBlock"),
+            L("Бетонной стеной в окне.", 2.5f, activateObject: "SecretBlock"),
             L("Можете смело добавлять в резюме пункт «QA-тестировщик».", 4.0f),
             L("Правда, Мэри теперь очень расстроена.", 3.0f),
             L("У неё забрали красивый вид на скайбокс.", 3.0f),
@@ -331,6 +331,7 @@ segmentLines[6] = new[] {
         {
             var elem = linesProp.GetArrayElementAtIndex(i);
             elem.FindPropertyRelative("text").stringValue          = lines[i].Text;
+            elem.FindPropertyRelative("textEn").stringValue        = lines[i].TextEn ?? "";
             elem.FindPropertyRelative("pauseAfter").floatValue     = lines[i].PauseAfter;
             elem.FindPropertyRelative("activateObject").stringValue = lines[i].ActivateObject ?? "";
         }
@@ -356,11 +357,12 @@ segmentLines[6] = new[] {
         EditorUtility.SetDirty(asset);
     }
 
-    private static DialogueLine L(string text, float pause, string activateObject = "")
+    private static DialogueLine L(string text, float pause, string textEn = "", string activateObject = "")
     {
         string json = JsonUtility.ToJson(new DialogueLineData
         {
             text = text,
+            textEn = textEn,
             pauseAfter = pause,
             activateObject = activateObject
         });

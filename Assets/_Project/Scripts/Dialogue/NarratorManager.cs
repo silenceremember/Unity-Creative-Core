@@ -27,6 +27,9 @@ public class NarratorManager : MonoBehaviour
     [Header("Config")]
     [SerializeField] private NarratorConfig config;
 
+    [Header("Localization")]
+    [SerializeField] private LanguageVariable languageVar;
+
     private AudioSource _audioSource;
     private CancellationTokenSource _cts;
     private DialogueSequence _currentSequence;
@@ -167,6 +170,8 @@ public class NarratorManager : MonoBehaviour
     private async UniTask ShowLine(DialogueLine line, CancellationToken ct)
     {
         _skipLine = false;
+        var lang = languageVar != null ? languageVar.Value : GameLanguage.Russian;
+        string resolvedText = line.GetText(lang);
 
         if (!string.IsNullOrEmpty(line.ActivateObject) && activateChannel != null)
             activateChannel.Raise(line.ActivateObject);
@@ -179,11 +184,11 @@ public class NarratorManager : MonoBehaviour
         if (lineText != null)
         {
             int delayMs = Mathf.Max(1, Mathf.RoundToInt(1000f / config.CharsPerSecond));
-            foreach (char c in line.Text)
+            foreach (char c in resolvedText)
             {
                 if (_skipLine)
                 {
-                    lineText.text = line.Text;
+                    lineText.text = resolvedText;
                     break;
                 }
                 lineText.text += c;
@@ -202,8 +207,8 @@ public class NarratorManager : MonoBehaviour
 
         if (!_skipLine)
         {
-            float elapsed   = line.Text.Length / config.CharsPerSecond;
-            float total     = line.GetDuration();
+            float elapsed   = resolvedText.Length / config.CharsPerSecond;
+            float total     = Mathf.Max(1.5f, resolvedText.Length / 50f);
             float remaining = total - elapsed;
             if (remaining > 0f)
             {
