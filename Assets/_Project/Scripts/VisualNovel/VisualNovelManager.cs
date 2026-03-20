@@ -200,7 +200,7 @@ public class VisualNovelManager : MonoBehaviour
         ShowNovelCanvas();
         var lang = languageVar != null ? languageVar.Value : GameLanguage.Russian;
 
-        if (speakerText != null) speakerText.text = line.SpeakerDisplayName;
+        if (speakerText != null) speakerText.text = line.GetSpeakerDisplayName(lang);
         if (lineText != null) lineText.text = "";
         _blipCounter = 0;
 

@@ -40,8 +40,8 @@ public static class MenuDialogueBuilder
             L("", "Может, и нет.", 0f));
 
         CreateSeq(folder, "Seq_LangTransition", 2, null,
-            L("Switching...", "Переключаюсь...", 0.8f),
-            L("Here goes...", "Сейчас я скажу...", 1.0f),
+            L("Переключаюсь...", "Switching...", 0.8f),
+            L("Сейчас я скажу...", "Here goes...", 1.0f),
             L("That actually worked.", "Эти родные депрессивные интонации.", 1.5f),
             L("I sound like a default Unity asset.", "Снова звучу как дилетант.", 1.2f),
             L("More professional. Completely soulless.", "Зато искренне.", 1.0f),

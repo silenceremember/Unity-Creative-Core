@@ -39,6 +39,6 @@ public class NovelLine
     [SerializeField] private DialogueSequence narratorSequenceBefore;
     public DialogueSequence NarratorSequenceBefore => narratorSequenceBefore;
 
-    /// <summary>Display name for UI. Returns enum name; localization can be added later.</summary>
-    public string SpeakerDisplayName => speaker.ToString();
+    /// <summary>Returns localized display name for the speaker.</summary>
+    public string GetSpeakerDisplayName(GameLanguage lang) => speaker.GetDisplayName(lang);
 }
