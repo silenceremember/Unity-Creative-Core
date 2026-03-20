@@ -227,10 +227,10 @@ public class NarratorManager : MonoBehaviour
 
     private void PlayVoiceBlip()
     {
-        if (channel == null || _audioSource == null) return;
-        var clip = channel.GetRandomBlip();
+        if (config == null || _audioSource == null) return;
+        var clip = config.GetRandomBlip();
         if (clip == null) return;
-        _audioSource.pitch = channel.GetRandomPitch();
+        _audioSource.pitch = config.GetRandomPitch();
         _audioSource.PlayOneShot(clip);
     }
 }

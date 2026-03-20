@@ -13,7 +13,6 @@ public class DialogueLineDrawer : PropertyDrawer
         EditorGUI.BeginProperty(position, label, property);
 
         var textProp     = property.FindPropertyRelative("text");
-        var durationProp = property.FindPropertyRelative("duration");
         var pauseProp    = property.FindPropertyRelative("pauseAfter");
         var activateProp = property.FindPropertyRelative("activateObject");
 
@@ -46,10 +45,8 @@ public class DialogueLineDrawer : PropertyDrawer
         EditorGUI.LabelField(new Rect(position.x, y, w, lineH), counter, style);
         y += lineH + pad;
 
-        // Duration + PauseAfter on one line
-        float half = (w - 4) / 2f;
-        EditorGUI.PropertyField(new Rect(position.x, y, half, lineH), durationProp, new GUIContent("Duration"));
-        EditorGUI.PropertyField(new Rect(position.x + half + 4, y, half, lineH), pauseProp, new GUIContent("Pause After"));
+        // PauseAfter
+        EditorGUI.PropertyField(new Rect(position.x, y, w, lineH), pauseProp, new GUIContent("Pause After"));
         y += lineH + pad;
 
         // Activate Object
@@ -64,7 +61,7 @@ public class DialogueLineDrawer : PropertyDrawer
         float pad   = 2f;
         return lineH * 3 + pad  // text
              + lineH + pad  // counter
-             + lineH + pad  // duration/pause
+             + lineH + pad  // pause
              + lineH + pad; // activateObject
     }
 }

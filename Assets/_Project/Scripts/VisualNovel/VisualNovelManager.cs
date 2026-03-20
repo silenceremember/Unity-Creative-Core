@@ -196,7 +196,7 @@ public class VisualNovelManager : MonoBehaviour
     {
         ShowNovelCanvas();
 
-        if (speakerText != null) speakerText.text = line.Speaker;
+        if (speakerText != null) speakerText.text = line.SpeakerDisplayName;
         if (lineText != null) lineText.text = "";
         _blipCounter = 0;
 
@@ -280,14 +280,13 @@ public class VisualNovelManager : MonoBehaviour
         _currentAnchor = anchor;
     }
 
-    private async UniTask TypewriterAsync(string text, string speaker, CancellationToken ct)
+    private async UniTask TypewriterAsync(string text, Speaker speaker, CancellationToken ct)
     {
         if (lineText == null) return;
 
-        int delay        = Mathf.RoundToInt(1000f / config.CharsPerSecond);
-        int blipInterval = novelChannel != null
-            ? novelChannel.GetBlipInterval(speaker)
-            : config.BlipEveryNChars;
+        var voice = config.GetVoice(speaker);
+        int delay = Mathf.RoundToInt(1000f / config.CharsPerSecond);
+        int blipInterval = voice != null ? voice.BlipInterval : 4;
 
         foreach (char c in text)
         {
@@ -314,12 +313,14 @@ public class VisualNovelManager : MonoBehaviour
         }
     }
 
-    private void PlayVoiceBlip(string speaker)
+    private void PlayVoiceBlip(Speaker speaker)
     {
-        if (_audioSource == null || novelChannel == null) return;
-        var clip = novelChannel.GetBlip(speaker);
+        if (_audioSource == null || config == null) return;
+        var voice = config.GetVoice(speaker);
+        if (voice == null) return;
+        var clip = voice.GetRandomBlip();
         if (clip == null) return;
-        _audioSource.pitch = novelChannel.GetRandomPitch(speaker);
+        _audioSource.pitch = voice.GetRandomPitch();
         _audioSource.PlayOneShot(clip);
     }
 }

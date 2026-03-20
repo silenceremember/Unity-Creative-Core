@@ -339,7 +339,6 @@ public static class ExplorationDialogueBuilder
             var elem = linesProp.GetArrayElementAtIndex(i);
             elem.FindPropertyRelative("text").stringValue          = lines[i].Text;
             elem.FindPropertyRelative("pauseAfter").floatValue     = lines[i].PauseAfter;
-            elem.FindPropertyRelative("duration").floatValue       = lines[i].Duration;
             elem.FindPropertyRelative("activateObject").stringValue = lines[i].ActivateObject ?? "";
         }
 
@@ -370,7 +369,6 @@ public static class ExplorationDialogueBuilder
         {
             text = text,
             pauseAfter = pause,
-            duration = 0f,
             activateObject = activateObject
         });
         return JsonUtility.FromJson<DialogueLine>(json);

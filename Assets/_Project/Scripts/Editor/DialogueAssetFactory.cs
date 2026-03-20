@@ -134,7 +134,6 @@ public static class DialogueAssetFactory
             var elem = linesProp.GetArrayElementAtIndex(i);
             elem.FindPropertyRelative("text").stringValue          = lines[i].Text;
             elem.FindPropertyRelative("pauseAfter").floatValue     = lines[i].PauseAfter;
-            elem.FindPropertyRelative("duration").floatValue       = lines[i].Duration;
             elem.FindPropertyRelative("activateObject").stringValue = lines[i].ActivateObject ?? "";
         }
 
@@ -148,7 +147,6 @@ public static class DialogueAssetFactory
         {
             text = text,
             pauseAfter = pause,
-            duration = 0f,
             activateObject = ""
         });
         return JsonUtility.FromJson<DialogueLine>(json);

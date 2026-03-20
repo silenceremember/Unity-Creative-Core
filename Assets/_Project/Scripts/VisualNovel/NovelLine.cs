@@ -9,9 +9,9 @@ using UnityEngine;
 [System.Serializable]
 public class NovelLine
 {
-    [Tooltip("Speaker name (displayed in NovelCanvas)")]
-    [SerializeField] private string speaker;
-    public string Speaker => speaker;
+    [Tooltip("Speaker (dropdown)")]
+    [SerializeField] private Speaker speaker;
+    public Speaker Speaker => speaker;
 
     [TextArea(2, 5)]
     [Tooltip("Line text")]
@@ -25,4 +25,7 @@ public class NovelLine
     [Tooltip("If set — narrator will play this sequence before showing this line (NovelCanvas is hidden).")]
     [SerializeField] private DialogueSequence narratorSequenceBefore;
     public DialogueSequence NarratorSequenceBefore => narratorSequenceBefore;
+
+    /// <summary>Display name for UI. Returns enum name; localization can be added later.</summary>
+    public string SpeakerDisplayName => speaker.ToString();
 }
