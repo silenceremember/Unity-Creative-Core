@@ -72,4 +72,9 @@ public class PlayerConfig : ScriptableObject
     [Range(0f, 1f)]
     [SerializeField] private float footstepVolume = 0.5f;
     public float FootstepVolume => footstepVolume;
+
+    [Header("Camera")]
+    [Tooltip("Camera offset from player pivot (eye height)")]
+    [SerializeField] private Vector3 cameraLocalOffset = new Vector3(0f, 0.7f, 0f);
+    public Vector3 CameraLocalOffset => cameraLocalOffset;
 }

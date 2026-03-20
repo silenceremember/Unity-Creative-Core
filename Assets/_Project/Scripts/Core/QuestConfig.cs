@@ -63,4 +63,48 @@ public class QuestConfig : ScriptableObject
 
     [SerializeField] private float inputSpamCooldown = 0.5f;
     public float InputSpamCooldown => inputSpamCooldown;
+
+    [Header("Quest Colors")]
+    [SerializeField] private Color colorDefault = Color.yellow;
+    public Color ColorDefault => colorDefault;
+
+    [SerializeField] private Color colorDone = Color.gray;
+    public Color ColorDone => colorDone;
+
+    [SerializeField] private Color colorAccept = Color.green;
+    public Color ColorAccept => colorAccept;
+
+    [SerializeField] private Color colorReject = Color.red;
+    public Color ColorReject => colorReject;
+
+    [Header("Quest Code")]
+    [Tooltip("Correct code sequence")]
+    [SerializeField] private string correctCode = "1234";
+    public string CorrectCode => correctCode;
+
+    [Header("Painting Shift")]
+    [Tooltip("Painting shift transition duration")]
+    [SerializeField] private float shiftDuration = 0.6f;
+    public float ShiftDuration => shiftDuration;
+
+    [Tooltip("Delay between individual painting shifts")]
+    [SerializeField] private float shiftStagger = 0f;
+    public float ShiftStagger => shiftStagger;
+
+    [Header("XP Level Data")]
+    [Tooltip("XP required for each level. [0] = Lv.0→1, etc.")]
+    [SerializeField] private int[] xpRequirements = { 500, 750, 1000 };
+    public int[] XPRequirements => xpRequirements;
+
+    [Tooltip("XP fill animation curve")]
+    [SerializeField] private AnimationCurve xpFillCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+    public AnimationCurve XPFillCurve => xpFillCurve;
+
+    [Tooltip("Flash color on level up")]
+    [SerializeField] private Color flashColor = new Color(1f, 0.85f, 0f, 1f);
+    public Color FlashColor => flashColor;
+
+    [Tooltip("Reward label format string ({0} = XP amount)")]
+    [SerializeField] private string rewardFormat = "REWARD: {0} XP";
+    public string RewardFormat => rewardFormat;
 }

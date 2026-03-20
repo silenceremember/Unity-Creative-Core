@@ -14,11 +14,6 @@ using UnityEngine.UI;
 /// </summary>
 public class XPLevelManager : MonoBehaviour
 {
-    [Header("Data")]
-    [Tooltip("XP for each level. [0] = Lv.0→1, [1] = Lv.1→2 etc.")]
-    [SerializeField] private int[] xpRequirements = { 500, 750, 1000 };
-    [SerializeField] private AnimationCurve fillCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
-
     [Header("Config")]
     [SerializeField] private QuestConfig config;
 
@@ -34,10 +29,8 @@ public class XPLevelManager : MonoBehaviour
 
     [Header("UI — Reward")]
     [SerializeField] private TextMeshProUGUI rewardLabel;
-    [SerializeField] private string          rewardFormat = "REWARD: {0} XP";
 
-    [Header("Style")]
-    [SerializeField] private Color flashColor = new Color(1f, 0.85f, 0f, 1f);
+
 
     [Header("XP Sounds")]
     [SerializeField] private AudioClip xpTickSound;
@@ -94,9 +87,9 @@ public class XPLevelManager : MonoBehaviour
     private CancellationTokenSource _blinkCts;
 
     private int XPForCurrentLevel =>
-        _level < xpRequirements.Length
-            ? xpRequirements[_level]
-            : xpRequirements[xpRequirements.Length - 1];
+        _level < config.XPRequirements.Length
+            ? config.XPRequirements[_level]
+            : config.XPRequirements[config.XPRequirements.Length - 1];
 
 
     void Start()
@@ -109,7 +102,7 @@ public class XPLevelManager : MonoBehaviour
         if (rewardLabel != null)
         {
             rewardLabel.gameObject.SetActive(true);
-            rewardLabel.text = string.Format(rewardFormat, config.QuestRewardXP);
+            rewardLabel.text = string.Format(config.RewardFormat, config.QuestRewardXP);
         }
 
         RefreshUI();
@@ -202,7 +195,7 @@ public class XPLevelManager : MonoBehaviour
         if (rewardLabel != null)
         {
             rewardLabel.gameObject.SetActive(true);
-            rewardLabel.text = string.Format(rewardFormat, amount);
+            rewardLabel.text = string.Format(config.RewardFormat, amount);
         }
 
         _animCts = new CancellationTokenSource();
@@ -229,8 +222,8 @@ public class XPLevelManager : MonoBehaviour
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / dur);
-            float curve = fillCurve != null && fillCurve.length > 0
-                ? fillCurve.Evaluate(t)
+            float curve = config.XPFillCurve != null && config.XPFillCurve.length > 0
+                ? config.XPFillCurve.Evaluate(t)
                 : Mathf.SmoothStep(0f, 1f, t);
 
             _displayXP = Mathf.Lerp(startXP, endXP, curve);
@@ -247,7 +240,7 @@ public class XPLevelManager : MonoBehaviour
             if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
             {
                 int rewardLeft = Mathf.RoundToInt(Mathf.Lerp(rewardDisplay, rewardEnd, curve));
-                rewardLabel.text = string.Format(rewardFormat, rewardLeft);
+                rewardLabel.text = string.Format(config.RewardFormat, rewardLeft);
                 if (rewardLeft <= 0)
                     rewardLabel.gameObject.SetActive(false);
             }
@@ -262,7 +255,7 @@ public class XPLevelManager : MonoBehaviour
 
         if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
         {
-            rewardLabel.text = string.Format(rewardFormat, rewardEnd);
+            rewardLabel.text = string.Format(config.RewardFormat, rewardEnd);
             if (rewardEnd <= 0)
                 rewardLabel.gameObject.SetActive(false);
         }
@@ -370,7 +363,7 @@ public class XPLevelManager : MonoBehaviour
             float t = (Mathf.Sin(Time.time * Mathf.PI * 2f) + 1f) * 0.5f;
             if (tmpText != null) tmpText.alpha = Mathf.Lerp(0.3f, 1f, t);
             if (rt      != null) rt.localScale = Vector3.one * Mathf.Lerp(1f, 1.06f, t);
-            if (fillImg != null) fillImg.color = Color.Lerp(_fillOriginalColor, flashColor, t);
+            if (fillImg != null) fillImg.color = Color.Lerp(_fillOriginalColor, config.FlashColor, t);
             bool canceled = await UniTask.Yield(PlayerLoopTiming.Update, ct).SuppressCancellationThrow();
             if (canceled) break;
         }
@@ -418,7 +411,7 @@ public class XPLevelManager : MonoBehaviour
         int ms = Mathf.RoundToInt(interval * 1000f);
         for (int i = 0; i < times; i++)
         {
-            fillImage.color = flashColor;
+            fillImage.color = config.FlashColor;
             await UniTask.Delay(ms, cancellationToken: ct);
             fillImage.color = _fillOriginalColor;
             await UniTask.Delay(ms, cancellationToken: ct);

@@ -21,8 +21,8 @@ public class GameplaySetup : MonoBehaviour
     [Tooltip("Main Camera (Character Camera)")]
     [SerializeField] private Camera mainCamera;
 
-    [Tooltip("Camera offset from player pivot (eye height)")]
-    [SerializeField] private Vector3 cameraLocalOffset = new Vector3(0f, 0.7f, 0f);
+    [Header("Config")]
+    [SerializeField] private PlayerConfig config;
 
     private PlayerController _playerController;
     private MeshRenderer _capsuleRenderer;
@@ -84,7 +84,7 @@ public class GameplaySetup : MonoBehaviour
 
         if (_playerController != null)
         {
-            _playerController.SetCameraBaseOffset(cameraLocalOffset);
+            _playerController.SetCameraBaseOffset(config.CameraLocalOffset);
             _playerController.enabled = true;
             _playerController.Init(mainCamera != null ? mainCamera.transform : null);
         }

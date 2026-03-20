@@ -20,8 +20,7 @@ public class PauseMenuManager : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioMixer audioMixer;
-    [Tooltip("Exposed parameter name")]
-    [SerializeField] private string exposedParam = "Master";
+    [SerializeField] private AudioConfig audioConfig;
     [Tooltip("Volume slider inside the pause menu")]
     [SerializeField] private Slider volumeSlider;
 
@@ -71,7 +70,7 @@ public class PauseMenuManager : MonoBehaviour
     {
         if (volumeSlider != null)
         {
-            float saved = PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, 0.25f);
+            float saved = PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, audioConfig.DefaultVolume);
             volumeSlider.value = saved;
             volumeSlider.onValueChanged.AddListener(ApplyVolume);
         }
@@ -146,8 +145,8 @@ public class PauseMenuManager : MonoBehaviour
     {
         if (audioMixer == null) return;
 
-        float dB = Mathf.Lerp(10f, -30f, value);
-        audioMixer.SetFloat(exposedParam, dB);
+        float dB = Mathf.Lerp(audioConfig.DBMax, audioConfig.DBMin, value);
+        audioMixer.SetFloat(audioConfig.ExposedParam, dB);
         PlayerPrefs.SetFloat(AudioPrefsKeys.MasterVolume, value);
     }
 
@@ -178,7 +177,7 @@ public class PauseMenuManager : MonoBehaviour
             pauseMenuCanvas.SetActive(true);
 
         if (volumeSlider != null)
-            volumeSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, 0.25f));
+            volumeSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, audioConfig.DefaultVolume));
 
         if (playerController != null && playerController.enabled)
             playerController.enabled = false;

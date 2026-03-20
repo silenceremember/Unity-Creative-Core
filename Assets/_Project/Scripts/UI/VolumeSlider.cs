@@ -12,8 +12,8 @@ public class VolumeSlider : MonoBehaviour
     [Tooltip("Drag AudioMixer.mixer here")]
     [SerializeField] private AudioMixer audioMixer;
 
-    [Tooltip("Exposed parameter name in AudioMixer")]
-    [SerializeField] private string exposedParam = "Master";
+    [Header("Config")]
+    [SerializeField] private AudioConfig audioConfig;
 
     [Header("UI")]
     [Tooltip("Slider (auto-found if not assigned)")]
@@ -29,8 +29,7 @@ public class VolumeSlider : MonoBehaviour
             slider.minValue = 0f;
             slider.maxValue = 1f;
 
-            PlayerPrefs.DeleteKey(AudioPrefsKeys.MasterVolume);
-            float saved = PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, 0.25f);
+            float saved = PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, audioConfig.DefaultVolume);
             slider.value = saved;
 
             slider.onValueChanged.AddListener(ApplyVolume);
@@ -42,8 +41,8 @@ public class VolumeSlider : MonoBehaviour
     {
         if (audioMixer == null) return;
 
-        float dB = Mathf.Lerp(10f, -30f, value);
-        audioMixer.SetFloat(exposedParam, dB);
+        float dB = Mathf.Lerp(audioConfig.DBMax, audioConfig.DBMin, value);
+        audioMixer.SetFloat(audioConfig.ExposedParam, dB);
         PlayerPrefs.SetFloat(AudioPrefsKeys.MasterVolume, value);
     }
 

@@ -15,11 +15,8 @@ public class CameraTransition : MonoBehaviour
     [Tooltip("Settings menu anchor (Settings Camera)")]
     [SerializeField] private Transform settingsAnchor;
 
-    [Header("Settings")]
-    [Range(0.1f, 3f)]
-    [SerializeField] private float duration = 0.8f;
-
-    [SerializeField] private AnimationCurve curve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [Header("Config")]
+    [SerializeField] private CameraTransitionConfig config;
 
     private Transform _cam;
     private CancellationTokenSource _currentCts;
@@ -74,11 +71,11 @@ public class CameraTransition : MonoBehaviour
         Quaternion startRot = _cam.rotation;
         float elapsed = 0f;
 
-        while (elapsed < duration)
+        while (elapsed < config.Duration)
         {
             ct.ThrowIfCancellationRequested();
             elapsed += Time.deltaTime;
-            float t = curve.Evaluate(Mathf.Clamp01(elapsed / duration));
+            float t = config.BlendCurve.Evaluate(Mathf.Clamp01(elapsed / config.Duration));
             _cam.position = Vector3.Lerp(startPos, targetPos, t);
             _cam.rotation = Quaternion.Lerp(startRot, targetRot, t);
             await UniTask.Yield(PlayerLoopTiming.Update, ct);

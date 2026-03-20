@@ -36,8 +36,8 @@ public class ExplorationManager : MonoBehaviour
     [Header("Decorative Timer (flavor, optional)")]
     [Tooltip("Countdown TMP_Text. Leave empty to skip.")]
     [SerializeField] private TMP_Text timerLabel;
-    [Tooltip("Decorative timer duration in seconds")]
-    [SerializeField] private float decorativeTimerDuration = 30f;
+    [Header("Config")]
+    [SerializeField] private ExplorationConfig config;
 
     [Header("Canvas")]
     [Tooltip("Root Canvas for timer and clicker")]
@@ -206,7 +206,7 @@ public class ExplorationManager : MonoBehaviour
 
         while (true)
         {
-            float display = decorativeTimerDuration - elapsed;
+            float display = config.DecorativeTimerDuration - elapsed;
             bool negative = display < 0f;
             float abs = Mathf.Abs(display);
             int minutes = Mathf.FloorToInt(abs / 60f);

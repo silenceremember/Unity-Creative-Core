@@ -19,12 +19,8 @@ public class PaintingShiftController : MonoBehaviour
     [Header("Paintings")]
     [SerializeField] private PaintingEntry[] paintings;
 
-    [Header("Animation")]
-    [Tooltip("Transition time in seconds (0 = instant)")]
-    [SerializeField] private float duration = 0.6f;
-
-    [Tooltip("Delay between paintings (0 = all at once)")]
-    [SerializeField] private float stagger = 0f;
+    [Header("Config")]
+    [SerializeField] private QuestConfig config;
 
     private bool _triggered;
 
@@ -54,8 +50,8 @@ public class PaintingShiftController : MonoBehaviour
             if (paintings[i].painting == null) continue;
             RotatePaintingAsync(paintings[i].painting, paintings[i].targetLocalEuler, ct).Forget();
 
-            if (stagger > 0f)
-                await UniTask.Delay(System.TimeSpan.FromSeconds(stagger), cancellationToken: ct);
+            if (config.ShiftStagger > 0f)
+                await UniTask.Delay(System.TimeSpan.FromSeconds(config.ShiftStagger), cancellationToken: ct);
         }
     }
 
@@ -64,18 +60,18 @@ public class PaintingShiftController : MonoBehaviour
         Quaternion startRot = t.localRotation;
         Quaternion endRot   = Quaternion.Euler(targetEuler);
 
-        if (duration <= 0f)
+        if (config.ShiftDuration <= 0f)
         {
             t.localRotation = endRot;
             return;
         }
 
         float elapsed = 0f;
-        while (elapsed < duration)
+        while (elapsed < config.ShiftDuration)
         {
             ct.ThrowIfCancellationRequested();
             elapsed += Time.deltaTime;
-            float p = Mathf.SmoothStep(0f, 1f, elapsed / duration);
+            float p = Mathf.SmoothStep(0f, 1f, elapsed / config.ShiftDuration);
             t.localRotation = Quaternion.Slerp(startRot, endRot, p);
             await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }

@@ -30,18 +30,8 @@ public class PaintingQuestManager : MonoBehaviour
     [Tooltip("UI object with '[E] Fix' hint")]
     [SerializeField] private GameObject ePrompt;
 
-    [Header("Code")]
-    [Tooltip("Correct code")]
-    [SerializeField] private string correctCode = "1234";
-
     [Header("Config")]
     [SerializeField] private QuestConfig config;
-
-    [Header("Colors")]
-    [SerializeField] private Color colorDefault  = Color.yellow;
-    [SerializeField] private Color colorDone     = Color.gray;
-    [SerializeField] private Color colorAccept   = Color.green;
-    [SerializeField] private Color colorReject   = Color.red;
 
     [Header("Quest Sounds")]
     [Tooltip("Sound on E press (not reject)")]
@@ -148,13 +138,13 @@ public class PaintingQuestManager : MonoBehaviour
             int slotIndex = p.AssignedSlotIndex;
             if (slotIndex < pictureLabels.Length && pictureLabels[slotIndex] != null)
             {
-                pictureLabels[slotIndex].color     = colorDone;
+                pictureLabels[slotIndex].color     = config.ColorDone;
                 pictureLabels[slotIndex].fontStyle |= FontStyles.Strikethrough;
             }
             _pressCount++;
         }
 
-        _enteredCode  = correctCode;
+        _enteredCode  = config.CorrectCode;
         _resolved     = true;
         _questActive  = false;
 
@@ -238,7 +228,7 @@ public class PaintingQuestManager : MonoBehaviour
         int slotIndex = painting.AssignedSlotIndex;
         if (slotIndex < pictureLabels.Length && pictureLabels[slotIndex] != null)
         {
-            pictureLabels[slotIndex].color = colorDone;
+            pictureLabels[slotIndex].color = config.ColorDone;
             pictureLabels[slotIndex].fontStyle |= FontStyles.Strikethrough;
         }
 
@@ -270,9 +260,9 @@ public class PaintingQuestManager : MonoBehaviour
 
         await UniTask.Delay(System.TimeSpan.FromSeconds(0.3f), cancellationToken: ct);
 
-        bool accepted = _enteredCode == correctCode;
+        bool accepted = _enteredCode == config.CorrectCode;
 
-        Color resultColor = accepted ? colorAccept : colorReject;
+        Color resultColor = accepted ? config.ColorAccept : config.ColorReject;
 
         foreach (var lbl in pictureLabels)
             if (lbl != null)
@@ -336,7 +326,7 @@ public class PaintingQuestManager : MonoBehaviour
         foreach (var lbl in pictureLabels)
             if (lbl != null)
             {
-                lbl.color     = colorDefault;
+                lbl.color     = config.ColorDefault;
                 lbl.fontStyle &= ~FontStyles.Strikethrough;
             }
 
@@ -357,7 +347,7 @@ public class PaintingQuestManager : MonoBehaviour
         foreach (var lbl in pictureLabels)
             if (lbl != null)
             {
-                lbl.color     = colorDefault;
+                lbl.color     = config.ColorDefault;
                 lbl.fontStyle &= ~FontStyles.Strikethrough;
             }
     }

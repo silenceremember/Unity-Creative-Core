@@ -30,16 +30,8 @@ public class NarratorManager : MonoBehaviour
     [Tooltip("AudioMixerGroup for narrator voice")]
     [SerializeField] private AudioMixerGroup mixerGroup;
 
-    [Header("Settings")]
-    [Range(20, 200)]
-    [SerializeField] private float charsPerSecond = 50f;
-    [Range(50, 500)]
-    [SerializeField] private float eraseSpeed = 1000f;
-    [SerializeField] private float fadeSpeed = 4f;
-
-    [Tooltip("Sound plays every N non-whitespace characters (Undertale-style).")]
-    [Range(1, 10)]
-    [SerializeField] private int blipEveryNChars = 4;
+    [Header("Config")]
+    [SerializeField] private NarratorConfig config;
 
     private AudioSource _audioSource;
     private CancellationTokenSource _cts;
@@ -202,7 +194,7 @@ public class NarratorManager : MonoBehaviour
 
         if (lineText != null)
         {
-            int delayMs = Mathf.Max(1, Mathf.RoundToInt(1000f / charsPerSecond));
+            int delayMs = Mathf.Max(1, Mathf.RoundToInt(1000f / config.CharsPerSecond));
             foreach (char c in line.Text)
             {
                 if (_skipLine)
@@ -214,7 +206,7 @@ public class NarratorManager : MonoBehaviour
                 if (!char.IsWhiteSpace(c))
                 {
                     _blipCounter++;
-                    if (_blipCounter >= blipEveryNChars)
+                    if (_blipCounter >= config.BlipEveryNChars)
                     {
                         _blipCounter = 0;
                         PlayVoiceBlip();
@@ -226,7 +218,7 @@ public class NarratorManager : MonoBehaviour
 
         if (!_skipLine)
         {
-            float elapsed   = line.Text.Length / charsPerSecond;
+            float elapsed   = line.Text.Length / config.CharsPerSecond;
             float total     = line.GetDuration();
             float remaining = total - elapsed;
             if (remaining > 0f)
@@ -241,7 +233,7 @@ public class NarratorManager : MonoBehaviour
     private async UniTask EraseText(CancellationToken ct)
     {
         if (lineText == null) return;
-        int delayMs = Mathf.Max(1, Mathf.RoundToInt(1000f / eraseSpeed));
+        int delayMs = Mathf.Max(1, Mathf.RoundToInt(1000f / config.EraseSpeed));
         while (lineText.text.Length > 0)
         {
             lineText.text = lineText.text[..^1];
