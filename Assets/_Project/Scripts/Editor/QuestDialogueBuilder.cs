@@ -20,25 +20,32 @@ public static class QuestDialogueBuilder
             AssetDatabase.CreateFolder("Assets/_Project/SO/Dialogue", "Quest");
 
         // Click dialogues
-        var click0 = CreateSeq(folder, "QuestClick_0", 5, null, L("Интересный выбор.", 2f));
-        var click1 = CreateSeq(folder, "QuestClick_1", 5, null, L("Любопытно...", 2f));
-        var click2 = CreateSeq(folder, "QuestClick_2", 5, null, L("Хм. Уверены?", 2f));
-        var click3 = CreateSeq(folder, "QuestClick_3", 5, null, L("Ну что ж.", 2f));
+        var clicks = new[] {
+            CreateSeq(folder, "QuestClick_0", 5, null, L("Интересный выбор.", 2f)),
+            CreateSeq(folder, "QuestClick_1", 5, null, L("Любопытно...", 2f)),
+            CreateSeq(folder, "QuestClick_2", 5, null, L("Хм. Уверены?", 2f)),
+            CreateSeq(folder, "QuestClick_3", 5, null, L("Ну что ж...", 2f)),
+            CreateSeq(folder, "QuestClick_4", 5, null, L("Смелое решение.", 2f)),
+            CreateSeq(folder, "QuestClick_5", 5, null, L("Допустим.", 2f)),
+            CreateSeq(folder, "QuestClick_6", 5, null, L("Неожиданно.", 2f))
+        };
 
         // Reject dialogues — escalating hints
-        var reject0 = CreateSeq(folder, "QuestReject_0", 5, null,
-            L("Похоже, картины надо нажать в правильном порядке.", 3.5f));
-        var reject1 = CreateSeq(folder, "QuestReject_1", 5, null,
-            L("Похоже, картины нужно нажать в порядке 1-2-3-4.", 3.5f));
-        var reject2 = CreateSeq(folder, "QuestReject_2", 5, null,
-            L("Порядок 1-2-3-4. Просто. Нажмите. Их. По. Очереди.", 3.5f));
-        var reject3 = CreateSeq(folder, "QuestReject_3", 5, null,
-            L("Я начинаю сомневаться в ваших когнитивных способностях.", 3.5f));
-        var reject4 = CreateSeq(folder, "QuestReject_4", 5, null,
-            L("Господи.", 1.5f),
-            L("Вы ведь даже не стараетесь, да?", 2.5f),
-            L("Ладно. Я выполню эту сложнейшую задачу за Вас.", 3.5f),
-            L("Смотрите и учитесь.", 2.0f));
+        var rejects = new[] {
+            CreateSeq(folder, "QuestReject_0", 5, null,
+                L("Похоже, картины надо нажать в правильном порядке.", 3.5f)),
+            CreateSeq(folder, "QuestReject_1", 5, null,
+                L("Похоже, картины нужно нажать в порядке 1-2-3-4.", 3.5f)),
+            CreateSeq(folder, "QuestReject_2", 5, null,
+                L("Порядок 1-2-3-4. Просто. Нажмите. Их. По. Очереди.", 3.5f)),
+            CreateSeq(folder, "QuestReject_3", 5, null,
+                L("Я начинаю сомневаться в Ваших когнитивных способностях.", 3.5f)),
+            CreateSeq(folder, "QuestReject_4", 5, null,
+                L("Господи.", 1.5f),
+                L("Вы ведь даже не стараетесь, да?", 2.5f),
+                L("Ладно. Я выполню эту сложнейшую задачу за Вас.", 3.5f),
+                L("Смотрите и учитесь.", 2.0f))
+        };
 
         // Post-quest chain (transitions managed by XPLevelManager)
         var postQuest = CreateSeq(folder, "QuestDone_PostQuest", 5, null,
@@ -55,7 +62,7 @@ public static class QuestDialogueBuilder
         var levelUp = CreateSeq(folder, "QuestDone_LevelUp", 5, null,
             L("Ого! Вы повысили уровень!", 2.0f), 
             L("Давайте посмотрим...", 1.5f),
-            L("Какие же потрясающие навыки предложит Разработчик.", 3.5f));
+            L("Какие же потрясающие навыки предложит Разработчик?", 3.5f));
 
         var abilityChosen = CreateSeq(folder, "QuestDone_AbilityChosen", 5, null,
             L("Боже, какой богатый выбор...", 2.5f), 
@@ -68,7 +75,7 @@ public static class QuestDialogueBuilder
             L("Теперь Вы можете идти.", 2.5f),
             L("Если спрыгнете вниз, Вы перейдёте дальше.", 3.5f),
             L("Но я Вас торопить не буду.", 2.5f),
-            L("Можете находиться здесь сколько захотите...", 3.0f),
+            L("Можете находиться здесь, сколько захотите...", 3.0f),
             L("И наслаждаться результатами своих действий.", 3.5f));
 
         var doorUnlocked = CreateSeq(folder, "QuestDone_DoorUnlocked", 5, doorEpilogue,
@@ -81,14 +88,13 @@ public static class QuestDialogueBuilder
             L("Разработчик оставил навыки как UI-заглушку.", 3.5f),
             L("Они ничего не делают. Совсем.", 2.5f),
             L("Впрочем, иллюзия выбора — это база современного гейм-дизайна.", 4.0f),
-            L("В любом случае, поздравляю с повышением уровня.", 3.5f));
+            L("В любом случае поздравляю с повышением уровня.", 3.5f));
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
         int assigned = AutoAssign(
-            click0, click1, click2, click3,
-            reject0, reject1, reject2, reject3, reject4,
+            clicks, rejects,
             postQuest, xpBar, levelUp, abilityChosen, abilityTried, doorUnlocked);
 
         string autoMsg = assigned > 0
@@ -99,11 +105,7 @@ public static class QuestDialogueBuilder
     }
 
     private static int AutoAssign(
-        DialogueSequence click0, DialogueSequence click1,
-        DialogueSequence click2, DialogueSequence click3,
-        DialogueSequence reject0, DialogueSequence reject1,
-        DialogueSequence reject2, DialogueSequence reject3,
-        DialogueSequence reject4,
+        DialogueSequence[] clicks, DialogueSequence[] rejects,
         DialogueSequence postQuest, DialogueSequence xpBar,
         DialogueSequence levelUp, DialogueSequence abilityChosen,
         DialogueSequence abilityTried, DialogueSequence doorUnlocked)
@@ -115,25 +117,20 @@ public static class QuestDialogueBuilder
         {
             var so = new SerializedObject(pqm);
             var clickArr = so.FindProperty("paintingClickDialogues");
-            clickArr.arraySize = 4;
-            clickArr.GetArrayElementAtIndex(0).objectReferenceValue = click0;
-            clickArr.GetArrayElementAtIndex(1).objectReferenceValue = click1;
-            clickArr.GetArrayElementAtIndex(2).objectReferenceValue = click2;
-            clickArr.GetArrayElementAtIndex(3).objectReferenceValue = click3;
+            clickArr.arraySize = clicks.Length;
+            for (int i = 0; i < clicks.Length; i++)
+                clickArr.GetArrayElementAtIndex(i).objectReferenceValue = clicks[i];
 
             var rejArr = so.FindProperty("rejectDialogues");
-            rejArr.arraySize = 5;
-            rejArr.GetArrayElementAtIndex(0).objectReferenceValue = reject0;
-            rejArr.GetArrayElementAtIndex(1).objectReferenceValue = reject1;
-            rejArr.GetArrayElementAtIndex(2).objectReferenceValue = reject2;
-            rejArr.GetArrayElementAtIndex(3).objectReferenceValue = reject3;
-            rejArr.GetArrayElementAtIndex(4).objectReferenceValue = reject4;
+            rejArr.arraySize = rejects.Length;
+            for (int i = 0; i < rejects.Length; i++)
+                rejArr.GetArrayElementAtIndex(i).objectReferenceValue = rejects[i];
 
             so.FindProperty("seqPostQuest").objectReferenceValue = postQuest;
             so.ApplyModifiedProperties();
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(pqm.gameObject.scene);
 
-            count += 8;
+            count += clicks.Length + rejects.Length + 1;
         }
         else
         {

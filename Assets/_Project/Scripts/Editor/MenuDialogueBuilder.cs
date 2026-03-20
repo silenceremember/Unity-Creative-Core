@@ -24,7 +24,7 @@ public static class MenuDialogueBuilder
             L("Вы нажали «Играть».",                        1.0f),
             L("Это не сработает. Игра не закончена.",      1.5f),
             L("И вряд ли когда-нибудь будет...",           1.2f),
-            L("Хотя, сейчас это называют «Ранний доступ».", 1.8f),
+            L("Хотя сейчас это называют «Ранний доступ».",  1.8f),
             L("Так что всё по стандартам индустрии.",       1.5f),
             L("Попробуйте покопаться в Настройках.",        0.0f));
 
@@ -32,8 +32,8 @@ public static class MenuDialogueBuilder
             L("Всё ещё не работает. Я же говорил.", 1.2f));
 
         CreateSeq(folder, "Seq_TVOn", 2, null,
-            L("Телевизор включён.",            0.8f),
-            L("Жильцы скорее всего довольны.", 0f));
+            L("Телевизор включён.",              0.8f),
+            L("Жильцы, скорее всего, довольны.", 0f));
 
         CreateSeq(folder, "Seq_TVOff", 2, null,
             L("Телевизор выключен.",            0.8f),
@@ -41,7 +41,7 @@ public static class MenuDialogueBuilder
             L("Может, и нет.",                  0f));
 
         CreateSeq(folder, "Seq_LangToEnglish", 2, null,
-            L("Переключаемся.",                 0.8f),
+            L("Переключаюсь...",                0.8f),
             L("Сейчас я скажу...",              1.0f),
             L("That actually worked.",          1.2f),
             L("I sound like a default Unity asset.", 1.5f),
@@ -49,7 +49,7 @@ public static class MenuDialogueBuilder
             L("Anyway.",                        0f));
 
         CreateSeq(folder, "Seq_LangToRussian", 2, null,
-            L("Switching language.",            0.8f),
+            L("Switching language...",          0.8f),
             L("Back to Russian. Here goes.",    1.2f),
             L("Эти родные депрессивные интонации.", 1.5f),
             L("Снова звучу как дилетант.",      1.2f),
@@ -58,7 +58,7 @@ public static class MenuDialogueBuilder
 
         CreateSeq(folder, "Seq_SettingsPlay", 3, null,
             L("Отлично. Вы нашли ещё одну кнопку.", 1.4f),
-            L("Но похоже, она тоже не работает.",         1.0f),
+            L("Но, похоже, она тоже не работает.",      1.0f),
             L("Разработчик совсем не старался.",       1.0f),
             L("Ладно. Я запущу нас сам.",              0f));
 

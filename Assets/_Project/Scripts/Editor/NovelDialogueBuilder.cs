@@ -73,7 +73,7 @@ public static class NovelDialogueBuilder
             L("Разработчик считает, что это, как правило, скучно.",         1.8f),
             L("Сидеть. Читать. Нажимать «Далее».",                          1.2f),
             L("Не очень-то захватывает.",                                   1.0f),
-            L("Поэтому, следующим шагом...",                                1.0f),
+            L("Поэтому... следующим шагом...",                                1.0f),
             L("В буквальном смысле шагом.",                                 1.0f),
             L("Он разблокировал для Вас...",                                1.0f),
             L("Ходьбу.",                                                     1.1f),
@@ -95,7 +95,7 @@ public static class NovelDialogueBuilder
 
         object[][] lineData = new object[][]
         {
-            new object[] { Speaker.John,   "Я стою у двери потому что...",       CameraAnchor.John,      seqIntroJohn },
+            new object[] { Speaker.John,   "Я стою у двери, потому что...",       CameraAnchor.John,      seqIntroJohn },
             new object[] { Speaker.John,   "...потому что мне здесь хорошо.",    CameraAnchor.John,      null },
             new object[] { Speaker.John,   "Слышу скепсис.",                     CameraAnchor.John,      seqNarrDisagrees },
             new object[] { Speaker.Mary,   "Красиво здесь.",                     CameraAnchor.Mary,      seqIntroMary },
@@ -114,8 +114,8 @@ public static class NovelDialogueBuilder
             new object[] { Speaker.Player, "...",                                 CameraAnchor.Player,    null },
             new object[] { Speaker.John,   "Ты умеешь чинить телевизоры?",       CameraAnchor.JohnClose, seqAfterPlayerSilence },
             new object[] { Speaker.Player, "...",                                 CameraAnchor.Player,    null },
-            new object[] { Speaker.John,   "Возможно это знак согласия.",          CameraAnchor.JohnClose, null },
-            new object[] { Speaker.John,   "А как работает?",                    CameraAnchor.John,      seqJohnNarr1 },
+            new object[] { Speaker.John,   "Возможно, это знак согласия.",          CameraAnchor.JohnClose, null },
+            new object[] { Speaker.John,   "И как это работает?",                    CameraAnchor.John,      seqJohnNarr1 },
             new object[] { Speaker.John,   "Я стою.",                            CameraAnchor.John,      seqJohnNarr2 },
             new object[] { Speaker.John,   "Я стою и разговариваю.",             CameraAnchor.John,      seqJohnNarr3 },
             new object[] { Speaker.John,   "Я невероятно многофункциональный.",   CameraAnchor.John,      null },
@@ -124,7 +124,7 @@ public static class NovelDialogueBuilder
             new object[] { Speaker.John,   "Не знаю.",                           CameraAnchor.John,      null },
             new object[] { Speaker.John,   "Спрашивать бесполезно, он молчит.", CameraAnchor.John,      null },
             new object[] { Speaker.Mary,   "Понятно.",                           CameraAnchor.Mary,      null },
-            new object[] { Speaker.Mary,   "Подождём пока сам разберётся.",      CameraAnchor.Mary,      null },
+            new object[] { Speaker.Mary,   "Подождём, пока сам разберётся.",      CameraAnchor.Mary,      null },
             new object[] { Speaker.Player, "...",                                 CameraAnchor.Player,    seqEnding },
         };
 
