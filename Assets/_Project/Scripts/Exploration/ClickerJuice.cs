@@ -182,7 +182,7 @@ public class ClickerJuice : MonoBehaviour
                 _label.text = v.ToString();
             },
             target,
-            0.12f
+            config.RollNumberDuration
         ).SetEase(Ease.OutExpo).SetUpdate(true);
     }
 
@@ -199,6 +199,6 @@ public class ClickerJuice : MonoBehaviour
         if (instant)
             _label.color = target;
         else
-            _colorTween = _label.DOColor(target, 0.3f).SetUpdate(true);
+            _colorTween = _label.DOColor(target, config.ColorTransitionDuration).SetUpdate(true);
     }
 }

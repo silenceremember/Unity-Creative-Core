@@ -1,8 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Turns TV on/off: changes screen material, audio, and light.
-/// Attach to any GameObject (e.g. scene manager).
+/// Turns TV on/off: changes screen material, audio, light, and plays on/off sound.
 /// </summary>
 public class TVController : MonoBehaviour
 {
@@ -16,20 +15,16 @@ public class TVController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioSource tvAudio;
 
-    [Header("Sound Effect")]
-    [Tooltip("TvSoundController on the TV object for on/off sound")]
-    [SerializeField] private TvSoundController soundController;
+    [Header("On/Off Sound")]
+    [Tooltip("AudioSource for the on/off toggle sound")]
+    [SerializeField] private AudioSource toggleSoundSource;
 
     [Header("Light")]
     [SerializeField] private Light tvLight;
 
     private bool _isOn = true;
 
-    void Start()
-    {
-        soundController?.SyncState(true);
-        SetState(true);
-    }
+    void Start() => SetState(true);
 
     public void TurnOn()  => SetState(true);
     public void TurnOff() => SetState(false);
@@ -37,6 +32,7 @@ public class TVController : MonoBehaviour
 
     private void SetState(bool on)
     {
+        bool changed = _isOn != on;
         _isOn = on;
 
         if (tvRenderer != null)
@@ -56,6 +52,7 @@ public class TVController : MonoBehaviour
         if (tvLight != null)
             tvLight.enabled = on;
 
-        soundController?.SetOn(on);
+        if (changed && toggleSoundSource != null)
+            toggleSoundSource.Play();
     }
 }

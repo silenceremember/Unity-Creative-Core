@@ -85,37 +85,37 @@ public class SmithNovelAssetFactory : EditorWindow
 
         object[][] lineData = new object[][]
         {
-            new object[] { "Джон",     "Я стою у двери потому что...",       0, seqIntroJohn },
-            new object[] { "Джон",     "...потому что мне здесь хорошо.",    0, null },
-            new object[] { "Джон",     "Слышу скепсис.",                     0, seqNarrDisagrees },
-            new object[] { "Мэри",     "Красиво здесь.",                     1, seqIntroMary },
-            new object[] { "Джон",     "Мэри.",                              0, null },
-            new object[] { "Мэри",     "Что.",                               1, null },
-            new object[] { "Джон",     "В гостиной кто-то есть.",            0, null },
-            new object[] { "Мэри",     "Ты уверен?",                        1, null },
-            new object[] { "Джон",     "Я... чувствую. Там кто-то есть.",   0, null },
-            new object[] { "Player 1", "...",                                 3, seqIntroYou },
-            new object[] { "Мэри",     "Может, это мастер по телевизору?",   1, null },
-            new object[] { "Джон",     "Я не вызывал мастера.",              0, null },
-            new object[] { "Мэри",     "Я вызывала.",                        1, null },
-            new object[] { "Джон",     "Когда?",                             0, null },
-            new object[] { "Мэри",     "Не помню.",                          1, null },
-            new object[] { "Джон",     "Эй. Ты кто?",                       2, seqAfterNotRemember },
-            new object[] { "Player 1", "...",                                 3, null },
-            new object[] { "Джон",     "Ты умеешь чинить телевизоры?",       2, seqAfterPlayerSilence },
-            new object[] { "Player 1", "...",                                 3, null },
-            new object[] { "Джон",     "Возможно это знак согласия.",          2, null },
-            new object[] { "Джон",     "А как работает?",                    0, seqJohnNarr1 },
-            new object[] { "Джон",     "Я стою.",                            0, seqJohnNarr2 },
-            new object[] { "Джон",     "Я стою и разговариваю.",             0, seqJohnNarr3 },
-            new object[] { "Джон",     "Я многофункциональный.",             0, null },
-            new object[] { "Мэри",     "Джон.",                              1, null },
-            new object[] { "Мэри",     "Он вообще уйдёт?",                  1, null },
-            new object[] { "Джон",     "Не знаю.",                           0, null },
-            new object[] { "Джон",     "Спрашивать бесполезно, он молчит.", 0, null },
-            new object[] { "Мэри",     "Понятно.",                           1, null },
-            new object[] { "Мэри",     "Подождём пока сам разберётся.",      1, null },
-            new object[] { "Player 1", "...",                                 3, seqEnding },
+            new object[] { "Джон",     "Я стою у двери потому что...",       "John",      seqIntroJohn },
+            new object[] { "Джон",     "...потому что мне здесь хорошо.",    "John",      null },
+            new object[] { "Джон",     "Слышу скепсис.",                     "John",      seqNarrDisagrees },
+            new object[] { "Мэри",     "Красиво здесь.",                     "Mary",      seqIntroMary },
+            new object[] { "Джон",     "Мэри.",                              "John",      null },
+            new object[] { "Мэри",     "Что.",                               "Mary",      null },
+            new object[] { "Джон",     "В гостиной кто-то есть.",            "John",      null },
+            new object[] { "Мэри",     "Ты уверен?",                        "Mary",      null },
+            new object[] { "Джон",     "Я... чувствую. Там кто-то есть.",   "John",      null },
+            new object[] { "Player 1", "...",                                 "Player",    seqIntroYou },
+            new object[] { "Мэри",     "Может, это мастер по телевизору?",   "Mary",      null },
+            new object[] { "Джон",     "Я не вызывал мастера.",              "John",      null },
+            new object[] { "Мэри",     "Я вызывала.",                        "Mary",      null },
+            new object[] { "Джон",     "Когда?",                             "John",      null },
+            new object[] { "Мэри",     "Не помню.",                          "Mary",      null },
+            new object[] { "Джон",     "Эй. Ты кто?",                       "JohnClose", seqAfterNotRemember },
+            new object[] { "Player 1", "...",                                 "Player",    null },
+            new object[] { "Джон",     "Ты умеешь чинить телевизоры?",       "JohnClose", seqAfterPlayerSilence },
+            new object[] { "Player 1", "...",                                 "Player",    null },
+            new object[] { "Джон",     "Возможно это знак согласия.",          "JohnClose", null },
+            new object[] { "Джон",     "А как работает?",                    "John",      seqJohnNarr1 },
+            new object[] { "Джон",     "Я стою.",                            "John",      seqJohnNarr2 },
+            new object[] { "Джон",     "Я стою и разговариваю.",             "John",      seqJohnNarr3 },
+            new object[] { "Джон",     "Я многофункциональный.",             "John",      null },
+            new object[] { "Мэри",     "Джон.",                              "Mary",      null },
+            new object[] { "Мэри",     "Он вообще уйдёт?",                  "Mary",      null },
+            new object[] { "Джон",     "Не знаю.",                           "John",      null },
+            new object[] { "Джон",     "Спрашивать бесполезно, он молчит.", "John",      null },
+            new object[] { "Мэри",     "Понятно.",                           "Mary",      null },
+            new object[] { "Мэри",     "Подождём пока сам разберётся.",      "Mary",      null },
+            new object[] { "Player 1", "...",                                 "Player",    seqEnding },
         };
 
         linesProp.arraySize = lineData.Length;
@@ -124,7 +124,7 @@ public class SmithNovelAssetFactory : EditorWindow
             var elem = linesProp.GetArrayElementAtIndex(i);
             elem.FindPropertyRelative("speaker").stringValue = (string)lineData[i][0];
             elem.FindPropertyRelative("text").stringValue = (string)lineData[i][1];
-            elem.FindPropertyRelative("cameraIndex").intValue = (int)lineData[i][2];
+            elem.FindPropertyRelative("cameraAnchorKey").stringValue = (string)lineData[i][2];
             elem.FindPropertyRelative("narratorSequenceBefore").objectReferenceValue = (Object)lineData[i][3];
         }
         so.ApplyModifiedPropertiesWithoutUndo();

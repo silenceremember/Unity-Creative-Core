@@ -25,4 +25,12 @@ public class CrawlConfig : ScriptableObject
     [Tooltip("Skip icon blink speed")]
     [SerializeField] private float blinkSpeed = 1.5f;
     public float BlinkSpeed => blinkSpeed;
+
+    [Tooltip("Music pitch when holding to skip")]
+    [SerializeField] private float holdMusicPitch = 2f;
+    public float HoldMusicPitch => holdMusicPitch;
+
+    [Tooltip("Skip icon base alpha (idle state)")]
+    [SerializeField] private float skipIconBaseAlpha = 0.3f;
+    public float SkipIconBaseAlpha => skipIconBaseAlpha;
 }

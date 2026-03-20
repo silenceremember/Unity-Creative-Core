@@ -8,11 +8,10 @@ using UnityEngine;
 /// Main manager for the "fix paintings" quest.
 ///
 /// Logic:
-///   - Fixed slot order: [2, 0, 3, 1] (0-based Picture indices)
-///     Means: 1st press → Picture3, 2nd → Picture1, 3rd → Picture4, 4th → Picture2
+///   - Slot order comes from QuestConfig.SlotOrder
 ///   - Each PaintingInteractable has a codeDigit (1-4)
 ///   - Code = string of codeDigit values in press order
-///   - Correct code = "1234"
+///   - Correct code = QuestConfig.CorrectCode
 ///   - Accept = green; Reject = red + shake
 /// </summary>
 public class PaintingQuestManager : MonoBehaviour
@@ -45,7 +44,7 @@ public class PaintingQuestManager : MonoBehaviour
     [Header("Dependencies")]
     [SerializeField] private IntChannel addXPChannel;
     [SerializeField] private BoolVariable isPausedVariable;
-    [SerializeField] private BoolVariable triggerDialoguePlayingVar;
+    [SerializeField] private BoolVariable narratorPlayingVar;
 
     [Header("Channels")]
     [SerializeField] private VoidChannel questStartChannel;
@@ -62,13 +61,12 @@ public class PaintingQuestManager : MonoBehaviour
     [Tooltip("Dialogue after successful quest completion")]
     [SerializeField] private DialogueSequence seqPostQuest;
 
-    private static readonly int[] SlotOrder = { 2, 0, 3, 1 };
-
     private string         _enteredCode   = "";
     private int            _pressCount    = 0;
     private bool           _questActive   = false;
     private bool           _resolved      = false;
     private int            _rejectCount   = 0;
+    private bool           _pendingXPReward = false;
 
     private PaintingInteractable _nearPainting;
 
@@ -110,10 +108,20 @@ public class PaintingQuestManager : MonoBehaviour
 
     private void OnNarratorCompleted(DialogueSequence completed)
     {
-        if (completed == seqPostQuest)
+        if (_pendingXPReward)
         {
+            _pendingXPReward = false;
             addXPChannel?.Raise(config.QuestRewardXP);
         }
+    }
+
+    /// <summary>
+    /// Returns the slot index for the given press count from config.
+    /// </summary>
+    private int GetSlotForPress(int pressIndex)
+    {
+        var order = config.SlotOrder;
+        return pressIndex < order.Length ? order[pressIndex] : pressIndex;
     }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -131,7 +139,7 @@ public class PaintingQuestManager : MonoBehaviour
             var p = interactables[i];
             if (p == null || p.IsUsed) continue;
             if (p.AssignedSlotIndex == -1)
-                p.AssignedSlotIndex = SlotOrder[_pressCount];
+                p.AssignedSlotIndex = GetSlotForPress(_pressCount);
             p.SnapToCorrect();
             _enteredCode += (p.AssignedSlotIndex + 1).ToString();
 
@@ -162,9 +170,9 @@ public class PaintingQuestManager : MonoBehaviour
         if (kb != null && kb.eKey.wasPressedThisFrame)
         {
             if (isPausedVariable != null && isPausedVariable.Value) return;
-            bool triggerDialogue = triggerDialoguePlayingVar != null &&
-                                   triggerDialoguePlayingVar.Value;
-            if (triggerDialogue)
+            bool narratorActive = narratorPlayingVar != null &&
+                                   narratorPlayingVar.Value;
+            if (narratorActive)
             {
                 if (!_ePromptShaking && ePrompt != null)
                 {
@@ -179,7 +187,7 @@ public class PaintingQuestManager : MonoBehaviour
         }
     }
 
-    /// <summary>Called from ExplorationManager — starts the quest.</summary>
+    /// <summary>Called via VoidChannel — starts the quest.</summary>
     public void StartQuest()
     {
         foreach (var interactable in interactables)
@@ -221,7 +229,7 @@ public class PaintingQuestManager : MonoBehaviour
         painting.SnapToCorrect();
 
         if (painting.AssignedSlotIndex == -1)
-            painting.AssignedSlotIndex = SlotOrder[_pressCount];
+            painting.AssignedSlotIndex = GetSlotForPress(_pressCount);
 
         _enteredCode += (painting.AssignedSlotIndex + 1).ToString();
 
@@ -244,7 +252,7 @@ public class PaintingQuestManager : MonoBehaviour
         if (ePrompt != null) ePrompt.SetActive(false);
         _nearPainting = null;
 
-        if (_pressCount >= 4)
+        if (_pressCount >= config.SlotOrder.Length)
         {
             _questCts?.Cancel();
             _questCts?.Dispose();
@@ -258,7 +266,7 @@ public class PaintingQuestManager : MonoBehaviour
         _resolved    = true;
         _questActive = false;
 
-        await UniTask.Delay(System.TimeSpan.FromSeconds(0.3f), cancellationToken: ct);
+        await UniTask.Delay(System.TimeSpan.FromSeconds(config.ResolveDelay), cancellationToken: ct);
 
         bool accepted = _enteredCode == config.CorrectCode;
 
@@ -279,9 +287,14 @@ public class PaintingQuestManager : MonoBehaviour
             await PulseLabelsAsync(ct);
 
             if (seqPostQuest != null)
+            {
+                _pendingXPReward = true;
                 narratorChannel?.Raise(seqPostQuest);
+            }
             else
+            {
                 addXPChannel?.Raise(config.QuestRewardXP);
+            }
         }
         else
         {
@@ -302,7 +315,7 @@ public class PaintingQuestManager : MonoBehaviour
             }
             else
             {
-                await UniTask.Delay(System.TimeSpan.FromSeconds(0.8f), cancellationToken: ct);
+                await UniTask.Delay(System.TimeSpan.FromSeconds(config.ResetDelay), cancellationToken: ct);
                 DoReset();
             }
         }
@@ -310,13 +323,13 @@ public class PaintingQuestManager : MonoBehaviour
 
     private async UniTask AutoSolveAfterDialogueAsync(CancellationToken ct)
     {
-        await UniTask.Delay(System.TimeSpan.FromSeconds(5f), cancellationToken: ct);
+        await UniTask.Delay(System.TimeSpan.FromSeconds(config.AutoSolveDelay), cancellationToken: ct);
 
         foreach (var interactable in interactables)
             if (interactable != null)
-                interactable.ResetPainting(0.4f);
+                interactable.ResetPainting(config.AutoSolveResetDuration);
 
-        await UniTask.Delay(System.TimeSpan.FromSeconds(0.6f), cancellationToken: ct);
+        await UniTask.Delay(System.TimeSpan.FromSeconds(config.AutoSolveResetPause), cancellationToken: ct);
 
         _resolved    = false;
         _questActive = true;
@@ -337,7 +350,7 @@ public class PaintingQuestManager : MonoBehaviour
     {
         foreach (var interactable in interactables)
             if (interactable != null)
-                interactable.ResetPainting(0.5f);
+                interactable.ResetPainting(config.RejectResetDuration);
 
         _enteredCode  = "";
         _pressCount   = 0;
@@ -363,7 +376,7 @@ public class PaintingQuestManager : MonoBehaviour
     {
         if (pictureLabels.Length == 0 || pictureLabels[0] == null) return;
         var groupRT = pictureLabels[0].transform.parent as RectTransform;
-        await UIAnimationHelper.PulseAsync(groupRT, config.PulseDuration, 0.12f, ct);
+        await UIAnimationHelper.PulseAsync(groupRT, config.PulseDuration, config.PulseAmount, ct);
     }
 
     private async UniTask ShakeEPromptAsync(CancellationToken ct)

@@ -1,20 +1,23 @@
 using UnityEngine;
 
 /// <summary>
-/// One-shot trigger for the final sequence.
-/// triggerId = 0 → HDRI fade
-/// triggerId = 1 → VFX fall + player freeze + camera + narrator + quit
+/// One-shot collider trigger for the final sequence.
+/// Each trigger instance fires its own actions:
+///   - optionally plays a DialogueSequence via NarratorChannel
+///   - optionally signals via VoidChannel (e.g., HDRI fade, finale start)
 /// </summary>
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 public class FinalTrigger : MonoBehaviour
 {
-    [Header("Trigger Settings")]
-    [Tooltip("0 = First trigger (HDRI fade), 1 = Second trigger (finale)")]
-    [SerializeField] private int triggerId;
+    [Header("Sequence (optional)")]
+    [Tooltip("Dialogue to play when player enters")]
+    [SerializeField] private DialogueSequence sequence;
+    [SerializeField] private NarratorChannel narratorChannel;
 
-    [Header("Channel")]
-    [SerializeField] private IntChannel finalTriggerChannel;
+    [Header("Signal (optional)")]
+    [Tooltip("VoidChannel to raise on trigger (HDRI fade, finale start, etc.)")]
+    [SerializeField] private VoidChannel signalChannel;
 
     private void Awake()
     {
@@ -27,7 +30,10 @@ public class FinalTrigger : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        finalTriggerChannel?.Raise(triggerId);
+        if (sequence != null)
+            narratorChannel?.Raise(sequence);
+
+        signalChannel?.Raise();
 
         gameObject.SetActive(false);
     }

@@ -5,11 +5,10 @@ using UnityEngine;
 
 /// <summary>
 /// Manages the exploration phase:
-///   • seqAmbientStart   — linear narrator dialogue chain
-///   • seqTimerTrigger   — segment AFTER which the decorative timer appears
-///   • seqClickerTrigger — segment AFTER which the clicker appears
-///   • Quest starts when the full ambient chain completes (last segment, nextSequence == null)
-///   • Trigger A / B     — interrupt ambient, then resume from the same place (one-shot)
+///   • Starts ambient narrator chain on GameState.Gameplay
+///   • Transitions to Quest when the chain completes (nextSequence == null)
+///   • Timer and clicker are activated via StringChannel / EventActivator
+///   • Area triggers (NarratorTrigger) fire their own sequences independently
 /// </summary>
 public class ExplorationManager : MonoBehaviour
 {
@@ -20,18 +19,6 @@ public class ExplorationManager : MonoBehaviour
     [Header("Ambient Sequence")]
     [Tooltip("First segment of the ambient chain")]
     [SerializeField] private DialogueSequence seqAmbientStart;
-
-    [Header("Timer Trigger")]
-    [Tooltip("Segment AFTER which the decorative timer appears")]
-    [SerializeField] private DialogueSequence seqTimerTrigger;
-
-    [Header("Clicker Trigger")]
-    [Tooltip("Segment AFTER which the clicker appears")]
-    [SerializeField] private DialogueSequence seqClickerTrigger;
-
-    [Header("Trigger Sequences (one-shot)")]
-    [SerializeField] private DialogueSequence seqTriggerA;
-    [SerializeField] private DialogueSequence seqTriggerB;
 
     [Header("Decorative Timer (flavor, optional)")]
     [Tooltip("Countdown TMP_Text. Leave empty to skip.")]
@@ -48,24 +35,19 @@ public class ExplorationManager : MonoBehaviour
     [SerializeField] private TMP_Text clickerLabel;
     [SerializeField] private ClickerJuice clickerJuice;
 
+    [Header("Activation Channel")]
+    [Tooltip("Same StringChannel used by NarratorManager's activateChannel")]
+    [SerializeField] private StringChannel activateChannel;
+
     [Header("Dependencies")]
     [SerializeField] private BoolVariable isPausedVariable;
-    [SerializeField] private BoolVariable triggerDialoguePlayingVar;
 
     [Header("Quest Channel")]
     [SerializeField] private VoidChannel questStartChannel;
-    [SerializeField] private IntChannel areaTriggerChannel;
 
     private bool             _explorationActive;
-    private bool             _triggerAUsed;
-    private bool             _triggerBUsed;
-
-    /// <summary>True only while a trigger A or B dialogue is actively playing.</summary>
-    public bool TriggerDialoguePlaying => triggerDialoguePlayingVar != null && triggerDialoguePlayingVar.Value;
-
     private CancellationTokenSource _timerCts;
     private bool             _clickerActive;
-
 
     void Start()
     {
@@ -79,8 +61,8 @@ public class ExplorationManager : MonoBehaviour
             gameStateChannel.OnStateChanged += OnStateChanged;
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
-        if (areaTriggerChannel != null)
-            areaTriggerChannel.OnRaised += OnAreaTrigger;
+        if (activateChannel != null)
+            activateChannel.OnRaised += OnActivateEvent;
     }
 
     void OnDisable()
@@ -89,8 +71,8 @@ public class ExplorationManager : MonoBehaviour
             gameStateChannel.OnStateChanged -= OnStateChanged;
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
-        if (areaTriggerChannel != null)
-            areaTriggerChannel.OnRaised -= OnAreaTrigger;
+        if (activateChannel != null)
+            activateChannel.OnRaised -= OnActivateEvent;
     }
 
     void OnDestroy()
@@ -126,52 +108,22 @@ public class ExplorationManager : MonoBehaviour
         if (explorationCanvas != null)
             explorationCanvas.SetActive(true);
 
-        PlayAmbient(seqAmbientStart);
-    }
-
-    private void PlayAmbient(DialogueSequence seg)
-    {
-        if (seg == null) return;
-        narratorChannel?.Raise(seg);
-    }
-
-    /// <summary>Called from NarratorTrigger (triggerId: 0 = A, 1 = B). One-shot.</summary>
-    public void OnAreaTrigger(int triggerId)
-    {
-        if (triggerId == 0 && !_triggerAUsed && seqTriggerA != null)
-        {
-            _triggerAUsed = true;
-            PlayTrigger(seqTriggerA);
-        }
-        else if (triggerId == 1 && !_triggerBUsed && seqTriggerB != null)
-        {
-            _triggerBUsed = true;
-            PlayTrigger(seqTriggerB);
-        }
-    }
-
-    private void PlayTrigger(DialogueSequence triggerSeq)
-    {
-        if (triggerDialoguePlayingVar != null)
-            triggerDialoguePlayingVar.Value = true;
-
-        narratorChannel?.Raise(triggerSeq);
+        if (seqAmbientStart != null)
+            narratorChannel?.Raise(seqAmbientStart);
     }
 
     private void OnNarratorCompleted(DialogueSequence completed)
     {
-        bool isTrigger = (completed == seqTriggerA || completed == seqTriggerB);
-
-        if (isTrigger)
-        {
-            if (triggerDialoguePlayingVar != null)
-                triggerDialoguePlayingVar.Value = false;
-            return;
-        }
-
         if (!_explorationActive) return;
 
-        if (completed == seqTimerTrigger && timerLabel != null)
+        if (completed.NextSequence == null)
+            OnAmbientChainCompleted();
+    }
+
+    /// <summary>Handles activation keys from StringChannel (timer, clicker).</summary>
+    private void OnActivateEvent(string key)
+    {
+        if (key == "Timer" && timerLabel != null && !timerLabel.gameObject.activeSelf)
         {
             _timerCts?.Cancel();
             _timerCts?.Dispose();
@@ -179,13 +131,10 @@ public class ExplorationManager : MonoBehaviour
             DecorativeCountdownAsync(_timerCts.Token).SuppressCancellationThrow().Forget();
         }
 
-        if (completed == seqClickerTrigger && clickerLabel != null)
+        if (key == "Clicker" && clickerLabel != null && !clickerLabel.gameObject.activeSelf)
         {
             ShowClicker();
         }
-
-        if (completed.NextSequence == null)
-            OnAmbientChainCompleted();
     }
 
     private void OnAmbientChainCompleted()

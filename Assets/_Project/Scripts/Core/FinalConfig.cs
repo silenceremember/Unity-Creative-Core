@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Configuration for final sequence timing.
+/// Configuration for final sequence timing and camera easing.
 /// </summary>
 [CreateAssetMenu(menuName = "Game/Config/Final Config", fileName = "FinalConfig")]
 public class FinalConfig : ScriptableObject
@@ -25,4 +25,12 @@ public class FinalConfig : ScriptableObject
     [Tooltip("Delay before quit")]
     [SerializeField] private float quitDelay = 1.5f;
     public float QuitDelay => quitDelay;
+
+    [Tooltip("Camera easing curve")]
+    [SerializeField] private AnimationCurve cameraCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+    public AnimationCurve CameraCurve => cameraCurve;
+
+    [Tooltip("Exposure property name in skybox material")]
+    [SerializeField] private string hdriExposureProperty = "_Exposure";
+    public string HdriExposureProperty => hdriExposureProperty;
 }

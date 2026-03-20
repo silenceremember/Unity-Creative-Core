@@ -1,0 +1,18 @@
+using UnityEngine;
+
+/// <summary>
+/// Configuration for the pause menu.
+/// </summary>
+[CreateAssetMenu(menuName = "Game/Config/Pause Menu Config", fileName = "PauseMenuConfig")]
+public class PauseMenuConfig : ScriptableObject
+{
+    [Header("Portfolio")]
+    [Tooltip("Portfolio URL opened from pause menu")]
+    [SerializeField] private string portfolioUrl = "https://example.com";
+    public string PortfolioUrl => portfolioUrl;
+
+    [Header("Blocked States")]
+    [Tooltip("GameStates where ESC is blocked")]
+    [SerializeField] private GameState[] blockedStates = { GameState.Menu, GameState.IntroCrawl, GameState.Final };
+    public GameState[] BlockedStates => blockedStates;
+}

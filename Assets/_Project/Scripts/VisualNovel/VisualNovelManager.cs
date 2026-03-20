@@ -2,7 +2,6 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
 
 /// <summary>
@@ -36,15 +35,10 @@ public class VisualNovelManager : MonoBehaviour
 
     [Header("Camera")]
     [SerializeField] private Camera mainCamera;
-    [SerializeField] private Transform[] cameraAnchors = new Transform[4];
+    [SerializeField] private TransformRegistry cameraAnchors;
 
     [Header("Config")]
     [SerializeField] private NovelConfig config;
-
-    [SerializeField] private AnimationCurve blendCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
-
-    [Header("Audio")]
-    [SerializeField] private AudioMixerGroup mixerGroup;
 
     private int _lineIndex = -1;
     private bool _waitingForNarrator = false;
@@ -54,14 +48,14 @@ public class VisualNovelManager : MonoBehaviour
     private bool _nextPressed = false;
     private bool _skipTypewriter = false;
 
-    private int _currentCameraIndex = -1;
+    private string _currentAnchorKey;
     private AudioSource _audioSource;
     private int _blipCounter;
 
     void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _audioSource.outputAudioMixerGroup = mixerGroup;
+        _audioSource.outputAudioMixerGroup = config != null ? config.MixerGroup : null;
         if (novelCanvasRoot != null) novelCanvasRoot.SetActive(false);
     }
 
@@ -102,7 +96,7 @@ public class VisualNovelManager : MonoBehaviour
         _cts = new CancellationTokenSource();
 
         _lineIndex = 0;
-        _currentCameraIndex = -1;
+        _currentAnchorKey = null;
         _waitingForNarrator = false;
         _nextPressed = false;
         _skipTypewriter = false;
@@ -133,7 +127,7 @@ public class VisualNovelManager : MonoBehaviour
 
     private async UniTask RunNovelAsync(CancellationToken ct)
     {
-        SnapCamera(sequence.Lines[0].CameraIndex);
+        SnapCamera(sequence.Lines[0].CameraAnchorKey);
 
         if (sequence.Lines[0].NarratorSequenceBefore != null)
         {
@@ -166,8 +160,8 @@ public class VisualNovelManager : MonoBehaviour
                 HideNovelCanvas();
                 _waitingForNarrator = true;
 
-                if (line.CameraIndex != _currentCameraIndex)
-                    await BlendCameraAsync(line.CameraIndex, ct);
+                if (!string.IsNullOrEmpty(line.CameraAnchorKey) && line.CameraAnchorKey != _currentAnchorKey)
+                    await BlendCameraAsync(line.CameraAnchorKey, ct);
 
                 TriggerNarrator(line.NarratorSequenceBefore);
                 await WaitForNarratorAsync(ct);
@@ -183,12 +177,12 @@ public class VisualNovelManager : MonoBehaviour
 
         var line = sequence.Lines[_lineIndex];
 
-        if (line.CameraIndex != _currentCameraIndex)
+        if (!string.IsNullOrEmpty(line.CameraAnchorKey) && line.CameraAnchorKey != _currentAnchorKey)
         {
-            if (_currentCameraIndex == -1)
-                _currentCameraIndex = line.CameraIndex;
+            if (_currentAnchorKey == null)
+                _currentAnchorKey = line.CameraAnchorKey;
             else
-                await BlendCameraAsync(line.CameraIndex, ct);
+                await BlendCameraAsync(line.CameraAnchorKey, ct);
         }
 
         await DisplayLineAsync(line, ct);
@@ -247,25 +241,21 @@ public class VisualNovelManager : MonoBehaviour
     }
 
     /// <summary>Instant camera teleport.</summary>
-    private void SnapCamera(int anchorIndex)
+    private void SnapCamera(string anchorKey)
     {
-        if (mainCamera == null) return;
-        if (anchorIndex < 0 || anchorIndex >= cameraAnchors.Length) return;
-        var anchor = cameraAnchors[anchorIndex];
-        if (anchor == null) return;
+        if (mainCamera == null || string.IsNullOrEmpty(anchorKey)) return;
+        if (!cameraAnchors.TryGet(anchorKey, out var anchor)) return;
 
         mainCamera.transform.position = anchor.position;
         mainCamera.transform.rotation = anchor.rotation;
-        _currentCameraIndex = anchorIndex;
+        _currentAnchorKey = anchorKey;
     }
 
     /// <summary>Smooth camera transition (async UniTask).</summary>
-    private async UniTask BlendCameraAsync(int anchorIndex, CancellationToken ct)
+    private async UniTask BlendCameraAsync(string anchorKey, CancellationToken ct)
     {
-        if (mainCamera == null || anchorIndex < 0 || anchorIndex >= cameraAnchors.Length) return;
-
-        var anchor = cameraAnchors[anchorIndex];
-        if (anchor == null) return;
+        if (mainCamera == null || string.IsNullOrEmpty(anchorKey)) return;
+        if (!cameraAnchors.TryGet(anchorKey, out var anchor)) return;
 
         Vector3 startPos = mainCamera.transform.position;
         Quaternion startRot = mainCamera.transform.rotation;
@@ -275,7 +265,7 @@ public class VisualNovelManager : MonoBehaviour
         {
             ct.ThrowIfCancellationRequested();
             elapsed += Time.deltaTime;
-            float t = blendCurve.Evaluate(Mathf.Clamp01(elapsed / config.BlendDuration));
+            float t = config.BlendCurve.Evaluate(Mathf.Clamp01(elapsed / config.BlendDuration));
             mainCamera.transform.position = Vector3.Lerp(startPos, anchor.position, t);
             mainCamera.transform.rotation = Quaternion.Lerp(startRot, anchor.rotation, t);
             await UniTask.Yield(PlayerLoopTiming.Update, ct);
@@ -283,7 +273,7 @@ public class VisualNovelManager : MonoBehaviour
 
         mainCamera.transform.position = anchor.position;
         mainCamera.transform.rotation = anchor.rotation;
-        _currentCameraIndex = anchorIndex;
+        _currentAnchorKey = anchorKey;
     }
 
     private async UniTask TypewriterAsync(string text, string speaker, CancellationToken ct)

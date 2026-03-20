@@ -21,6 +21,7 @@ public class SettingsPlayButton : MonoBehaviour
     [SerializeField] private Slider sliderToBlock;
 
     private bool _triggered = false;
+    private bool _waitingForSequence = false;
 
     void OnEnable()
     {
@@ -46,12 +47,14 @@ public class SettingsPlayButton : MonoBehaviour
         if (sliderToBlock != null)
             sliderToBlock.interactable = false;
 
+        _waitingForSequence = true;
         channel?.Raise(sequence);
     }
 
     private void OnNarratorDone(DialogueSequence completed)
     {
-        if (completed != sequence) return;
+        if (!_waitingForSequence) return;
+        _waitingForSequence = false;
         startCrawlChannel?.Raise();
     }
 }

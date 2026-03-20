@@ -9,30 +9,30 @@ public class NovelChannel : ScriptableObject
 {
     [Header("Character Voices")]
     [Tooltip("Mary's voice blips")]
-    public AudioClip[] maryBlips = new AudioClip[6];
+    [SerializeField] private AudioClip[] maryBlips = new AudioClip[6];
 
     [Tooltip("Min pitch for Mary. 1.0 = original.")]
-    public float maryPitchMin = 0.94f;
+    [SerializeField] private float maryPitchMin = 0.94f;
 
     [Tooltip("Max pitch for Mary.")]
-    public float maryPitchMax = 1.19f;
+    [SerializeField] private float maryPitchMax = 1.19f;
 
     [Tooltip("Blip every N non-whitespace chars for Mary (Undertale-style).")]
     [Range(1, 10)]
-    public int maryBlipInterval = 3;
+    [SerializeField] private int maryBlipInterval = 3;
 
     [Tooltip("John's voice blips")]
-    public AudioClip[] johnBlips = new AudioClip[6];
+    [SerializeField] private AudioClip[] johnBlips = new AudioClip[6];
 
     [Tooltip("Min pitch for John. 1.0 = original.")]
-    public float johnPitchMin = 0.84f;
+    [SerializeField] private float johnPitchMin = 0.84f;
 
     [Tooltip("Max pitch for John.")]
-    public float johnPitchMax = 1.05f;
+    [SerializeField] private float johnPitchMax = 1.05f;
 
     [Tooltip("Blip every N non-whitespace chars for John (Undertale-style).")]
     [Range(1, 10)]
-    public int johnBlipInterval = 4;
+    [SerializeField] private int johnBlipInterval = 4;
 
     /// <summary>Returns a random blip for the given speaker.</summary>
     public AudioClip GetBlip(string speaker)

@@ -107,4 +107,38 @@ public class QuestConfig : ScriptableObject
     [Tooltip("Reward label format string ({0} = XP amount)")]
     [SerializeField] private string rewardFormat = "REWARD: {0} XP";
     public string RewardFormat => rewardFormat;
+
+    [Header("Quest Slot Order")]
+    [Tooltip("Order in which painting slots are assigned (0-based indices)")]
+    [SerializeField] private int[] slotOrder = { 2, 0, 3, 1 };
+    public int[] SlotOrder => slotOrder;
+
+    [Header("Quest Timing")]
+    [Tooltip("Delay before resolve check after 4th painting")]
+    [SerializeField] private float resolveDelay = 0.3f;
+    public float ResolveDelay => resolveDelay;
+
+    [Tooltip("Delay before reset after reject")]
+    [SerializeField] private float resetDelay = 0.8f;
+    public float ResetDelay => resetDelay;
+
+    [Tooltip("Pulse scale amount on accept")]
+    [SerializeField] private float pulseAmount = 0.12f;
+    public float PulseAmount => pulseAmount;
+
+    [Tooltip("Delay before auto-solve after 5th reject")]
+    [SerializeField] private float autoSolveDelay = 5f;
+    public float AutoSolveDelay => autoSolveDelay;
+
+    [Tooltip("Duration for resetting paintings before auto-solve")]
+    [SerializeField] private float autoSolveResetDuration = 0.4f;
+    public float AutoSolveResetDuration => autoSolveResetDuration;
+
+    [Tooltip("Pause after auto-solve reset before completing")]
+    [SerializeField] private float autoSolveResetPause = 0.6f;
+    public float AutoSolveResetPause => autoSolveResetPause;
+
+    [Tooltip("Duration for resetting paintings on reject")]
+    [SerializeField] private float rejectResetDuration = 0.5f;
+    public float RejectResetDuration => rejectResetDuration;
 }

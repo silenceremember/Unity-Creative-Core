@@ -37,7 +37,7 @@ public static class FinalDialogueBuilder
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        int assigned = AutoAssign(trigger0, part1, part2);
+        int assigned = AutoAssign(part1, part2);
         string autoMsg = assigned > 0
             ? $"FinalSequenceManager updated ({assigned} fields)."
             : "⚠ FinalSequenceManager not found — assign manually.";
@@ -133,7 +133,7 @@ public static class FinalDialogueBuilder
             L("Прощай, Игрок.", 4f));
     }
 
-    private static int AutoAssign(DialogueSequence trigger0, DialogueSequence part1, DialogueSequence part2)
+    private static int AutoAssign(DialogueSequence part1, DialogueSequence part2)
     {
         var fsm = Object.FindFirstObjectByType<FinalSequenceManager>();
         if (fsm == null)
@@ -142,13 +142,12 @@ public static class FinalDialogueBuilder
             return 0;
         }
         var so = new SerializedObject(fsm);
-        so.FindProperty("seqTrigger0").objectReferenceValue   = trigger0;
         so.FindProperty("seqFinalPart1").objectReferenceValue = part1;
         so.FindProperty("seqFinalPart2").objectReferenceValue = part2;
         so.ApplyModifiedProperties();
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(fsm.gameObject.scene);
 
-        return 3;
+        return 2;
     }
 
     private static DialogueSequence CreateSeq(string folder, string name, int priority,

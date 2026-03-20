@@ -63,7 +63,7 @@ public class XPLevelManager : MonoBehaviour
 
     [Header("Dependencies")]
     [SerializeField] private BoolVariable isPausedVariable;
-    [SerializeField] private BoolVariable triggerDialoguePlayingVar;
+
     [SerializeField] private BoolVariable narratorPlayingVar;
 
     [Header("Channels")]
@@ -163,12 +163,10 @@ public class XPLevelManager : MonoBehaviour
         if (!_promptVisible || kb == null || !kb.xKey.wasPressedThisFrame) return;
         if (isPausedVariable != null && isPausedVariable.Value) return;
 
-        bool triggerDialogue = triggerDialoguePlayingVar != null &&
-                               triggerDialoguePlayingVar.Value;
         bool narratorActive  = narratorPlayingVar != null &&
                                narratorPlayingVar.Value;
 
-        if (triggerDialogue || narratorActive)
+        if (narratorActive)
         {
             if (!_promptShaking && levelUpPrompt != null)
                 ShakePrompt(this.GetCancellationTokenOnDestroy()).Forget();

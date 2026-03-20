@@ -22,6 +22,7 @@ public class BrokenPlayButton : MonoBehaviour
 
     private int _pressCount = 0;
     private bool _settingsUnlocked = false;
+    private bool _waitingForFirstSequence = false;
 
     void Start()
     {
@@ -46,7 +47,10 @@ public class BrokenPlayButton : MonoBehaviour
         if (channel == null) return;
 
         if (_pressCount == 0 || repeatSequences == null || repeatSequences.Length == 0)
+        {
+            _waitingForFirstSequence = true;
             channel.Raise(brokenSequence);
+        }
         else
         {
             int idx = (_pressCount - 1) % repeatSequences.Length;
@@ -58,8 +62,9 @@ public class BrokenPlayButton : MonoBehaviour
 
     private void OnSequenceFinished(DialogueSequence completed)
     {
-        if (!_settingsUnlocked && completed == brokenSequence)
+        if (!_settingsUnlocked && _waitingForFirstSequence)
         {
+            _waitingForFirstSequence = false;
             _settingsUnlocked = true;
             if (settingsButton != null)
                 settingsButton.interactable = true;

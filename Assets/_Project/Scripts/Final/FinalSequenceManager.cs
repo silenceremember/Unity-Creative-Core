@@ -4,14 +4,18 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 /// <summary>
-/// Manages the final game sequence (two triggers).
+/// Manages the final game sequence.
 ///
-/// Trigger 0: smoothly fades HDRI (skybox exposure → 0) + starts dialogue.
-/// Trigger 1:
-///   1. Freezes the player (PlayerController + CharacterController disabled).
-///   2. Camera smoothly detaches and moves to cameraEndAnchor, looking at the player.
-///   3. Starts the final narrator dialogue.
-///   4. After dialogue ends → Application.Quit().
+/// Trigger 0 (VoidChannel hdriFadeChannel):
+///   Locks player XZ, smoothly fades HDRI exposure → 0.
+///   (Dialogue is fired by FinalTrigger itself.)
+///
+/// Trigger 1 (VoidChannel finaleStartChannel):
+///   1. Freezes player.
+///   2. Camera detaches and moves to cameraEndAnchor, looking at player.
+///   3. Starts seqFinalPart1 narrator dialogue.
+///   4. After part1 → ESC hint + camera pull-back to cameraFarAnchor.
+///   5. After part2 → Application.Quit().
 /// </summary>
 public class FinalSequenceManager : MonoBehaviour
 {
@@ -25,21 +29,13 @@ public class FinalSequenceManager : MonoBehaviour
     [Header("Config")]
     [SerializeField] private FinalConfig config;
 
-    [Header("HDRI Fade (Trigger 1)")]
+    [Header("HDRI Fade")]
     [Tooltip("Skybox material (HDRI)")]
     [SerializeField] private Material hdriMaterial;
 
-    [Tooltip("Exposure property name in the material")]
-    [SerializeField] private string hdriExposureProperty = "_Exposure";
-
-    [Header("Narrator (Trigger 0)")]
-    [SerializeField] private DialogueSequence seqTrigger0;
-
-    [Header("Camera Cinematic (Trigger 2)")]
+    [Header("Camera Cinematic")]
     [Tooltip("Camera destination point")]
     [SerializeField] private Transform cameraEndAnchor;
-
-    [SerializeField] private AnimationCurve cameraCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     [Tooltip("Camera far point — pull-back at the end")]
     [SerializeField] private Transform cameraFarAnchor;
@@ -50,15 +46,19 @@ public class FinalSequenceManager : MonoBehaviour
     [SerializeField] private DialogueSequence seqFinalPart2;
 
     [Header("Channels")]
-    [SerializeField] private IntChannel finalTriggerChannel;
+    [Tooltip("Raised by first FinalTrigger — starts HDRI fade")]
+    [SerializeField] private VoidChannel hdriFadeChannel;
+
+    [Tooltip("Raised by second FinalTrigger — starts finale")]
+    [SerializeField] private VoidChannel finaleStartChannel;
 
     [Header("ESC Hint")]
     [SerializeField] private GameObject escHintUI;
 
-    private bool     _trigger1Done  = false;
-    private bool     _trigger2Done  = false;
-    private bool     _escEnabled    = false;
-    private Material _hdriClone;
+    private enum FinalState { Idle, HdriFading, CameraMoving, NarratorPart1, EscWait, NarratorPart2 }
+    private FinalState _state = FinalState.Idle;
+    private bool       _escEnabled = false;
+    private Material   _hdriClone;
 
     void Awake()
     {
@@ -73,16 +73,20 @@ public class FinalSequenceManager : MonoBehaviour
     {
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
-        if (finalTriggerChannel != null)
-            finalTriggerChannel.OnRaised += OnFinalTrigger;
+        if (hdriFadeChannel != null)
+            hdriFadeChannel.OnRaised += OnHdriFadeTrigger;
+        if (finaleStartChannel != null)
+            finaleStartChannel.OnRaised += OnFinaleStart;
     }
 
     void OnDisable()
     {
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
-        if (finalTriggerChannel != null)
-            finalTriggerChannel.OnRaised -= OnFinalTrigger;
+        if (hdriFadeChannel != null)
+            hdriFadeChannel.OnRaised -= OnHdriFadeTrigger;
+        if (finaleStartChannel != null)
+            finaleStartChannel.OnRaised -= OnFinaleStart;
     }
 
     void Update()
@@ -95,47 +99,47 @@ public class FinalSequenceManager : MonoBehaviour
         }
     }
 
-    public void OnFinalTrigger(int triggerId)
+    private void OnHdriFadeTrigger()
     {
-        if (triggerId == 0 && !_trigger1Done)
-        {
-            _trigger1Done = true;
+        if (_state != FinalState.Idle) return;
+        _state = FinalState.HdriFading;
 
-            if (playerTransform != null)
-            {
-                var pc = playerTransform.GetComponent<PlayerController>();
-                if (pc != null) pc.SetLockXZ();
-            }
-
-            FadeHDRI(this.GetCancellationTokenOnDestroy()).Forget();
-            if (seqTrigger0 != null)
-                narratorChannel?.Raise(seqTrigger0);
-        }
-        else if (triggerId == 1 && !_trigger2Done)
+        if (playerTransform != null)
         {
-            _trigger2Done = true;
-            gameStateChannel?.Raise(GameState.Final);
-            StartFinalSequence(this.GetCancellationTokenOnDestroy()).Forget();
+            var pc = playerTransform.GetComponent<PlayerController>();
+            if (pc != null) pc.SetLockXZ();
         }
+
+        FadeHDRI(this.GetCancellationTokenOnDestroy()).Forget();
+    }
+
+    private void OnFinaleStart()
+    {
+        if (_state == FinalState.CameraMoving) return;
+        _state = FinalState.CameraMoving;
+
+        gameStateChannel?.Raise(GameState.Final);
+        StartFinalSequence(this.GetCancellationTokenOnDestroy()).Forget();
     }
 
     private async UniTask FadeHDRI(CancellationToken ct)
     {
-        if (_hdriClone == null || !_hdriClone.HasProperty(hdriExposureProperty))
+        string prop = config.HdriExposureProperty;
+        if (_hdriClone == null || !_hdriClone.HasProperty(prop))
             return;
 
         float elapsed  = 0f;
-        float startExp = _hdriClone.GetFloat(hdriExposureProperty);
+        float startExp = _hdriClone.GetFloat(prop);
 
         while (elapsed < config.HdriDarkDuration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / config.HdriDarkDuration));
-            _hdriClone.SetFloat(hdriExposureProperty, Mathf.Lerp(startExp, 0f, t));
+            _hdriClone.SetFloat(prop, Mathf.Lerp(startExp, 0f, t));
             await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }
 
-        _hdriClone.SetFloat(hdriExposureProperty, 0f);
+        _hdriClone.SetFloat(prop, 0f);
     }
 
     private async UniTask StartFinalSequence(CancellationToken ct)
@@ -148,9 +152,14 @@ public class FinalSequenceManager : MonoBehaviour
             cancellationToken: ct);
 
         if (seqFinalPart1 != null)
+        {
+            _state = FinalState.NarratorPart1;
             narratorChannel?.Raise(seqFinalPart1);
+        }
         else
+        {
             await QuitSequence(ct);
+        }
     }
 
     private void FreezePlayer()
@@ -185,16 +194,23 @@ public class FinalSequenceManager : MonoBehaviour
 
     private void OnNarratorCompleted(DialogueSequence completed)
     {
-        if (completed == seqFinalPart1)
+        if (_state == FinalState.NarratorPart1)
         {
+            _state = FinalState.EscWait;
             _escEnabled = true;
             if (escHintUI != null) escHintUI.SetActive(true);
             if (cameraFarAnchor != null)
                 MoveCameraToTarget(cameraFarAnchor, config.CameraFarDuration, this.GetCancellationTokenOnDestroy()).Forget();
+
+            if (seqFinalPart2 != null)
+            {
+                _state = FinalState.NarratorPart2;
+                narratorChannel?.Raise(seqFinalPart2);
+            }
             return;
         }
 
-        if (completed == seqFinalPart2)
+        if (_state == FinalState.NarratorPart2)
         {
             QuitSequence(this.GetCancellationTokenOnDestroy()).Forget();
         }
@@ -205,6 +221,7 @@ public class FinalSequenceManager : MonoBehaviour
     {
         if (mainCamera == null || target == null) return;
 
+        var curve = config.CameraCurve;
         var    camT     = mainCamera.transform;
         Vector3    startPos = camT.position;
         Quaternion startRot = camT.rotation;
@@ -213,8 +230,8 @@ public class FinalSequenceManager : MonoBehaviour
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float t = cameraCurve != null && cameraCurve.length > 0
-                ? cameraCurve.Evaluate(Mathf.Clamp01(elapsed / duration))
+            float t = curve != null && curve.length > 0
+                ? curve.Evaluate(Mathf.Clamp01(elapsed / duration))
                 : Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / duration));
 
             camT.position = Vector3.Lerp(startPos, target.position, t);

@@ -115,7 +115,7 @@ public static class ExplorationDialogueBuilder
             L("Но Разработчик выделил мне несколько инструментов.", 2.5f) };
         segmentLines[22] = new[] {
             L("Смотрите...", 1.5f),
-            L("Таймер!", 2.5f) };
+            L("Таймер!", 2.5f, "Timer") };
         segmentLines[23] = new[] {
             L("Это среднее время прохождения игры.", 2f),
             L("Точнее, её оставшейся части.", 2f),
@@ -131,7 +131,7 @@ public static class ExplorationDialogueBuilder
             L("Так что не пытайтесь, смысла нет.", 2f) };
         segmentLines[25] = new[] {
             L("Ладно. Похоже, таймер Вас не впечатлил.", 3f),
-            L("А что насчёт кликера?", 2f) };
+            L("А что насчёт кликера?", 2f, "Clicker") };
         segmentLines[26] = new[] {
             L("Это обычный счётчик.", 2f),
             L("При нажатии ЛКМ издаёт приятный звук.", 2f),
@@ -213,10 +213,6 @@ public static class ExplorationDialogueBuilder
         segmentLines[44] = new[] {
             L("Помогите жильцам разобраться с этим.", 4f, "QuestCanvas") };
 
-        // Key indices for auto-assignment in ExplorationManager
-        const int idxTimerTrigger   = 22;
-        const int idxClickerTrigger = 25;
-
         // Pass 1: create/overwrite assets to disk, write lines via SerializedObject
         var disk = new DialogueSequence[segmentLines.Length];
         for (int i = 0; i < segmentLines.Length; i++)
@@ -226,9 +222,7 @@ public static class ExplorationDialogueBuilder
         for (int i = 0; i < disk.Length - 1; i++)
             SetNextSequence(disk[i], disk[i + 1]);
 
-        var diskStart          = disk[0];
-        var diskTimerTrigger   = disk[idxTimerTrigger];
-        var diskClickerTrigger = disk[idxClickerTrigger];
+        var diskStart = disk[0];
 
         //  TRIGGER A — one-shot (~48s)
         var trigA = CreateSeq(folder, "Seq_Trigger_A", 10, null,
@@ -289,12 +283,7 @@ public static class ExplorationDialogueBuilder
         AssetDatabase.Refresh();
 
         // Auto-assign in ExplorationManager in scene
-        int assignedCount = AutoAssignInScene(
-            ambientStart:   diskStart,
-            timerTrigger:   diskTimerTrigger,
-            clickerTrigger: diskClickerTrigger,
-            triggerA:       trigA,
-            triggerB:       trigB);
+        int assignedCount = AutoAssignInScene(diskStart);
 
 
         string autoMsg = assignedCount > 0
@@ -306,15 +295,9 @@ public static class ExplorationDialogueBuilder
     }
 
     /// <summary>
-    /// Finds ExplorationManager in the open scene and wires all dialogue refs
-    /// via SerializedObject. Returns number of updated fields.
+    /// Finds ExplorationManager in the open scene and wires ambient start ref.
     /// </summary>
-    private static int AutoAssignInScene(
-        DialogueSequence ambientStart,
-        DialogueSequence timerTrigger,
-        DialogueSequence clickerTrigger,
-        DialogueSequence triggerA,
-        DialogueSequence triggerB)
+    private static int AutoAssignInScene(DialogueSequence ambientStart)
     {
         var mgr = Object.FindFirstObjectByType<ExplorationManager>();
         if (mgr == null)
@@ -324,17 +307,13 @@ public static class ExplorationDialogueBuilder
         }
 
         var so = new SerializedObject(mgr);
-        so.FindProperty("seqAmbientStart")  .objectReferenceValue = ambientStart;
-        so.FindProperty("seqTimerTrigger")  .objectReferenceValue = timerTrigger;
-        so.FindProperty("seqClickerTrigger").objectReferenceValue = clickerTrigger;
-        so.FindProperty("seqTriggerA")      .objectReferenceValue = triggerA;
-        so.FindProperty("seqTriggerB")      .objectReferenceValue = triggerB;
+        so.FindProperty("seqAmbientStart").objectReferenceValue = ambientStart;
         so.ApplyModifiedProperties();
 
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
             mgr.gameObject.scene);
 
-        return 5;
+        return 1;
     }
 
     private static DialogueSequence CreateSeq(string folder, string name, int priority,

@@ -126,7 +126,7 @@ public class IntroCrawl : MonoBehaviour
                 float speed = _isHolding ? config.ScrollSpeed * config.HoldMultiplier : config.ScrollSpeed;
 
                 if (crawlMusic != null)
-                    crawlMusic.pitch = _isHolding ? 2f : 1f;
+                    crawlMusic.pitch = _isHolding ? config.HoldMusicPitch : 1f;
 
                 pos = textTransform.anchoredPosition;
                 pos.y += speed * Time.deltaTime;
@@ -151,7 +151,7 @@ public class IntroCrawl : MonoBehaviour
 
     private async UniTask BlinkIconAsync(CancellationToken ct)
     {
-        Color baseColor = new Color(1f, 1f, 1f, 0.3f);
+        Color baseColor = new Color(1f, 1f, 1f, config.SkipIconBaseAlpha);
         Color holdColor = Color.white;
 
         while (true)

@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -21,14 +20,9 @@ public class NarratorManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI speakerText;
     [SerializeField] private TextMeshProUGUI lineText;
 
-    [Header("Scene Objects (activateObject)")]
-    [Tooltip("Scene objects referenced by DialogueLine.activateObject. " +
-             "Drag GameObjects here — works even if the object is initially inactive.")]
-    [SerializeField] private List<SceneObjectEntry> sceneObjects = new();
-
-    [Header("Audio")]
-    [Tooltip("AudioMixerGroup for narrator voice")]
-    [SerializeField] private AudioMixerGroup mixerGroup;
+    [Header("Scene Activation")]
+    [Tooltip("Channel to raise when a DialogueLine.activateObject fires")]
+    [SerializeField] private StringChannel activateChannel;
 
     [Header("Config")]
     [SerializeField] private NarratorConfig config;
@@ -36,7 +30,6 @@ public class NarratorManager : MonoBehaviour
     private AudioSource _audioSource;
     private CancellationTokenSource _cts;
     private DialogueSequence _currentSequence;
-    private Dictionary<string, GameObject> _sceneObjectMap;
     private int _blipCounter;
 
     private bool _skipLine;
@@ -62,12 +55,6 @@ public class NarratorManager : MonoBehaviour
     void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
-        _audioSource.outputAudioMixerGroup = mixerGroup;
-
-        _sceneObjectMap = new Dictionary<string, GameObject>(sceneObjects.Count);
-        foreach (var entry in sceneObjects)
-            if (!string.IsNullOrEmpty(entry.key) && entry.gameObject != null)
-                _sceneObjectMap[entry.key] = entry.gameObject;
     }
 
     void OnEnable()
@@ -181,11 +168,8 @@ public class NarratorManager : MonoBehaviour
     {
         _skipLine = false;
 
-        if (!string.IsNullOrEmpty(line.ActivateObject))
-        {
-            if (_sceneObjectMap.TryGetValue(line.ActivateObject, out var go))
-                go.SetActive(true);
-        }
+        if (!string.IsNullOrEmpty(line.ActivateObject) && activateChannel != null)
+            activateChannel.Raise(line.ActivateObject);
 
         if (subtitleRoot != null) subtitleRoot.SetActive(true);
         if (speakerText != null) speakerText.text = "";

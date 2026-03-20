@@ -2,7 +2,7 @@ using UnityEngine;
 
 /// <summary>
 /// Single visual novel line.
-/// cameraIndex — index in the camera anchors array (0-3).
+/// cameraAnchorKey — key in the TransformRegistry (e.g. "John", "Mary").
 /// narratorSequenceBefore — if not null, narrator will play this sequence
 /// AFTER hiding NovelCanvas (i.e., between two novel lines).
 /// </summary>
@@ -18,9 +18,9 @@ public class NovelLine
     [SerializeField] private string text;
     public string Text => text;
 
-    [Tooltip("Camera anchor index (0-3). -1 = don't change.")]
-    [SerializeField] private int cameraIndex;
-    public int CameraIndex => cameraIndex;
+    [Tooltip("Camera anchor key (matches CameraAnchorRegistrar key). Empty = don't change.")]
+    [SerializeField] private string cameraAnchorKey;
+    public string CameraAnchorKey => cameraAnchorKey;
 
     [Tooltip("If set — narrator will play this sequence before showing this line (NovelCanvas is hidden).")]
     [SerializeField] private DialogueSequence narratorSequenceBefore;

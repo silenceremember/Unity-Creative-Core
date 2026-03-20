@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -27,9 +28,8 @@ public class PauseMenuManager : MonoBehaviour
     [Header("TV")]
     [SerializeField] private TVController tvController;
 
-    [Header("Portfolio")]
-    [Tooltip("Portfolio URL")]
-    [SerializeField] private string portfolioUrl = "https://example.com";
+    [Header("Config")]
+    [SerializeField] private PauseMenuConfig config;
 
     [Header("GameState")]
     [SerializeField] private GameStateChannel gameStateChannel;
@@ -81,9 +81,7 @@ public class PauseMenuManager : MonoBehaviour
         var kb = UnityEngine.InputSystem.Keyboard.current;
         if (kb == null || !kb.escapeKey.wasPressedThisFrame) return;
 
-        if (_curState == GameState.Menu       ||
-            _curState == GameState.IntroCrawl ||
-            _curState == GameState.Final)
+        if (IsBlockedState(_curState))
             return;
 
         if (levelUpCanvas != null && levelUpCanvas.gameObject.activeSelf)
@@ -96,10 +94,7 @@ public class PauseMenuManager : MonoBehaviour
     {
         _curState = state;
 
-        if (_isPaused &&
-            (state == GameState.Final      ||
-             state == GameState.Menu       ||
-             state == GameState.IntroCrawl))
+        if (_isPaused && IsBlockedState(state))
         {
             ClosePause();
         }
@@ -158,8 +153,8 @@ public class PauseMenuManager : MonoBehaviour
     /// <summary>Portfolio image button: opens URL in browser.</summary>
     public void OpenPortfolio()
     {
-        if (!string.IsNullOrEmpty(portfolioUrl))
-            Application.OpenURL(portfolioUrl);
+        if (config != null && !string.IsNullOrEmpty(config.PortfolioUrl))
+            Application.OpenURL(config.PortfolioUrl);
     }
 
     private void TogglePause()
@@ -195,6 +190,12 @@ public class PauseMenuManager : MonoBehaviour
         if (_curState != GameState.VisualNovel &&
             playerController != null && !playerController.enabled)
             playerController.enabled = true;
+    }
+
+    private bool IsBlockedState(GameState state)
+    {
+        if (config == null) return false;
+        return Array.IndexOf(config.BlockedStates, state) >= 0;
     }
 
     private void SetPaused(bool value)

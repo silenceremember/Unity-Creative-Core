@@ -69,4 +69,13 @@ public class ClickerConfig : ScriptableObject
 
     [SerializeField] private float pitchMax = 1.35f;
     public float PitchMax => pitchMax;
+
+    [Header("Transitions")]
+    [Tooltip("Number roll animation duration")]
+    [SerializeField] private float rollNumberDuration = 0.12f;
+    public float RollNumberDuration => rollNumberDuration;
+
+    [Tooltip("Heat color transition duration")]
+    [SerializeField] private float colorTransitionDuration = 0.3f;
+    public float ColorTransitionDuration => colorTransitionDuration;
 }

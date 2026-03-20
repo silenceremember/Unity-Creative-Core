@@ -1,20 +1,19 @@
 using UnityEngine;
 
 /// <summary>
-/// Box/Sphere trigger that notifies ExplorationManager when the player enters.
-/// Add any Collider (isTrigger = true) on the same GameObject.
-/// Rigidbody (kinematic) is auto-added — player does NOT need a Rigidbody.
+/// Collider trigger that fires a DialogueSequence through NarratorChannel
+/// when the player enters. One-shot (deactivates after first use).
 /// </summary>
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]
 public class NarratorTrigger : MonoBehaviour
 {
-    [Header("Trigger Settings")]
-    [Tooltip("0 = Trigger A, 1 = Trigger B")]
-    [SerializeField] private int triggerId;
+    [Header("Sequence")]
+    [Tooltip("Dialogue to play when player enters")]
+    [SerializeField] private DialogueSequence sequence;
 
     [Header("Channel")]
-    [SerializeField] private IntChannel areaTriggerChannel;
+    [SerializeField] private NarratorChannel narratorChannel;
 
     private void Awake()
     {
@@ -27,7 +26,8 @@ public class NarratorTrigger : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        areaTriggerChannel?.Raise(triggerId);
+        if (sequence != null)
+            narratorChannel?.Raise(sequence);
 
         gameObject.SetActive(false);
     }
