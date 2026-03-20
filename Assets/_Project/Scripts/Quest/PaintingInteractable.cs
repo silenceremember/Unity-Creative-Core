@@ -14,10 +14,6 @@ public class PaintingInteractable : MonoBehaviour
     [Tooltip("Transform of the painting itself (not the trigger zone)")]
     [SerializeField] private Transform paintingTransform;
 
-    [Tooltip("Code digit contributed by this painting (1-4)")]
-    [Range(1, 4)]
-    [SerializeField] private int codeDigit = 1;
-
     [Header("Correct Rotation")]
     [Tooltip("Target localEuler angles when painting is aligned")]
     [SerializeField] private Vector3 correctLocalEuler;
@@ -27,10 +23,6 @@ public class PaintingInteractable : MonoBehaviour
 
     [Header("Dependencies")]
     [SerializeField] private PaintingQuestManager paintingQuestManager;
-
-    [Header("Slide Sounds (3D)")]
-    [Tooltip("1-4 clips. A random one is picked on each painting rotation.")]
-    [SerializeField] private AudioClip[] slideClips;
 
     public bool IsUsed          { get; private set; }
 
@@ -110,11 +102,12 @@ public class PaintingInteractable : MonoBehaviour
             SnapToAsync(_initialRotation, duration, destroyCancellationToken).Forget();
     }
 
-    /// <summary>Plays a random 3D slide sound from the painting position.</summary>
-    public void PlaySlideSound()
+    /// <summary>Plays a random 3D slide sound from config.</summary>
+    private void PlaySlideSound()
     {
-        if (_audioSource == null || slideClips == null || slideClips.Length == 0) return;
-        var clip = slideClips[Random.Range(0, slideClips.Length)];
+        var clips = config.SlideClips;
+        if (_audioSource == null || clips == null || clips.Length == 0) return;
+        var clip = clips[Random.Range(0, clips.Length)];
         if (clip != null) _audioSource.PlayOneShot(clip);
     }
 

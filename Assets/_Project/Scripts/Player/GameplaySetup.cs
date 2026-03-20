@@ -84,7 +84,6 @@ public class GameplaySetup : MonoBehaviour
 
         if (_playerController != null)
         {
-            _playerController.SetCameraBaseOffset(config.CameraLocalOffset);
             _playerController.enabled = true;
             _playerController.Init(mainCamera != null ? mainCamera.transform : null);
         }

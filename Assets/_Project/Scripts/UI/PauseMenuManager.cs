@@ -1,17 +1,17 @@
 using System;
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 /// <summary>
 /// ESC pause menu.
 ///
-/// Opens on ESC in all states except Menu, IntroCrawl, and Final.
+/// Opens on ESC in all states except blocked ones (configured via PauseMenuConfig).
 /// In VisualNovel mode ESC also works — allows returning to main menu,
 /// aborting the novel via NovelChannel.RaiseAbort().
 ///
 /// Time.timeScale = 0 while pause is open.
+/// Volume slider is handled by VolumeSlider component — PauseMenuManager only syncs its value on open.
 /// </summary>
 public class PauseMenuManager : MonoBehaviour
 {
@@ -20,9 +20,8 @@ public class PauseMenuManager : MonoBehaviour
     [SerializeField] private GameObject pauseMenuCanvas;
 
     [Header("Audio")]
-    [SerializeField] private AudioMixer audioMixer;
     [SerializeField] private AudioConfig audioConfig;
-    [Tooltip("Volume slider inside the pause menu")]
+    [Tooltip("Volume slider inside the pause menu (managed by VolumeSlider component)")]
     [SerializeField] private Slider volumeSlider;
 
     [Header("TV")]
@@ -64,16 +63,6 @@ public class PauseMenuManager : MonoBehaviour
     {
         if (gameStateChannel != null)
             gameStateChannel.OnStateChanged -= OnStateChanged;
-    }
-
-    void Start()
-    {
-        if (volumeSlider != null)
-        {
-            float saved = PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, audioConfig.DefaultVolume);
-            volumeSlider.value = saved;
-            volumeSlider.onValueChanged.AddListener(ApplyVolume);
-        }
     }
 
     void Update()
@@ -135,16 +124,6 @@ public class PauseMenuManager : MonoBehaviour
 #endif
     }
 
-    /// <summary>Applies slider volume to AudioMixer.</summary>
-    public void ApplyVolume(float value)
-    {
-        if (audioMixer == null) return;
-
-        float dB = Mathf.Lerp(audioConfig.DBMax, audioConfig.DBMin, value);
-        audioMixer.SetFloat(audioConfig.ExposedParam, dB);
-        PlayerPrefs.SetFloat(AudioPrefsKeys.MasterVolume, value);
-    }
-
     /// <summary>TV On button.</summary>
     public void TVOn()  => tvController?.TurnOn();
     /// <summary>TV Off button.</summary>
@@ -171,7 +150,7 @@ public class PauseMenuManager : MonoBehaviour
         if (pauseMenuCanvas != null)
             pauseMenuCanvas.SetActive(true);
 
-        if (volumeSlider != null)
+        if (volumeSlider != null && audioConfig != null)
             volumeSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, audioConfig.DefaultVolume));
 
         if (playerController != null && playerController.enabled)
@@ -203,11 +182,5 @@ public class PauseMenuManager : MonoBehaviour
         _isPaused = value;
         if (isPausedVariable != null)
             isPausedVariable.Value = value;
-    }
-
-    void OnDestroy()
-    {
-        if (volumeSlider != null)
-            volumeSlider.onValueChanged.RemoveListener(ApplyVolume);
     }
 }

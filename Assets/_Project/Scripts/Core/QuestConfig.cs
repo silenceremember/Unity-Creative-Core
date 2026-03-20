@@ -141,4 +141,22 @@ public class QuestConfig : ScriptableObject
     [Tooltip("Duration for resetting paintings on reject")]
     [SerializeField] private float rejectResetDuration = 0.5f;
     public float RejectResetDuration => rejectResetDuration;
+
+    [Header("Quest Sounds")]
+    [Tooltip("Sound on E press (painting interaction)")]
+    [SerializeField] private AudioClip interactSound;
+    public AudioClip InteractSound => interactSound;
+
+    [Tooltip("Sound on quest success (accept / green)")]
+    [SerializeField] private AudioClip acceptSound;
+    public AudioClip AcceptSound => acceptSound;
+
+    [Tooltip("Sound on quest failure (reject / red)")]
+    [SerializeField] private AudioClip rejectSound;
+    public AudioClip RejectSound => rejectSound;
+
+    [Header("Painting Slide Sounds")]
+    [Tooltip("1-4 clips — random on each painting rotation")]
+    [SerializeField] private AudioClip[] slideClips;
+    public AudioClip[] SlideClips => slideClips;
 }

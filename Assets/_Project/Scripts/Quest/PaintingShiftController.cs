@@ -11,9 +11,12 @@ public class PaintingShiftController : MonoBehaviour
     [System.Serializable]
     public struct PaintingEntry
     {
-        public Transform painting;
+        [SerializeField] private Transform painting;
+        public Transform Painting => painting;
+
         [Tooltip("Target Euler angles (localRotation) after shift")]
-        public Vector3 targetLocalEuler;
+        [SerializeField] private Vector3 targetLocalEuler;
+        public Vector3 TargetLocalEuler => targetLocalEuler;
     }
 
     [Header("Paintings")]
@@ -47,8 +50,8 @@ public class PaintingShiftController : MonoBehaviour
 
         for (int i = 0; i < paintings.Length; i++)
         {
-            if (paintings[i].painting == null) continue;
-            RotatePaintingAsync(paintings[i].painting, paintings[i].targetLocalEuler, ct).Forget();
+            if (paintings[i].Painting == null) continue;
+            RotatePaintingAsync(paintings[i].Painting, paintings[i].TargetLocalEuler, ct).Forget();
 
             if (config.ShiftStagger > 0f)
                 await UniTask.Delay(System.TimeSpan.FromSeconds(config.ShiftStagger), cancellationToken: ct);

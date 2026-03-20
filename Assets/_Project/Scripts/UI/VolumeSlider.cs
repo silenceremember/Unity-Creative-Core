@@ -1,17 +1,12 @@
 using UnityEngine;
-using UnityEngine.Audio;
 using UnityEngine.UI;
 
 /// <summary>
-/// Controls volume via AudioMixer exposed parameter.
-/// Slider: 0.0001 (−80 dB silence) to 1.0 (0 dB max).
+/// Controls volume via AudioConfig SO.
+/// Slider: 0 (silence) to 1 (max).
 /// </summary>
 public class VolumeSlider : MonoBehaviour
 {
-    [Header("AudioMixer")]
-    [Tooltip("Drag AudioMixer.mixer here")]
-    [SerializeField] private AudioMixer audioMixer;
-
     [Header("Config")]
     [SerializeField] private AudioConfig audioConfig;
 
@@ -32,23 +27,16 @@ public class VolumeSlider : MonoBehaviour
             float saved = PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, audioConfig.DefaultVolume);
             slider.value = saved;
 
-            slider.onValueChanged.AddListener(ApplyVolume);
-            ApplyVolume(saved);
+            slider.onValueChanged.AddListener(OnSliderChanged);
+            audioConfig.ApplyVolume(saved);
         }
     }
 
-    public void ApplyVolume(float value)
-    {
-        if (audioMixer == null) return;
-
-        float dB = Mathf.Lerp(audioConfig.DBMax, audioConfig.DBMin, value);
-        audioMixer.SetFloat(audioConfig.ExposedParam, dB);
-        PlayerPrefs.SetFloat(AudioPrefsKeys.MasterVolume, value);
-    }
+    private void OnSliderChanged(float value) => audioConfig.ApplyVolume(value);
 
     void OnDestroy()
     {
         if (slider != null)
-            slider.onValueChanged.RemoveListener(ApplyVolume);
+            slider.onValueChanged.RemoveListener(OnSliderChanged);
     }
 }

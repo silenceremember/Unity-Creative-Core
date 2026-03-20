@@ -9,8 +9,7 @@ using UnityEngine;
 ///
 /// Logic:
 ///   - Slot order comes from QuestConfig.SlotOrder
-///   - Each PaintingInteractable has a codeDigit (1-4)
-///   - Code = string of codeDigit values in press order
+///   - Code = string of (slotIndex + 1) values in press order
 ///   - Correct code = QuestConfig.CorrectCode
 ///   - Accept = green; Reject = red + shake
 /// </summary>
@@ -32,13 +31,7 @@ public class PaintingQuestManager : MonoBehaviour
     [Header("Config")]
     [SerializeField] private QuestConfig config;
 
-    [Header("Quest Sounds")]
-    [Tooltip("Sound on E press (not reject)")]
-    [SerializeField] private AudioClip interactSound;
-    [Tooltip("Sound on quest success (accept / green)")]
-    [SerializeField] private AudioClip acceptSound;
-    [Tooltip("Sound on quest failure (reject / red)")]
-    [SerializeField] private AudioClip rejectSound;
+    [Header("Audio")]
     [SerializeField] private AudioSource questAudioSource;
 
     [Header("Dependencies")]
@@ -176,8 +169,8 @@ public class PaintingQuestManager : MonoBehaviour
             {
                 if (!_ePromptShaking && ePrompt != null)
                 {
-                    if (questAudioSource != null && rejectSound != null)
-                        questAudioSource.PlayOneShot(rejectSound);
+                    if (questAudioSource != null && config.RejectSound != null)
+                        questAudioSource.PlayOneShot(config.RejectSound);
                     ShakeEPromptAsync(destroyCancellationToken).Forget();
                 }
                 return;
@@ -223,8 +216,8 @@ public class PaintingQuestManager : MonoBehaviour
     {
         if (painting.IsUsed) return;
 
-        if (questAudioSource != null && interactSound != null)
-            questAudioSource.PlayOneShot(interactSound);
+        if (questAudioSource != null && config.InteractSound != null)
+            questAudioSource.PlayOneShot(config.InteractSound);
 
         painting.SnapToCorrect();
 
@@ -281,8 +274,8 @@ public class PaintingQuestManager : MonoBehaviour
 
         if (accepted)
         {
-            if (questAudioSource != null && acceptSound != null)
-                questAudioSource.PlayOneShot(acceptSound);
+            if (questAudioSource != null && config.AcceptSound != null)
+                questAudioSource.PlayOneShot(config.AcceptSound);
 
             await PulseLabelsAsync(ct);
 
@@ -298,8 +291,8 @@ public class PaintingQuestManager : MonoBehaviour
         }
         else
         {
-            if (questAudioSource != null && rejectSound != null)
-                questAudioSource.PlayOneShot(rejectSound);
+            if (questAudioSource != null && config.RejectSound != null)
+                questAudioSource.PlayOneShot(config.RejectSound);
 
             await ShakeLabelsAsync(ct);
 

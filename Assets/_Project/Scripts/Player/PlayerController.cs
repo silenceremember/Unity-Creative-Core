@@ -13,8 +13,7 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private PlayerConfig config;
 
-    [Tooltip("Camera offset from player pivot in normal state")]
-    [SerializeField] private Vector3 cameraBaseLocalOffset = new Vector3(0f, 0.7f, 0f);
+
 
     private CharacterController _cc;
     private Camera _camera;
@@ -157,7 +156,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void PushCameraFromWalls()
     {
-        Vector3 origin = transform.position + cameraBaseLocalOffset;
+        Vector3 origin = transform.position + config.CameraLocalOffset;
         Vector3 desiredPos = origin;
 
         Vector3 lookDir = _cameraTransform.forward;
@@ -175,6 +174,5 @@ public class PlayerController : MonoBehaviour
         _cameraTransform.position = desiredPos;
     }
 
-    /// <summary>Set camera offset from player pivot (used by GameplaySetup).</summary>
-    public void SetCameraBaseOffset(Vector3 offset) => cameraBaseLocalOffset = offset;
+
 }
