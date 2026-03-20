@@ -65,7 +65,7 @@ public class CameraTransition : MonoBehaviour
         _currentCts?.Dispose();
         _currentCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
 
-        DoTransitionAsync(targetPos, targetRot, _currentCts.Token).Forget();
+        DoTransitionAsync(targetPos, targetRot, _currentCts.Token).SuppressCancellationThrow().Forget();
     }
 
     private async UniTask DoTransitionAsync(Vector3 targetPos, Quaternion targetRot, CancellationToken ct)
@@ -74,21 +74,17 @@ public class CameraTransition : MonoBehaviour
         Quaternion startRot = _cam.rotation;
         float elapsed = 0f;
 
-        try
+        while (elapsed < duration)
         {
-            while (elapsed < duration)
-            {
-                ct.ThrowIfCancellationRequested();
-                elapsed += Time.deltaTime;
-                float t = curve.Evaluate(Mathf.Clamp01(elapsed / duration));
-                _cam.position = Vector3.Lerp(startPos, targetPos, t);
-                _cam.rotation = Quaternion.Lerp(startRot, targetRot, t);
-                await UniTask.Yield(PlayerLoopTiming.Update, ct);
-            }
-
-            _cam.position = targetPos;
-            _cam.rotation = targetRot;
+            ct.ThrowIfCancellationRequested();
+            elapsed += Time.deltaTime;
+            float t = curve.Evaluate(Mathf.Clamp01(elapsed / duration));
+            _cam.position = Vector3.Lerp(startPos, targetPos, t);
+            _cam.rotation = Quaternion.Lerp(startRot, targetRot, t);
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }
-        catch (System.OperationCanceledException) { }
+
+        _cam.position = targetPos;
+        _cam.rotation = targetRot;
     }
 }

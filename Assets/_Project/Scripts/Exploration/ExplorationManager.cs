@@ -176,7 +176,7 @@ public class ExplorationManager : MonoBehaviour
             _timerCts?.Cancel();
             _timerCts?.Dispose();
             _timerCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
-            DecorativeCountdownAsync(_timerCts.Token).Forget();
+            DecorativeCountdownAsync(_timerCts.Token).SuppressCancellationThrow().Forget();
         }
 
         if (completed == seqClickerTrigger && clickerLabel != null)
@@ -204,24 +204,20 @@ public class ExplorationManager : MonoBehaviour
         timerLabel.gameObject.SetActive(true);
         float elapsed = 0f;
 
-        try
+        while (true)
         {
-            while (true)
-            {
-                float display = decorativeTimerDuration - elapsed;
-                bool negative = display < 0f;
-                float abs = Mathf.Abs(display);
-                int minutes = Mathf.FloorToInt(abs / 60f);
-                int seconds = Mathf.FloorToInt(abs % 60f);
-                timerLabel.text = negative
-                    ? $"-{minutes:0}:{seconds:00}"
-                    : $"{minutes:0}:{seconds:00}";
+            float display = decorativeTimerDuration - elapsed;
+            bool negative = display < 0f;
+            float abs = Mathf.Abs(display);
+            int minutes = Mathf.FloorToInt(abs / 60f);
+            int seconds = Mathf.FloorToInt(abs % 60f);
+            timerLabel.text = negative
+                ? $"-{minutes:0}:{seconds:00}"
+                : $"{minutes:0}:{seconds:00}";
 
-                await UniTask.Delay(System.TimeSpan.FromSeconds(1f), cancellationToken: ct);
-                elapsed += 1f;
-            }
+            await UniTask.Delay(System.TimeSpan.FromSeconds(1f), cancellationToken: ct);
+            elapsed += 1f;
         }
-        catch (System.OperationCanceledException) { }
     }
 
     private void ShowClicker()
@@ -240,7 +236,7 @@ public class ExplorationManager : MonoBehaviour
             _timerCts?.Cancel();
             _timerCts?.Dispose();
             _timerCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
-            DecorativeCountdownAsync(_timerCts.Token).Forget();
+            DecorativeCountdownAsync(_timerCts.Token).SuppressCancellationThrow().Forget();
         }
 
         if (clickerLabel != null && !clickerLabel.gameObject.activeSelf)

@@ -259,7 +259,7 @@ public class PaintingQuestManager : MonoBehaviour
             _questCts?.Cancel();
             _questCts?.Dispose();
             _questCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
-            ResolveAsync(_questCts.Token).Forget();
+            ResolveAsync(_questCts.Token).SuppressCancellationThrow().Forget();
         }
     }
 
@@ -268,58 +268,54 @@ public class PaintingQuestManager : MonoBehaviour
         _resolved    = true;
         _questActive = false;
 
-        try
-        {
-            await UniTask.Delay(System.TimeSpan.FromSeconds(0.3f), cancellationToken: ct);
+        await UniTask.Delay(System.TimeSpan.FromSeconds(0.3f), cancellationToken: ct);
 
-            bool accepted = _enteredCode == correctCode;
+        bool accepted = _enteredCode == correctCode;
 
-            Color resultColor = accepted ? colorAccept : colorReject;
+        Color resultColor = accepted ? colorAccept : colorReject;
 
-            foreach (var lbl in pictureLabels)
-                if (lbl != null)
-                {
-                    lbl.color = resultColor;
-                    lbl.fontStyle &= ~FontStyles.Strikethrough;
-                }
-
-            if (accepted)
+        foreach (var lbl in pictureLabels)
+            if (lbl != null)
             {
-                if (questAudioSource != null && acceptSound != null)
-                    questAudioSource.PlayOneShot(acceptSound);
+                lbl.color = resultColor;
+                lbl.fontStyle &= ~FontStyles.Strikethrough;
+            }
 
-                await PulseLabelsAsync(ct);
+        if (accepted)
+        {
+            if (questAudioSource != null && acceptSound != null)
+                questAudioSource.PlayOneShot(acceptSound);
 
-                if (seqPostQuest != null)
-                    narratorChannel?.Raise(seqPostQuest);
-                else
-                    addXPChannel?.Raise(config.QuestRewardXP);
+            await PulseLabelsAsync(ct);
+
+            if (seqPostQuest != null)
+                narratorChannel?.Raise(seqPostQuest);
+            else
+                addXPChannel?.Raise(config.QuestRewardXP);
+        }
+        else
+        {
+            if (questAudioSource != null && rejectSound != null)
+                questAudioSource.PlayOneShot(rejectSound);
+
+            await ShakeLabelsAsync(ct);
+
+            _rejectCount++;
+
+            int rejectIdx = _rejectCount - 1;
+            if (rejectDialogues != null && rejectIdx < rejectDialogues.Length && rejectDialogues[rejectIdx] != null)
+                narratorChannel?.Raise(rejectDialogues[rejectIdx]);
+
+            if (_rejectCount >= 5)
+            {
+                await AutoSolveAfterDialogueAsync(ct);
             }
             else
             {
-                if (questAudioSource != null && rejectSound != null)
-                    questAudioSource.PlayOneShot(rejectSound);
-
-                await ShakeLabelsAsync(ct);
-
-                _rejectCount++;
-
-                int rejectIdx = _rejectCount - 1;
-                if (rejectDialogues != null && rejectIdx < rejectDialogues.Length && rejectDialogues[rejectIdx] != null)
-                    narratorChannel?.Raise(rejectDialogues[rejectIdx]);
-
-                if (_rejectCount >= 5)
-                {
-                    await AutoSolveAfterDialogueAsync(ct);
-                }
-                else
-                {
-                    await UniTask.Delay(System.TimeSpan.FromSeconds(0.8f), cancellationToken: ct);
-                    DoReset();
-                }
+                await UniTask.Delay(System.TimeSpan.FromSeconds(0.8f), cancellationToken: ct);
+                DoReset();
             }
         }
-        catch (System.OperationCanceledException) { }
     }
 
     private async UniTask AutoSolveAfterDialogueAsync(CancellationToken ct)

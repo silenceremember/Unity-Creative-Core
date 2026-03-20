@@ -19,8 +19,6 @@ public class VolumeSlider : MonoBehaviour
     [Tooltip("Slider (auto-found if not assigned)")]
     [SerializeField] private Slider slider;
 
-    private const string PREFS_KEY = "MasterVolumeV2";
-
     void Start()
     {
         if (slider == null)
@@ -31,8 +29,8 @@ public class VolumeSlider : MonoBehaviour
             slider.minValue = 0f;
             slider.maxValue = 1f;
 
-            PlayerPrefs.DeleteKey(PREFS_KEY);
-            float saved = PlayerPrefs.GetFloat(PREFS_KEY, 0.25f);
+            PlayerPrefs.DeleteKey(AudioPrefsKeys.MasterVolume);
+            float saved = PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, 0.25f);
             slider.value = saved;
 
             slider.onValueChanged.AddListener(ApplyVolume);
@@ -46,7 +44,7 @@ public class VolumeSlider : MonoBehaviour
 
         float dB = Mathf.Lerp(10f, -30f, value);
         audioMixer.SetFloat(exposedParam, dB);
-        PlayerPrefs.SetFloat(PREFS_KEY, value);
+        PlayerPrefs.SetFloat(AudioPrefsKeys.MasterVolume, value);
     }
 
     void OnDestroy()

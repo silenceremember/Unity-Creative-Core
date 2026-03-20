@@ -123,18 +123,15 @@ public class PaintingInteractable : MonoBehaviour
         Quaternion start = paintingTransform.localRotation;
         float elapsed    = 0f;
 
-        try
+        while (elapsed < dur)
         {
-            while (elapsed < dur)
-            {
-                ct.ThrowIfCancellationRequested();
-                elapsed += Time.deltaTime;
-                float t  = Mathf.SmoothStep(0f, 1f, elapsed / dur);
-                paintingTransform.localRotation = Quaternion.Slerp(start, target, t);
-                await UniTask.Yield(PlayerLoopTiming.Update, ct);
-            }
-            paintingTransform.localRotation = target;
+            elapsed += Time.deltaTime;
+            float t  = Mathf.SmoothStep(0f, 1f, elapsed / dur);
+            paintingTransform.localRotation = Quaternion.Slerp(start, target, t);
+            bool canceled = await UniTask.Yield(PlayerLoopTiming.Update, ct).SuppressCancellationThrow();
+            if (canceled) break;
         }
-        catch (System.OperationCanceledException) { }
+
+        paintingTransform.localRotation = target;
     }
 }

@@ -206,110 +206,102 @@ public class XPLevelManager : MonoBehaviour
         }
 
         _animCts = new CancellationTokenSource();
-        TransferAnimation(amount, rewardDisplay: amount, _animCts.Token).Forget();
+        TransferAnimation(amount, rewardDisplay: amount, _animCts.Token).SuppressCancellationThrow().Forget();
     }
 
     private async UniTask TransferAnimation(int xpToAdd, int rewardDisplay, CancellationToken ct)
     {
-        try
+        int cap     = XPForCurrentLevel;
+        int canFill = cap - _currentXP;
+        int fill    = Mathf.Min(xpToAdd, canFill);
+        int overflow = xpToAdd - fill;
+        int endXP   = _currentXP + fill;
+
+        int rewardEnd = rewardDisplay - fill;
+        rewardEnd = Mathf.Max(rewardEnd, 0);
+
+        float startXP = _currentXP;
+        float dur     = config.FillDuration * Mathf.Max((float)fill / cap, 0.2f);
+        float elapsed = 0f;
+        float nextTick = 0f;
+
+        while (elapsed < dur)
         {
-            int cap     = XPForCurrentLevel;
-            int canFill = cap - _currentXP;
-            int fill    = Mathf.Min(xpToAdd, canFill);
-            int overflow = xpToAdd - fill;
-            int endXP   = _currentXP + fill;
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / dur);
+            float curve = fillCurve != null && fillCurve.length > 0
+                ? fillCurve.Evaluate(t)
+                : Mathf.SmoothStep(0f, 1f, t);
 
-            int rewardEnd = rewardDisplay - fill;
-            rewardEnd = Mathf.Max(rewardEnd, 0);
+            _displayXP = Mathf.Lerp(startXP, endXP, curve);
+            if (xpSlider != null) xpSlider.value = _displayXP;
+            if (xpLabel  != null) xpLabel.text   = $"{Mathf.RoundToInt(_displayXP)} / {cap}";
 
-            float startXP = _currentXP;
-            float dur     = config.FillDuration * Mathf.Max((float)fill / cap, 0.2f);
-            float elapsed = 0f;
-            float nextTick = 0f;
-
-            while (elapsed < dur)
+            if (elapsed >= nextTick && xpTickSound != null && xpTickAudioSource != null)
             {
-                elapsed += Time.deltaTime;
-                float t = Mathf.Clamp01(elapsed / dur);
-                float curve = fillCurve != null && fillCurve.length > 0
-                    ? fillCurve.Evaluate(t)
-                    : Mathf.SmoothStep(0f, 1f, t);
-
-                _displayXP = Mathf.Lerp(startXP, endXP, curve);
-                if (xpSlider != null) xpSlider.value = _displayXP;
-                if (xpLabel  != null) xpLabel.text   = $"{Mathf.RoundToInt(_displayXP)} / {cap}";
-
-                if (elapsed >= nextTick && xpTickSound != null && xpTickAudioSource != null)
-                {
-                    xpTickAudioSource.pitch = Mathf.Lerp(config.TickPitchMin, config.TickPitchMax, curve);
-                    xpTickAudioSource.PlayOneShot(xpTickSound);
-                    nextTick = elapsed + config.TickInterval;
-                }
-
-                if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
-                {
-                    int rewardLeft = Mathf.RoundToInt(Mathf.Lerp(rewardDisplay, rewardEnd, curve));
-                    rewardLabel.text = string.Format(rewardFormat, rewardLeft);
-                    if (rewardLeft <= 0)
-                        rewardLabel.gameObject.SetActive(false);
-                }
-
-                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+                xpTickAudioSource.pitch = Mathf.Lerp(config.TickPitchMin, config.TickPitchMax, curve);
+                xpTickAudioSource.PlayOneShot(xpTickSound);
+                nextTick = elapsed + config.TickInterval;
             }
-
-            _currentXP = endXP;
-            _displayXP = endXP;
-            if (xpSlider != null) xpSlider.value = endXP;
-            if (xpLabel  != null) xpLabel.text   = $"{endXP} / {cap}";
 
             if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
             {
-                rewardLabel.text = string.Format(rewardFormat, rewardEnd);
-                if (rewardEnd <= 0)
+                int rewardLeft = Mathf.RoundToInt(Mathf.Lerp(rewardDisplay, rewardEnd, curve));
+                rewardLabel.text = string.Format(rewardFormat, rewardLeft);
+                if (rewardLeft <= 0)
                     rewardLabel.gameObject.SetActive(false);
             }
 
-            if (_currentXP >= cap)
-                await AutoLevelUp(overflow, rewardEnd, ct);
-            else
-                FinishAnim();
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }
-        catch (System.OperationCanceledException) { }
+
+        _currentXP = endXP;
+        _displayXP = endXP;
+        if (xpSlider != null) xpSlider.value = endXP;
+        if (xpLabel  != null) xpLabel.text   = $"{endXP} / {cap}";
+
+        if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
+        {
+            rewardLabel.text = string.Format(rewardFormat, rewardEnd);
+            if (rewardEnd <= 0)
+                rewardLabel.gameObject.SetActive(false);
+        }
+
+        if (_currentXP >= cap)
+            await AutoLevelUp(overflow, rewardEnd, ct);
+        else
+            FinishAnim();
     }
 
     private async UniTask AutoLevelUp(int overflow, int rewardLeft, CancellationToken ct)
     {
-        try
+        await FlashFill(times: 3, interval: 0.12f, ct);
+
+        if (levelUpSound != null && levelUpAudioSource != null)
         {
-            await FlashFill(times: 3, interval: 0.12f, ct);
-
-            if (levelUpSound != null && levelUpAudioSource != null)
-            {
-                levelUpAudioSource.pitch = 1f;
-                levelUpAudioSource.PlayOneShot(levelUpSound);
-            }
-
-            _level++;
-            _currentXP = 0;
-            _displayXP = 0f;
-
-            PunchLevelLabel(this.GetCancellationTokenOnDestroy()).Forget();
-
-            ResetFillColor();
-            InitSlider();
-            RefreshUI();
-
-            if (overflow > 0)
-            {
-                await UniTask.Delay(200, cancellationToken: ct);
-                await TransferAnimation(overflow, rewardLeft, ct);
-            }
-            else
-            {
-                FinishAnim();
-            }
+            levelUpAudioSource.pitch = 1f;
+            levelUpAudioSource.PlayOneShot(levelUpSound);
         }
-        catch (System.OperationCanceledException) { }
+
+        _level++;
+        _currentXP = 0;
+        _displayXP = 0f;
+
+        PunchLevelLabel(this.GetCancellationTokenOnDestroy()).SuppressCancellationThrow().Forget();
+
+        ResetFillColor();
+        InitSlider();
+        RefreshUI();
+
+        if (overflow > 0)
+        {
+            await UniTask.Delay(200, cancellationToken: ct);
+            await TransferAnimation(overflow, rewardLeft, ct);
+        }
+        else
+        {
+            FinishAnim();
+        }
     }
 
     private async UniTask PunchLevelLabel(CancellationToken ct)
@@ -321,19 +313,16 @@ public class XPLevelManager : MonoBehaviour
         levelLabel.text = $"Lv.{_level}";
 
         float elapsed = 0f;
-        try
+        while (elapsed < config.LevelPunchDuration)
         {
-            while (elapsed < config.LevelPunchDuration)
-            {
-                elapsed += Time.deltaTime;
-                float t = elapsed / config.LevelPunchDuration;
-                float scale = 1f + (config.LevelLabelPunch - 1f) * Mathf.Sin(t * Mathf.PI);
-                if (rt    != null) rt.localScale = Vector3.one * scale;
-                if (canvg != null) canvg.SetAlpha(Mathf.PingPong(t * 6f, 1f));
-                await UniTask.Yield(PlayerLoopTiming.Update, ct);
-            }
+            elapsed += Time.deltaTime;
+            float t = elapsed / config.LevelPunchDuration;
+            float scale = 1f + (config.LevelLabelPunch - 1f) * Mathf.Sin(t * Mathf.PI);
+            if (rt    != null) rt.localScale = Vector3.one * scale;
+            if (canvg != null) canvg.SetAlpha(Mathf.PingPong(t * 6f, 1f));
+            bool canceled = await UniTask.Yield(PlayerLoopTiming.Update, ct).SuppressCancellationThrow();
+            if (canceled) break;
         }
-        catch (System.OperationCanceledException) { }
 
         if (rt    != null) rt.localScale = Vector3.one;
         if (canvg != null) canvg.SetAlpha(1f);
@@ -376,18 +365,15 @@ public class XPLevelManager : MonoBehaviour
         var rt      = levelUpPrompt.GetComponent<RectTransform>();
         Image fillImg = fillImage;
 
-        try
+        while (true)
         {
-            while (true)
-            {
-                float t = (Mathf.Sin(Time.time * Mathf.PI * 2f) + 1f) * 0.5f;
-                if (tmpText != null) tmpText.alpha = Mathf.Lerp(0.3f, 1f, t);
-                if (rt      != null) rt.localScale = Vector3.one * Mathf.Lerp(1f, 1.06f, t);
-                if (fillImg != null) fillImg.color = Color.Lerp(_fillOriginalColor, flashColor, t);
-                await UniTask.Yield(PlayerLoopTiming.Update, ct);
-            }
+            float t = (Mathf.Sin(Time.time * Mathf.PI * 2f) + 1f) * 0.5f;
+            if (tmpText != null) tmpText.alpha = Mathf.Lerp(0.3f, 1f, t);
+            if (rt      != null) rt.localScale = Vector3.one * Mathf.Lerp(1f, 1.06f, t);
+            if (fillImg != null) fillImg.color = Color.Lerp(_fillOriginalColor, flashColor, t);
+            bool canceled = await UniTask.Yield(PlayerLoopTiming.Update, ct).SuppressCancellationThrow();
+            if (canceled) break;
         }
-        catch (System.OperationCanceledException) { }
 
         if (tmpText != null) tmpText.alpha = 1f;
         if (rt      != null) rt.localScale = Vector3.one;

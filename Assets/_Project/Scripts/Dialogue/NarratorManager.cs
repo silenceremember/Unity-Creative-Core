@@ -120,7 +120,7 @@ public class NarratorManager : MonoBehaviour
 
         _cts = new CancellationTokenSource();
         if (narratorPlayingVar != null) narratorPlayingVar.Value = true;
-        PlaySequence(sequence, _cts.Token).Forget();
+        PlaySequence(sequence, _cts.Token).SuppressCancellationThrow().Forget();
     }
 
     public void Stop()
@@ -141,52 +141,48 @@ public class NarratorManager : MonoBehaviour
 
     private async UniTask PlaySequence(DialogueSequence sequence, CancellationToken ct)
     {
-        try
+        foreach (var line in sequence.Lines)
         {
-            foreach (var line in sequence.Lines)
-            {
-                if (lineText != null && lineText.text.Length > 0)
-                    await EraseText(ct);
-
-                await ShowLine(line, ct);
-
-                float pauseLeft = line.PauseAfter;
-                while (pauseLeft > 0f && !_skipLine)
-                {
-                    await UniTask.Yield(ct);
-                    pauseLeft -= Time.deltaTime;
-                }
-                _skipLine = false;
-            }
-
             if (lineText != null && lineText.text.Length > 0)
                 await EraseText(ct);
 
-            subtitleRoot?.SetActive(false);
+            await ShowLine(line, ct);
 
-            if (sequence.NextSequence != null)
+            float pauseLeft = line.PauseAfter;
+            while (pauseLeft > 0f && !_skipLine)
             {
-                channel?.NotifyCompleted(sequence);
-                _currentSequence = sequence.NextSequence;
-                await PlaySequence(sequence.NextSequence, ct);
+                await UniTask.Yield(ct);
+                pauseLeft -= Time.deltaTime;
             }
-            else
-            {
-                _cts?.Dispose();
-                _cts = null;
-                _currentSequence = null;
-                if (narratorPlayingVar != null) narratorPlayingVar.Value = false;
-                channel?.NotifyCompleted(sequence);
+            _skipLine = false;
+        }
 
-                if (_savedSequence != null)
-                {
-                    var toRestore = _savedSequence;
-                    _savedSequence = null;
-                    channel?.Raise(toRestore);
-                }
+        if (lineText != null && lineText.text.Length > 0)
+            await EraseText(ct);
+
+        subtitleRoot?.SetActive(false);
+
+        if (sequence.NextSequence != null)
+        {
+            channel?.NotifyCompleted(sequence);
+            _currentSequence = sequence.NextSequence;
+            await PlaySequence(sequence.NextSequence, ct);
+        }
+        else
+        {
+            _cts?.Dispose();
+            _cts = null;
+            _currentSequence = null;
+            if (narratorPlayingVar != null) narratorPlayingVar.Value = false;
+            channel?.NotifyCompleted(sequence);
+
+            if (_savedSequence != null)
+            {
+                var toRestore = _savedSequence;
+                _savedSequence = null;
+                channel?.Raise(toRestore);
             }
         }
-        catch (System.OperationCanceledException) { }
     }
 
     private async UniTask ShowLine(DialogueLine line, CancellationToken ct)

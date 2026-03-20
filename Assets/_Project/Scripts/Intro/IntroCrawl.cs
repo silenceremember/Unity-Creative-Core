@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -110,7 +109,7 @@ public class IntroCrawl : MonoBehaviour
             if (skipIcon != null)
             {
                 skipIcon.gameObject.SetActive(true);
-                BlinkIconAsync(ct).Forget();
+                BlinkIconAsync(ct).SuppressCancellationThrow().Forget();
             }
 
             Vector2 pos = textTransform.anchoredPosition;
@@ -136,7 +135,6 @@ public class IntroCrawl : MonoBehaviour
                 await UniTask.Yield(PlayerLoopTiming.Update, ct);
             }
         }
-        catch (OperationCanceledException) { }
         finally
         {
             if (skipIcon != null) skipIcon.gameObject.SetActive(false);
@@ -156,25 +154,20 @@ public class IntroCrawl : MonoBehaviour
         Color baseColor = new Color(1f, 1f, 1f, 0.3f);
         Color holdColor = Color.white;
 
-        try
+        while (true)
         {
-            while (true)
+            if (_isHolding)
             {
-                ct.ThrowIfCancellationRequested();
-
-                if (_isHolding)
-                {
-                    skipIcon.color = holdColor;
-                }
-                else
-                {
-                    float t = Mathf.PingPong(Time.time * config.BlinkSpeed, 1f);
-                    skipIcon.color = Color.Lerp(baseColor, holdColor, t);
-                }
-
-                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+                skipIcon.color = holdColor;
             }
+            else
+            {
+                float t = Mathf.PingPong(Time.time * config.BlinkSpeed, 1f);
+                skipIcon.color = Color.Lerp(baseColor, holdColor, t);
+            }
+
+            bool canceled = await UniTask.Yield(PlayerLoopTiming.Update, ct).SuppressCancellationThrow();
+            if (canceled) break;
         }
-        catch (OperationCanceledException) { }
     }
 }

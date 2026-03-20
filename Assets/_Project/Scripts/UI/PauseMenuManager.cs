@@ -49,8 +49,6 @@ public class PauseMenuManager : MonoBehaviour
     private bool      _isPaused   = false;
     private GameState _curState   = GameState.Menu;
 
-    private const string PREFS_KEY = "MasterVolumeV2";
-
     void Awake()
     {
         if (pauseMenuCanvas != null)
@@ -73,7 +71,7 @@ public class PauseMenuManager : MonoBehaviour
     {
         if (volumeSlider != null)
         {
-            float saved = PlayerPrefs.GetFloat(PREFS_KEY, 0.25f);
+            float saved = PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, 0.25f);
             volumeSlider.value = saved;
             volumeSlider.onValueChanged.AddListener(ApplyVolume);
         }
@@ -150,7 +148,7 @@ public class PauseMenuManager : MonoBehaviour
 
         float dB = Mathf.Lerp(10f, -30f, value);
         audioMixer.SetFloat(exposedParam, dB);
-        PlayerPrefs.SetFloat(PREFS_KEY, value);
+        PlayerPrefs.SetFloat(AudioPrefsKeys.MasterVolume, value);
     }
 
     /// <summary>TV On button.</summary>
@@ -180,7 +178,7 @@ public class PauseMenuManager : MonoBehaviour
             pauseMenuCanvas.SetActive(true);
 
         if (volumeSlider != null)
-            volumeSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat(PREFS_KEY, 0.25f));
+            volumeSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, 0.25f));
 
         if (playerController != null && playerController.enabled)
             playerController.enabled = false;

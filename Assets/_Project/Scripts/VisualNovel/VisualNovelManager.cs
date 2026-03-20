@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
@@ -108,7 +107,7 @@ public class VisualNovelManager : MonoBehaviour
         _nextPressed = false;
         _skipTypewriter = false;
 
-        RunNovelAsync(_cts.Token).Forget();
+        RunNovelAsync(_cts.Token).SuppressCancellationThrow().Forget();
     }
 
     /// <summary>Force-abort the novel (called from NovelChannel or directly).</summary>
@@ -134,52 +133,48 @@ public class VisualNovelManager : MonoBehaviour
 
     private async UniTask RunNovelAsync(CancellationToken ct)
     {
-        try
-        {
-            SnapCamera(sequence.Lines[0].CameraIndex);
+        SnapCamera(sequence.Lines[0].CameraIndex);
 
-            if (sequence.Lines[0].NarratorSequenceBefore != null)
+        if (sequence.Lines[0].NarratorSequenceBefore != null)
+        {
+            HideNovelCanvas();
+            TriggerNarrator(sequence.Lines[0].NarratorSequenceBefore);
+            _waitingForNarrator = true;
+            await WaitForNarratorAsync(ct);
+        }
+
+        await ShowLineAndWaitAsync(ct);
+
+        while (true)
+        {
+            _nextPressed = false;
+            await UniTask.WaitUntil(() => _nextPressed, cancellationToken: ct);
+            _nextPressed = false;
+
+            _lineIndex++;
+
+            if (sequence == null || _lineIndex >= sequence.Lines.Length)
+            {
+                EndNovel();
+                return;
+            }
+
+            var line = sequence.Lines[_lineIndex];
+
+            if (line.NarratorSequenceBefore != null)
             {
                 HideNovelCanvas();
-                TriggerNarrator(sequence.Lines[0].NarratorSequenceBefore);
                 _waitingForNarrator = true;
+
+                if (line.CameraIndex != _currentCameraIndex)
+                    await BlendCameraAsync(line.CameraIndex, ct);
+
+                TriggerNarrator(line.NarratorSequenceBefore);
                 await WaitForNarratorAsync(ct);
             }
 
             await ShowLineAndWaitAsync(ct);
-
-            while (true)
-            {
-                _nextPressed = false;
-                await UniTask.WaitUntil(() => _nextPressed, cancellationToken: ct);
-                _nextPressed = false;
-
-                _lineIndex++;
-
-                if (sequence == null || _lineIndex >= sequence.Lines.Length)
-                {
-                    EndNovel();
-                    return;
-                }
-
-                var line = sequence.Lines[_lineIndex];
-
-                if (line.NarratorSequenceBefore != null)
-                {
-                    HideNovelCanvas();
-                    _waitingForNarrator = true;
-
-                    if (line.CameraIndex != _currentCameraIndex)
-                        await BlendCameraAsync(line.CameraIndex, ct);
-
-                    TriggerNarrator(line.NarratorSequenceBefore);
-                    await WaitForNarratorAsync(ct);
-                }
-
-                await ShowLineAndWaitAsync(ct);
-            }
         }
-        catch (OperationCanceledException) { }
     }
 
     private async UniTask ShowLineAndWaitAsync(CancellationToken ct)
