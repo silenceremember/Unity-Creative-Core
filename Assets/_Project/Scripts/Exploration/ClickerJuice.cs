@@ -19,51 +19,13 @@ using UnityEngine;
 [RequireComponent(typeof(TextMeshProUGUI))]
 public class ClickerJuice : MonoBehaviour
 {
-    [Header("Punch (main hit)")]
-    [Tooltip("Punch scale strength on regular click")]
-    [SerializeField] private float punchStrength   = 0.45f;
-    [Tooltip("Punch animation duration")]
-    [SerializeField] private float punchDuration   = 0.28f;
-    [Tooltip("Punch vibration count")]
-    [SerializeField] private int   punchVibrato    = 6;
-    [Tooltip("Punch elasticity")]
-    [SerializeField] private float punchElasticity = 0.6f;
-
-    [Header("Mega Punch (every N clicks)")]
-    [SerializeField] private int   megaEvery    = 10;
-    [SerializeField] private float megaStrength = 1.1f;
-    [SerializeField] private float megaDuration = 0.5f;
-    [SerializeField] private float megaRotation = 12f;
-
-    [Header("Colors (by heat)")]
-    [SerializeField] private Color colorCold = new Color(0.7f, 0.9f, 1.0f);
-    [SerializeField] private Color colorWarm = new Color(1.0f, 0.85f, 0.3f);
-    [SerializeField] private Color colorHot  = new Color(1.0f, 0.35f, 0.1f);
-    [SerializeField] private Color colorMega = new Color(1.0f, 1.0f, 1.0f);
-
-    [Header("Heat (intensity)")]
-    [Tooltip("Heat gained per regular click (0-1)")]
-    [SerializeField] private float heatPerClick    = 0.08f;
-    [Tooltip("Mega-click heat = heatPerClick × megaHeatMultiplier")]
-    [SerializeField] private float megaHeatMultiplier = 5f;
-    [Tooltip("Heat decay rate per second")]
-    [SerializeField] private float heatDecayRate   = 0.18f;
-    [Tooltip("Warm heat threshold")]
-    [Range(0f, 1f)]
-    [SerializeField] private float heatWarmThreshold = 0.35f;
-    [Tooltip("Hot heat threshold")]
-    [Range(0f, 1f)]
-    [SerializeField] private float heatHotThreshold  = 0.70f;
+    [SerializeField] private ClickerConfig config;
 
     [Header("Pop Sound (clicker)")]
     [Tooltip("1-15 clips — random on each click")]
     [SerializeField] private AudioClip[] popClips;
     [Tooltip("AudioSource for pop sounds (2D)")]
     [SerializeField] private AudioSource popSource;
-    [Tooltip("Pitch at cold")]
-    [SerializeField] private float pitchMin = 0.85f;
-    [Tooltip("Pitch at hot")]
-    [SerializeField] private float pitchMax = 1.35f;
 
     [Header("Coin Sound (mega-click)")]
     [Tooltip("Coin sound — plays alongside pop on each mega-click")]
@@ -110,7 +72,7 @@ public class ClickerJuice : MonoBehaviour
     {
         if (_heat > 0f)
         {
-            _heat = Mathf.Max(0f, _heat - heatDecayRate * Time.unscaledDeltaTime);
+            _heat = Mathf.Max(0f, _heat - config.HeatDecayRate * Time.unscaledDeltaTime);
 
             if (!_megaFlashing)
                 ApplyHeatColor(instant: false);
@@ -122,11 +84,11 @@ public class ClickerJuice : MonoBehaviour
     {
         _count++;
 
-        bool isMega = (_count % megaEvery == 0) && CurrentHeatState != HeatState.Cold;
+        bool isMega = (_count % config.MegaEvery == 0) && CurrentHeatState != HeatState.Cold;
 
         float heatGain = isMega
-            ? heatPerClick * megaHeatMultiplier
-            : heatPerClick;
+            ? config.HeatPerClick * config.MegaHeatMultiplier
+            : config.HeatPerClick;
         _heat = Mathf.Clamp01(_heat + heatGain);
 
         RollNumber(_count);
@@ -149,7 +111,7 @@ public class ClickerJuice : MonoBehaviour
         var clip = popClips[Random.Range(0, popClips.Length)];
         if (clip == null) return;
 
-        popSource.pitch = Mathf.Lerp(pitchMin, pitchMax, _heat);
+        popSource.pitch = Mathf.Lerp(config.PitchMin, config.PitchMax, _heat);
         popSource.PlayOneShot(clip);
     }
 
@@ -163,8 +125,8 @@ public class ClickerJuice : MonoBehaviour
     private enum HeatState { Cold, Warm, Hot }
 
     private HeatState CurrentHeatState =>
-        _heat >= heatHotThreshold  ? HeatState.Hot  :
-        _heat >= heatWarmThreshold ? HeatState.Warm :
+        _heat >= config.HeatHotThreshold  ? HeatState.Hot  :
+        _heat >= config.HeatWarmThreshold ? HeatState.Warm :
                                      HeatState.Cold;
 
     private void PlayPunch()
@@ -174,10 +136,10 @@ public class ClickerJuice : MonoBehaviour
 
         float boost = 1f + Mathf.Clamp01(_heat * 0.5f);
         _rect.DOPunchScale(
-            Vector3.one * punchStrength * boost,
-            punchDuration / boost,
-            punchVibrato,
-            punchElasticity
+            Vector3.one * config.PunchStrength * boost,
+            config.PunchDuration / boost,
+            config.PunchVibrato,
+            config.PunchElasticity
         ).SetUpdate(true).OnComplete(() => _rect.localScale = _baseScale);
     }
 
@@ -189,7 +151,7 @@ public class ClickerJuice : MonoBehaviour
 
         _megaFlashing = true;
         _colorTween?.Kill();
-        _colorTween = _label.DOColor(colorMega, 0.05f)
+        _colorTween = _label.DOColor(config.ColorMega, 0.05f)
             .SetUpdate(true)
             .OnComplete(() =>
             {
@@ -198,8 +160,8 @@ public class ClickerJuice : MonoBehaviour
             });
 
         Sequence s = DOTween.Sequence().SetUpdate(true);
-        s.Join(_rect.DOPunchScale(Vector3.one * megaStrength, megaDuration, 8, 0.5f));
-        s.Join(_rect.DOPunchRotation(Vector3.forward * megaRotation, megaDuration, 8, 0.5f));
+        s.Join(_rect.DOPunchScale(Vector3.one * config.MegaStrength, config.MegaDuration, 8, 0.5f));
+        s.Join(_rect.DOPunchRotation(Vector3.forward * config.MegaRotation, config.MegaDuration, 8, 0.5f));
         s.OnComplete(() =>
         {
             _rect.localScale    = _baseScale;
@@ -228,9 +190,9 @@ public class ClickerJuice : MonoBehaviour
     {
         Color target = CurrentHeatState switch
         {
-            HeatState.Hot  => colorHot,
-            HeatState.Warm => colorWarm,
-            _              => colorCold,
+            HeatState.Hot  => config.ColorHot,
+            HeatState.Warm => config.ColorWarm,
+            _              => config.ColorCold,
         };
 
         _colorTween?.Kill();

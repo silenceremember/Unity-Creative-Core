@@ -11,37 +11,7 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movement")]
-    [Tooltip("Max walk speed (m/s)")]
-    [SerializeField] private float moveSpeed = 4f;
-
-    [Tooltip("Time to reach max speed")]
-    [Range(0.05f, 0.5f)]
-    [SerializeField] private float acceleration = 0.12f;
-
-    [Tooltip("Time to stop")]
-    [Range(0.05f, 0.5f)]
-    [SerializeField] private float deceleration = 0.08f;
-
-    [Tooltip("Gravity force")]
-    [SerializeField] private float gravity = -18f;
-
-    [Tooltip("Max fall speed (m/s)")]
-    [SerializeField] private float maxFallSpeed = 10f;
-
-    [Header("Look")]
-    [Tooltip("Mouse sensitivity")]
-    [Range(0.5f, 5f)]
-    [SerializeField] private float mouseSensitivity = 1.8f;
-
-    [Tooltip("Min/max vertical look angle")]
-    [SerializeField] private float pitchMin = -75f;
-    [SerializeField] private float pitchMax = 75f;
-
-    [Header("Camera Wall Clip Prevention")]
-    [Tooltip("Sphere radius for camera collision check")]
-    [Range(0.01f, 0.3f)]
-    [SerializeField] private float cameraCollisionRadius = 0.1f;
+    [SerializeField] private PlayerConfig config;
 
     [Tooltip("Camera offset from player pivot in normal state")]
     [SerializeField] private Vector3 cameraBaseLocalOffset = new Vector3(0f, 0.7f, 0f);
@@ -132,14 +102,14 @@ public class PlayerController : MonoBehaviour
     {
         if (Mouse.current == null) return;
 
-        Vector2 delta = Mouse.current.delta.ReadValue() * (mouseSensitivity * 0.08f);
+        Vector2 delta = Mouse.current.delta.ReadValue() * (config.MouseSensitivity * 0.08f);
 
         transform.Rotate(Vector3.up, delta.x, Space.World);
 
         if (_cameraTransform != null)
         {
             _cameraPitch -= delta.y;
-            _cameraPitch = Mathf.Clamp(_cameraPitch, pitchMin, pitchMax);
+            _cameraPitch = Mathf.Clamp(_cameraPitch, config.PitchMin, config.PitchMax);
             _cameraTransform.localEulerAngles = new Vector3(_cameraPitch, 0f, 0f);
         }
     }
@@ -155,7 +125,7 @@ public class PlayerController : MonoBehaviour
         Vector3 wishDir = transform.right * h + transform.forward * v;
         wishDir = Vector3.ClampMagnitude(wishDir, 1f);
 
-        Vector3 targetVelocity = wishDir * moveSpeed;
+        Vector3 targetVelocity = wishDir * config.MoveSpeed;
 
         if (_lockXZ)
         {
@@ -164,7 +134,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            float smoothTime = wishDir.sqrMagnitude > 0.01f ? acceleration : deceleration;
+            float smoothTime = wishDir.sqrMagnitude > 0.01f ? config.Acceleration : config.Deceleration;
             _currentVelocityXZ = Vector3.SmoothDamp(
                 _currentVelocityXZ, targetVelocity, ref _smoothDampVelocity, smoothTime);
         }
@@ -172,8 +142,8 @@ public class PlayerController : MonoBehaviour
         if (_cc.isGrounded && _verticalVelocity < 0f)
             _verticalVelocity = -4f;
 
-        _verticalVelocity += gravity * Time.deltaTime;
-        _verticalVelocity = Mathf.Max(_verticalVelocity, -maxFallSpeed);
+        _verticalVelocity += config.Gravity * Time.deltaTime;
+        _verticalVelocity = Mathf.Max(_verticalVelocity, -config.MaxFallSpeed);
 
         Vector3 move = _currentVelocityXZ;
         move.y = _verticalVelocity;
@@ -193,12 +163,12 @@ public class PlayerController : MonoBehaviour
         Vector3 lookDir = _cameraTransform.forward;
         float checkDist = 0.15f;
 
-        if (Physics.SphereCast(origin, cameraCollisionRadius,
+        if (Physics.SphereCast(origin, config.CameraCollisionRadius,
                                lookDir, out RaycastHit hit,
                                checkDist, _wallMask,
                                QueryTriggerInteraction.Ignore))
         {
-            float pushBack = checkDist - hit.distance + cameraCollisionRadius;
+            float pushBack = checkDist - hit.distance + config.CameraCollisionRadius;
             desiredPos = origin - lookDir * pushBack;
         }
 

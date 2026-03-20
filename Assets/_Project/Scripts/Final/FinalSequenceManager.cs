@@ -22,12 +22,12 @@ public class FinalSequenceManager : MonoBehaviour
     [Header("GameState")]
     [SerializeField] private GameStateChannel gameStateChannel;
 
+    [Header("Config")]
+    [SerializeField] private FinalConfig config;
+
     [Header("HDRI Fade (Trigger 1)")]
     [Tooltip("Skybox material (HDRI)")]
     [SerializeField] private Material hdriMaterial;
-
-    [Tooltip("HDRI fade duration in seconds")]
-    [SerializeField] private float hdriDarkDuration = 4f;
 
     [Tooltip("Exposure property name in the material")]
     [SerializeField] private string hdriExposureProperty = "_Exposure";
@@ -39,31 +39,21 @@ public class FinalSequenceManager : MonoBehaviour
     [Tooltip("Camera destination point")]
     [SerializeField] private Transform cameraEndAnchor;
 
-    [Tooltip("Camera travel duration (sec)")]
-    [SerializeField] private float cameraTravelDuration = 2.5f;
-
     [SerializeField] private AnimationCurve cameraCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
 
     [Tooltip("Camera far point — pull-back at the end")]
     [SerializeField] private Transform cameraFarAnchor;
-
-    [Tooltip("Pull-back duration (sec)")]
-    [SerializeField] private float cameraFarDuration = 4f;
 
     [Header("Narrator")]
     [SerializeField] private NarratorChannel narratorChannel;
     [SerializeField] private DialogueSequence seqFinalPart1;
     [SerializeField] private DialogueSequence seqFinalPart2;
 
-    [Tooltip("Delay before starting final dialogue (sec)")]
-    [SerializeField] private float narratorDelayAfterCamera = 0.5f;
+    [Header("Channels")]
+    [SerializeField] private IntChannel finalTriggerChannel;
 
     [Header("ESC Hint")]
     [SerializeField] private GameObject escHintUI;
-
-    [Header("Quit")]
-    [Tooltip("Delay after part 2 ends before quitting (sec)")]
-    [SerializeField] private float quitDelay = 1.5f;
 
     private bool     _trigger1Done  = false;
     private bool     _trigger2Done  = false;
@@ -83,12 +73,16 @@ public class FinalSequenceManager : MonoBehaviour
     {
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
+        if (finalTriggerChannel != null)
+            finalTriggerChannel.OnRaised += OnFinalTrigger;
     }
 
     void OnDisable()
     {
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
+        if (finalTriggerChannel != null)
+            finalTriggerChannel.OnRaised -= OnFinalTrigger;
     }
 
     void Update()
@@ -133,10 +127,10 @@ public class FinalSequenceManager : MonoBehaviour
         float elapsed  = 0f;
         float startExp = _hdriClone.GetFloat(hdriExposureProperty);
 
-        while (elapsed < hdriDarkDuration)
+        while (elapsed < config.HdriDarkDuration)
         {
             elapsed += Time.deltaTime;
-            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / hdriDarkDuration));
+            float t = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / config.HdriDarkDuration));
             _hdriClone.SetFloat(hdriExposureProperty, Mathf.Lerp(startExp, 0f, t));
             await UniTask.Yield(PlayerLoopTiming.Update, ct);
         }
@@ -150,7 +144,7 @@ public class FinalSequenceManager : MonoBehaviour
         await MoveCameraToAnchor(ct);
 
         await UniTask.Delay(
-            (int)(narratorDelayAfterCamera * 1000f),
+            (int)(config.NarratorDelayAfterCamera * 1000f),
             cancellationToken: ct);
 
         if (seqFinalPart1 != null)
@@ -186,7 +180,7 @@ public class FinalSequenceManager : MonoBehaviour
         if (mainCamera == null || cameraEndAnchor == null) return;
 
         mainCamera.transform.SetParent(null, worldPositionStays: true);
-        await MoveCameraToTarget(cameraEndAnchor, cameraTravelDuration, ct);
+        await MoveCameraToTarget(cameraEndAnchor, config.CameraTravelDuration, ct);
     }
 
     private void OnNarratorCompleted(DialogueSequence completed)
@@ -196,7 +190,7 @@ public class FinalSequenceManager : MonoBehaviour
             _escEnabled = true;
             if (escHintUI != null) escHintUI.SetActive(true);
             if (cameraFarAnchor != null)
-                MoveCameraToTarget(cameraFarAnchor, cameraFarDuration, this.GetCancellationTokenOnDestroy()).Forget();
+                MoveCameraToTarget(cameraFarAnchor, config.CameraFarDuration, this.GetCancellationTokenOnDestroy()).Forget();
             return;
         }
 
@@ -249,7 +243,7 @@ public class FinalSequenceManager : MonoBehaviour
 
     private async UniTask QuitSequence(CancellationToken ct)
     {
-        await UniTask.Delay((int)(quitDelay * 1000f), cancellationToken: ct);
+        await UniTask.Delay((int)(config.QuitDelay * 1000f), cancellationToken: ct);
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;

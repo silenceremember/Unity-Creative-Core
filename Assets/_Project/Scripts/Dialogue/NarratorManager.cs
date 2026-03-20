@@ -14,6 +14,7 @@ public class NarratorManager : MonoBehaviour
 {
     [Header("SO Channel")]
     [SerializeField] private NarratorChannel channel;
+    [SerializeField] private BoolVariable narratorPlayingVar;
 
     [Header("UI")]
     [SerializeField] private GameObject subtitleRoot;
@@ -118,6 +119,7 @@ public class NarratorManager : MonoBehaviour
         _currentSequence = sequence;
 
         _cts = new CancellationTokenSource();
+        if (narratorPlayingVar != null) narratorPlayingVar.Value = true;
         PlaySequence(sequence, _cts.Token).Forget();
     }
 
@@ -130,6 +132,8 @@ public class NarratorManager : MonoBehaviour
             _cts = null;
         }
         _currentSequence = null;
+
+        if (narratorPlayingVar != null) narratorPlayingVar.Value = false;
 
         if (lineText != null) lineText.text = "";
         if (subtitleRoot != null) subtitleRoot.SetActive(false);
@@ -171,6 +175,7 @@ public class NarratorManager : MonoBehaviour
                 _cts?.Dispose();
                 _cts = null;
                 _currentSequence = null;
+                if (narratorPlayingVar != null) narratorPlayingVar.Value = false;
                 channel?.NotifyCompleted(sequence);
 
                 if (_savedSequence != null)

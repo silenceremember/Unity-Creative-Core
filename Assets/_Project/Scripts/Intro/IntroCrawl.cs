@@ -22,24 +22,11 @@ public class IntroCrawl : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Transform crawlAnchor;
 
-    [Header("Scroll")]
-    [Tooltip("Scroll speed (pixels/sec)")]
-    [SerializeField] private float scrollSpeed = 60f;
-
-    [Tooltip("Multiplier when holding mouse")]
-    [SerializeField] private float holdMultiplier = 3f;
-
-    [Tooltip("Starting Y position of text")]
-    [SerializeField] private float startY = -800f;
-
-    [Tooltip("Ending Y position of text")]
-    [SerializeField] private float endY = 3000f;
+    [Header("Config")]
+    [SerializeField] private CrawlConfig config;
 
     [Header("Skip Icon")]
     [SerializeField] private Image skipIcon;
-
-    [Tooltip("Blink speed (cycles/sec)")]
-    [SerializeField] private float blinkSpeed = 1.5f;
 
     [Header("Audio")]
     [SerializeField] private AudioSource crawlMusic;
@@ -49,7 +36,10 @@ public class IntroCrawl : MonoBehaviour
     [SerializeField] private GameObject crawlRoot;
 
     [Header("Visual Novel")]
-    [SerializeField] private VisualNovelManager visualNovelManager;
+    [SerializeField] private VoidChannel novelStartChannel;
+
+    [Header("Channels")]
+    [SerializeField] private VoidChannel startCrawlChannel;
 
     /// <summary>Hides the crawl root. Called by external systems instead of direct crawlRoot access.</summary>
     public void HideCrawl()
@@ -69,6 +59,18 @@ public class IntroCrawl : MonoBehaviour
     {
 
         if (crawlRoot != null) crawlRoot.SetActive(false);
+    }
+
+    void OnEnable()
+    {
+        if (startCrawlChannel != null)
+            startCrawlChannel.OnRaised += Play;
+    }
+
+    void OnDisable()
+    {
+        if (startCrawlChannel != null)
+            startCrawlChannel.OnRaised -= Play;
     }
 
     void OnDestroy()
@@ -112,17 +114,17 @@ public class IntroCrawl : MonoBehaviour
             }
 
             Vector2 pos = textTransform.anchoredPosition;
-            pos.y = startY;
+            pos.y = config.StartY;
             textTransform.anchoredPosition = pos;
 
-            while (textTransform.anchoredPosition.y < endY)
+            while (textTransform.anchoredPosition.y < config.EndY)
             {
                 ct.ThrowIfCancellationRequested();
 
                 var mouse = Mouse.current;
                 _isHolding = mouse != null && mouse.leftButton.isPressed;
 
-                float speed = _isHolding ? scrollSpeed * holdMultiplier : scrollSpeed;
+                float speed = _isHolding ? config.ScrollSpeed * config.HoldMultiplier : config.ScrollSpeed;
 
                 if (crawlMusic != null)
                     crawlMusic.pitch = _isHolding ? 2f : 1f;
@@ -146,9 +148,7 @@ public class IntroCrawl : MonoBehaviour
         }
 
         gameStateChannel?.Raise(GameState.VisualNovel);
-
-        if (visualNovelManager != null)
-            visualNovelManager.StartNovel();
+        novelStartChannel?.Raise();
     }
 
     private async UniTask BlinkIconAsync(CancellationToken ct)
@@ -168,7 +168,7 @@ public class IntroCrawl : MonoBehaviour
                 }
                 else
                 {
-                    float t = Mathf.PingPong(Time.time * blinkSpeed, 1f);
+                    float t = Mathf.PingPong(Time.time * config.BlinkSpeed, 1f);
                     skipIcon.color = Color.Lerp(baseColor, holdColor, t);
                 }
 

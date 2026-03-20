@@ -12,29 +12,11 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class FootstepSystem : MonoBehaviour
 {
-    [Header("Step Settings")]
-    [Tooltip("Distance between steps in meters (Half-Life 2 uses ~2.0)")]
-    [SerializeField] private float stepDistance = 2.1f;
-
-    [Tooltip("Min horizontal speed to trigger a step")]
-    [SerializeField] private float minMoveSpeed = 0.5f;
+    [SerializeField] private PlayerConfig config;
 
     [Header("Audio Clips")]
     [Tooltip("Footstep clips (step-001 … step-018)")]
     [SerializeField] private AudioClip[] footstepClips;
-
-    [Header("Pitch Variation")]
-    [Tooltip("Pitch lower bound")]
-    [Range(0.5f, 1.5f)]
-    [SerializeField] private float pitchMin = 0.9f;
-
-    [Tooltip("Pitch upper bound")]
-    [Range(0.5f, 1.5f)]
-    [SerializeField] private float pitchMax = 1.1f;
-
-    [Header("Volume")]
-    [Range(0f, 1f)]
-    [SerializeField] private float footstepVolume = 0.5f;
 
     private CharacterController _cc;
     private AudioSource _audioSource;
@@ -62,15 +44,15 @@ public class FootstepSystem : MonoBehaviour
         Vector3 vel = _cc.velocity;
         float horizontalSpeed = new Vector3(vel.x, 0f, vel.z).magnitude;
 
-        if (horizontalSpeed < minMoveSpeed)
+        if (horizontalSpeed < config.MinMoveSpeed)
             return;
 
         _distanceTravelled += horizontalSpeed * Time.deltaTime;
 
-        if (_distanceTravelled >= stepDistance)
+        if (_distanceTravelled >= config.StepDistance)
         {
             PlayFootstep();
-            _distanceTravelled -= stepDistance;
+            _distanceTravelled -= config.StepDistance;
         }
     }
 
@@ -79,8 +61,8 @@ public class FootstepSystem : MonoBehaviour
         AudioClip clip = GetRandomClip();
         if (clip == null) return;
 
-        _audioSource.pitch = Random.Range(pitchMin, pitchMax);
-        _audioSource.PlayOneShot(clip, footstepVolume);
+        _audioSource.pitch = Random.Range(config.FootstepPitchMin, config.FootstepPitchMax);
+        _audioSource.PlayOneShot(clip, config.FootstepVolume);
     }
 
     /// <summary>

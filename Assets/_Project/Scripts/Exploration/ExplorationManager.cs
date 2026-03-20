@@ -49,17 +49,19 @@ public class ExplorationManager : MonoBehaviour
     [SerializeField] private ClickerJuice clickerJuice;
 
     [Header("Dependencies")]
-    [SerializeField] private NarratorManager narratorManager;
-    [SerializeField] private PaintingQuestManager paintingQuestManager;
     [SerializeField] private BoolVariable isPausedVariable;
+    [SerializeField] private BoolVariable triggerDialoguePlayingVar;
+
+    [Header("Quest Channel")]
+    [SerializeField] private VoidChannel questStartChannel;
+    [SerializeField] private IntChannel areaTriggerChannel;
 
     private bool             _explorationActive;
     private bool             _triggerAUsed;
     private bool             _triggerBUsed;
 
     /// <summary>True only while a trigger A or B dialogue is actively playing.</summary>
-    public bool TriggerDialoguePlaying => _triggerDialoguePlaying;
-    private bool _triggerDialoguePlaying;
+    public bool TriggerDialoguePlaying => triggerDialoguePlayingVar != null && triggerDialoguePlayingVar.Value;
 
     private CancellationTokenSource _timerCts;
     private bool             _clickerActive;
@@ -77,6 +79,8 @@ public class ExplorationManager : MonoBehaviour
             gameStateChannel.OnStateChanged += OnStateChanged;
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
+        if (areaTriggerChannel != null)
+            areaTriggerChannel.OnRaised += OnAreaTrigger;
     }
 
     void OnDisable()
@@ -85,6 +89,8 @@ public class ExplorationManager : MonoBehaviour
             gameStateChannel.OnStateChanged -= OnStateChanged;
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
+        if (areaTriggerChannel != null)
+            areaTriggerChannel.OnRaised -= OnAreaTrigger;
     }
 
     void OnDestroy()
@@ -146,10 +152,8 @@ public class ExplorationManager : MonoBehaviour
 
     private void PlayTrigger(DialogueSequence triggerSeq)
     {
-        int currentPriority = narratorManager?.CurrentSequence?.Priority ?? 0;
-        bool willPlay = narratorManager == null || !narratorManager.IsPlaying || triggerSeq.Priority >= currentPriority;
-        if (willPlay)
-            _triggerDialoguePlaying = true;
+        if (triggerDialoguePlayingVar != null)
+            triggerDialoguePlayingVar.Value = true;
 
         narratorChannel?.Raise(triggerSeq);
     }
@@ -160,7 +164,8 @@ public class ExplorationManager : MonoBehaviour
 
         if (isTrigger)
         {
-            _triggerDialoguePlaying = false;
+            if (triggerDialoguePlayingVar != null)
+                triggerDialoguePlayingVar.Value = false;
             return;
         }
 
@@ -191,8 +196,7 @@ public class ExplorationManager : MonoBehaviour
 
         gameStateChannel?.Raise(GameState.Quest);
 
-        if (paintingQuestManager != null)
-            paintingQuestManager.StartQuest();
+        questStartChannel?.Raise();
     }
 
     private async UniTask DecorativeCountdownAsync(CancellationToken ct)

@@ -34,10 +34,8 @@ public class PaintingQuestManager : MonoBehaviour
     [Tooltip("Correct code")]
     [SerializeField] private string correctCode = "1234";
 
-    [Header("Animation")]
-    [SerializeField] private float shakeDuration   = 0.5f;
-    [SerializeField] private float shakeMagnitude  = 12f;
-    [SerializeField] private float pulseDuration   = 0.4f;
+    [Header("Config")]
+    [SerializeField] private QuestConfig config;
 
     [Header("Colors")]
     [SerializeField] private Color colorDefault  = Color.yellow;
@@ -55,9 +53,12 @@ public class PaintingQuestManager : MonoBehaviour
     [SerializeField] private AudioSource questAudioSource;
 
     [Header("Dependencies")]
-    [SerializeField] private XPLevelManager xpLevelManager;
-    [SerializeField] private ExplorationManager explorationManager;
+    [SerializeField] private IntChannel addXPChannel;
     [SerializeField] private BoolVariable isPausedVariable;
+    [SerializeField] private BoolVariable triggerDialoguePlayingVar;
+
+    [Header("Channels")]
+    [SerializeField] private VoidChannel questStartChannel;
 
     [Header("Narrator")]
     [SerializeField] private NarratorChannel narratorChannel;
@@ -82,13 +83,8 @@ public class PaintingQuestManager : MonoBehaviour
     private PaintingInteractable _nearPainting;
 
     private float _eBlockedUntil  = 0f;
-    private const float ESpamCooldown = 0.5f;
 
     [Header("Reject E-Prompt Animation")]
-    [Tooltip("E-prompt shake amplitude (pixels)")]
-    [SerializeField] private float ePromptShakeMagnitude = 10f;
-    [Tooltip("Shake duration (sec)")]
-    [SerializeField] private float ePromptShakeDuration  = 0.35f;
     private bool _ePromptShaking = false;
 
     private CancellationTokenSource _questCts;
@@ -104,12 +100,16 @@ public class PaintingQuestManager : MonoBehaviour
     {
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
+        if (questStartChannel != null)
+            questStartChannel.OnRaised += StartQuest;
     }
 
     void OnDisable()
     {
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
+        if (questStartChannel != null)
+            questStartChannel.OnRaised -= StartQuest;
     }
 
     void OnDestroy()
@@ -120,9 +120,9 @@ public class PaintingQuestManager : MonoBehaviour
 
     private void OnNarratorCompleted(DialogueSequence completed)
     {
-        if (completed == seqPostQuest && xpLevelManager != null)
+        if (completed == seqPostQuest)
         {
-            xpLevelManager.AddXP(xpLevelManager.questRewardXP);
+            addXPChannel?.Raise(config.QuestRewardXP);
         }
     }
 
@@ -172,8 +172,8 @@ public class PaintingQuestManager : MonoBehaviour
         if (kb != null && kb.eKey.wasPressedThisFrame)
         {
             if (isPausedVariable != null && isPausedVariable.Value) return;
-            bool triggerDialogue = explorationManager != null &&
-                                   explorationManager.TriggerDialoguePlaying;
+            bool triggerDialogue = triggerDialoguePlayingVar != null &&
+                                   triggerDialoguePlayingVar.Value;
             if (triggerDialogue)
             {
                 if (!_ePromptShaking && ePrompt != null)
@@ -184,7 +184,7 @@ public class PaintingQuestManager : MonoBehaviour
                 }
                 return;
             }
-            _eBlockedUntil = Time.unscaledTime + ESpamCooldown;
+            _eBlockedUntil = Time.unscaledTime + config.ESpamCooldown;
             InteractPainting(_nearPainting);
         }
     }
@@ -293,7 +293,7 @@ public class PaintingQuestManager : MonoBehaviour
                 if (seqPostQuest != null)
                     narratorChannel?.Raise(seqPostQuest);
                 else
-                    xpLevelManager?.AddXP(xpLevelManager != null ? xpLevelManager.questRewardXP : 1000);
+                    addXPChannel?.Raise(config.QuestRewardXP);
             }
             else
             {
@@ -370,14 +370,14 @@ public class PaintingQuestManager : MonoBehaviour
     {
         if (pictureLabels.Length == 0 || pictureLabels[0] == null) return;
         var groupRT = pictureLabels[0].transform.parent as RectTransform;
-        await UIAnimationHelper.ShakeAsync(groupRT, shakeDuration, shakeMagnitude, ct);
+        await UIAnimationHelper.ShakeAsync(groupRT, config.ShakeDuration, config.ShakeMagnitude, ct);
     }
 
     private async UniTask PulseLabelsAsync(CancellationToken ct)
     {
         if (pictureLabels.Length == 0 || pictureLabels[0] == null) return;
         var groupRT = pictureLabels[0].transform.parent as RectTransform;
-        await UIAnimationHelper.PulseAsync(groupRT, pulseDuration, 0.12f, ct);
+        await UIAnimationHelper.PulseAsync(groupRT, config.PulseDuration, 0.12f, ct);
     }
 
     private async UniTask ShakeEPromptAsync(CancellationToken ct)
@@ -392,7 +392,7 @@ public class PaintingQuestManager : MonoBehaviour
         Color originalColor = txt != null ? txt.color : Color.white;
         if (txt != null) txt.color = Color.red;
 
-        await UIAnimationHelper.ShakeAsync(rt, ePromptShakeDuration, ePromptShakeMagnitude, ct);
+        await UIAnimationHelper.ShakeAsync(rt, config.EPromptShakeDuration, config.EPromptShakeMagnitude, ct);
 
         if (txt != null) txt.color = originalColor;
         _ePromptShaking = false;

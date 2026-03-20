@@ -22,8 +22,8 @@ public class PaintingInteractable : MonoBehaviour
     [Tooltip("Target localEuler angles when painting is aligned")]
     [SerializeField] private Vector3 correctLocalEuler;
 
-    [Header("Animation")]
-    [SerializeField] private float snapDuration = 0.5f;
+    [Header("Config")]
+    [SerializeField] private QuestConfig config;
 
     [Header("Dependencies")]
     [SerializeField] private PaintingQuestManager paintingQuestManager;
@@ -95,7 +95,7 @@ public class PaintingInteractable : MonoBehaviour
         PlaySlideSound();
 
         if (paintingTransform != null)
-            SnapToAsync(Quaternion.Euler(correctLocalEuler), snapDuration, destroyCancellationToken).Forget();
+            SnapToAsync(Quaternion.Euler(correctLocalEuler), config.SnapDuration, destroyCancellationToken).Forget();
     }
 
     /// <summary>Returns painting to initial (tilted) position and resets the flag.</summary>

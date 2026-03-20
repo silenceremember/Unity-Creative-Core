@@ -24,6 +24,7 @@ public class VisualNovelManager : MonoBehaviour
     [SerializeField] private NovelChannel novelChannel;
     [SerializeField] private GameStateChannel gameStateChannel;
     [SerializeField] private NarratorChannel narratorChannel;
+    [SerializeField] private VoidChannel novelStartChannel;
 
     [Header("Novel Canvas")]
     [SerializeField] private GameObject novelCanvasRoot;
@@ -38,23 +39,13 @@ public class VisualNovelManager : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Transform[] cameraAnchors = new Transform[4];
 
-    [Tooltip("Camera blend duration (sec)")]
-    [Range(0.2f, 2f)]
-    [SerializeField] private float blendDuration = 0.8f;
+    [Header("Config")]
+    [SerializeField] private NovelConfig config;
 
     [SerializeField] private AnimationCurve blendCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     [Header("Audio")]
-    [Tooltip("AudioMixerGroup for novel voices")]
     [SerializeField] private AudioMixerGroup mixerGroup;
-
-    [Header("Typewriter")]
-    [Range(20, 200)]
-    [SerializeField] private float charsPerSecond = 60f;
-
-    [Tooltip("Sound plays every N non-whitespace characters")]
-    [Range(1, 10)]
-    [SerializeField] private int blipEveryNChars = 4;
 
     private int _lineIndex = -1;
     private bool _waitingForNarrator = false;
@@ -81,6 +72,8 @@ public class VisualNovelManager : MonoBehaviour
             narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
         if (novelChannel != null)
             novelChannel.OnNovelAbortRequested += AbortNovel;
+        if (novelStartChannel != null)
+            novelStartChannel.OnRaised += StartNovel;
     }
 
     void OnDisable()
@@ -89,6 +82,8 @@ public class VisualNovelManager : MonoBehaviour
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
         if (novelChannel != null)
             novelChannel.OnNovelAbortRequested -= AbortNovel;
+        if (novelStartChannel != null)
+            novelStartChannel.OnRaised -= StartNovel;
     }
 
     /// <summary>Force-hide the novel UI (for debug skip).</summary>
@@ -281,11 +276,11 @@ public class VisualNovelManager : MonoBehaviour
         Quaternion startRot = mainCamera.transform.rotation;
         float elapsed = 0f;
 
-        while (elapsed < blendDuration)
+        while (elapsed < config.BlendDuration)
         {
             ct.ThrowIfCancellationRequested();
             elapsed += Time.deltaTime;
-            float t = blendCurve.Evaluate(Mathf.Clamp01(elapsed / blendDuration));
+            float t = blendCurve.Evaluate(Mathf.Clamp01(elapsed / config.BlendDuration));
             mainCamera.transform.position = Vector3.Lerp(startPos, anchor.position, t);
             mainCamera.transform.rotation = Quaternion.Lerp(startRot, anchor.rotation, t);
             await UniTask.Yield(PlayerLoopTiming.Update, ct);
@@ -300,10 +295,10 @@ public class VisualNovelManager : MonoBehaviour
     {
         if (lineText == null) return;
 
-        int delay        = Mathf.RoundToInt(1000f / charsPerSecond);
+        int delay        = Mathf.RoundToInt(1000f / config.CharsPerSecond);
         int blipInterval = novelChannel != null
             ? novelChannel.GetBlipInterval(speaker)
-            : blipEveryNChars;
+            : config.BlipEveryNChars;
 
         foreach (char c in text)
         {

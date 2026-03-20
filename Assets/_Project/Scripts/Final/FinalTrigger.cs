@@ -13,8 +13,8 @@ public class FinalTrigger : MonoBehaviour
     [Tooltip("0 = First trigger (HDRI fade), 1 = Second trigger (finale)")]
     [SerializeField] private int triggerId;
 
-    [Header("Dependencies")]
-    [SerializeField] private FinalSequenceManager finalSequenceManager;
+    [Header("Channel")]
+    [SerializeField] private IntChannel finalTriggerChannel;
 
     private void Awake()
     {
@@ -27,8 +27,7 @@ public class FinalTrigger : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        if (finalSequenceManager != null)
-            finalSequenceManager.OnFinalTrigger(triggerId);
+        finalTriggerChannel?.Raise(triggerId);
 
         gameObject.SetActive(false);
     }

@@ -17,9 +17,10 @@ public class XPLevelManager : MonoBehaviour
     [Header("Data")]
     [Tooltip("XP for each level. [0] = Lv.0→1, [1] = Lv.1→2 etc.")]
     [SerializeField] private int[] xpRequirements = { 500, 750, 1000 };
-    [Tooltip("Fill animation duration (sec)")]
-    [SerializeField] private float fillDuration = 4f;
     [SerializeField] private AnimationCurve fillCurve = AnimationCurve.EaseInOut(0f, 0f, 1f, 1f);
+
+    [Header("Config")]
+    [SerializeField] private QuestConfig config;
 
     [Header("UI — LevelBar")]
     [SerializeField] private GameObject      levelBar;
@@ -34,25 +35,13 @@ public class XPLevelManager : MonoBehaviour
     [Header("UI — Reward")]
     [SerializeField] private TextMeshProUGUI rewardLabel;
     [SerializeField] private string          rewardFormat = "REWARD: {0} XP";
-    [Tooltip("Displayed reward (XP)")]
-    [SerializeField] private int             _questRewardXP = 1000;
-    public int questRewardXP => _questRewardXP;
 
     [Header("Style")]
-    [SerializeField] private Color flashColor      = new Color(1f, 0.85f, 0f, 1f);
-    [SerializeField] private float levelLabelPunch = 1.35f;
-    [SerializeField] private float punchDuration   = 0.35f;
+    [SerializeField] private Color flashColor = new Color(1f, 0.85f, 0f, 1f);
 
     [Header("XP Sounds")]
-    [Tooltip("Short tick sound — plays while XP fills")]
     [SerializeField] private AudioClip xpTickSound;
     [SerializeField] private AudioSource xpTickAudioSource;
-    [Tooltip("Interval between tick sounds (sec)")]
-    [SerializeField] private float tickInterval = 0.08f;
-    [Tooltip("Pitch at bar start")]
-    [SerializeField] private float tickPitchMin = 0.8f;
-    [Tooltip("Pitch at bar end")]
-    [SerializeField] private float tickPitchMax = 1.4f;
 
     [Header("Level Up Sound")]
     [SerializeField] private AudioClip levelUpSound;
@@ -80,18 +69,15 @@ public class XPLevelManager : MonoBehaviour
     [SerializeField] private GameObject doorObject;
 
     [Header("Dependencies")]
-    [SerializeField] private ExplorationManager explorationManager;
-    [SerializeField] private NarratorManager narratorManager;
     [SerializeField] private BoolVariable isPausedVariable;
+    [SerializeField] private BoolVariable triggerDialoguePlayingVar;
+    [SerializeField] private BoolVariable narratorPlayingVar;
 
     [Header("Channels")]
     [SerializeField] private VoidChannel abilityChosenChannel;
+    [SerializeField] private IntChannel addXPChannel;
 
-    [Header("Reject Animation")]
-    [Tooltip("X prompt shake amplitude (pixels)")]
-    [SerializeField] private float promptShakeMagnitude = 10f;
-    [Tooltip("X prompt shake duration (sec)")]
-    [SerializeField] private float promptShakeDuration  = 0.35f;
+
 
     private int   _level         = 0;
     private int   _currentXP     = 0;
@@ -101,7 +87,7 @@ public class XPLevelManager : MonoBehaviour
     private bool  _xpBarNarrPlayed = false;
     private bool  _promptShaking   = false;
 
-    private const float InputSpamCooldown = 0.5f;
+
     private float _xBlockedUntil = 0f;
 
     private CancellationTokenSource _animCts;
@@ -123,7 +109,7 @@ public class XPLevelManager : MonoBehaviour
         if (rewardLabel != null)
         {
             rewardLabel.gameObject.SetActive(true);
-            rewardLabel.text = string.Format(rewardFormat, _questRewardXP);
+            rewardLabel.text = string.Format(rewardFormat, config.QuestRewardXP);
         }
 
         RefreshUI();
@@ -136,12 +122,16 @@ public class XPLevelManager : MonoBehaviour
     {
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
+        if (addXPChannel != null)
+            addXPChannel.OnRaised += AddXP;
     }
 
     void OnDisable()
     {
         if (narratorChannel != null)
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
+        if (addXPChannel != null)
+            addXPChannel.OnRaised -= AddXP;
     }
 
     void OnDestroy()
@@ -180,10 +170,10 @@ public class XPLevelManager : MonoBehaviour
         if (!_promptVisible || kb == null || !kb.xKey.wasPressedThisFrame) return;
         if (isPausedVariable != null && isPausedVariable.Value) return;
 
-        bool triggerDialogue = explorationManager != null &&
-                               explorationManager.TriggerDialoguePlaying;
-        bool narratorActive  = narratorManager != null &&
-                               narratorManager.IsPlaying;
+        bool triggerDialogue = triggerDialoguePlayingVar != null &&
+                               triggerDialoguePlayingVar.Value;
+        bool narratorActive  = narratorPlayingVar != null &&
+                               narratorPlayingVar.Value;
 
         if (triggerDialogue || narratorActive)
         {
@@ -192,7 +182,7 @@ public class XPLevelManager : MonoBehaviour
         }
         else
         {
-            _xBlockedUntil = Time.unscaledTime + InputSpamCooldown;
+            _xBlockedUntil = Time.unscaledTime + config.InputSpamCooldown;
             OnUpgradeKeyPressed();
         }
     }
@@ -233,7 +223,7 @@ public class XPLevelManager : MonoBehaviour
             rewardEnd = Mathf.Max(rewardEnd, 0);
 
             float startXP = _currentXP;
-            float dur     = fillDuration * Mathf.Max((float)fill / cap, 0.2f);
+            float dur     = config.FillDuration * Mathf.Max((float)fill / cap, 0.2f);
             float elapsed = 0f;
             float nextTick = 0f;
 
@@ -251,9 +241,9 @@ public class XPLevelManager : MonoBehaviour
 
                 if (elapsed >= nextTick && xpTickSound != null && xpTickAudioSource != null)
                 {
-                    xpTickAudioSource.pitch = Mathf.Lerp(tickPitchMin, tickPitchMax, curve);
+                    xpTickAudioSource.pitch = Mathf.Lerp(config.TickPitchMin, config.TickPitchMax, curve);
                     xpTickAudioSource.PlayOneShot(xpTickSound);
-                    nextTick = elapsed + tickInterval;
+                    nextTick = elapsed + config.TickInterval;
                 }
 
                 if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
@@ -333,11 +323,11 @@ public class XPLevelManager : MonoBehaviour
         float elapsed = 0f;
         try
         {
-            while (elapsed < punchDuration)
+            while (elapsed < config.LevelPunchDuration)
             {
                 elapsed += Time.deltaTime;
-                float t = elapsed / punchDuration;
-                float scale = 1f + (levelLabelPunch - 1f) * Mathf.Sin(t * Mathf.PI);
+                float t = elapsed / config.LevelPunchDuration;
+                float scale = 1f + (config.LevelLabelPunch - 1f) * Mathf.Sin(t * Mathf.PI);
                 if (rt    != null) rt.localScale = Vector3.one * scale;
                 if (canvg != null) canvg.SetAlpha(Mathf.PingPong(t * 6f, 1f));
                 await UniTask.Yield(PlayerLoopTiming.Update, ct);
@@ -430,7 +420,7 @@ public class XPLevelManager : MonoBehaviour
         Color originalColor = txt != null ? txt.color : Color.white;
         if (txt != null) txt.color = Color.red;
 
-        await UIAnimationHelper.ShakeAsync(rt, promptShakeDuration, promptShakeMagnitude, ct);
+        await UIAnimationHelper.ShakeAsync(rt, config.PromptShakeDuration, config.PromptShakeMagnitude, ct);
 
         if (txt != null) txt.color = originalColor;
         _promptShaking = false;

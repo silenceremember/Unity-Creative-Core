@@ -1828,9 +1828,7 @@ MonoBehaviour:
   - {fileID: 960201089}
   ePrompt: {fileID: 1971993269}
   correctCode: 1234
-  shakeDuration: 0.5
-  shakeMagnitude: 12
-  pulseDuration: 0.4
+  config: {fileID: 11400000, guid: 5f8098172b4e553449ceb779ddc23a69, type: 2}
   colorDefault: {r: 1, g: 1, b: 1, a: 1}
   colorDone: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   colorAccept: {r: 0, g: 1, b: 0, a: 1}
@@ -1839,10 +1837,11 @@ MonoBehaviour:
   acceptSound: {fileID: 8300000, guid: c2729a6729423a844aa23aaa42d13bfb, type: 3}
   rejectSound: {fileID: 8300000, guid: 1464521a0a13ce44f8ab29dd60ab687a, type: 3}
   questAudioSource: {fileID: 162033292}
-  xpLevelManager: {fileID: 0}
-  explorationManager: {fileID: 0}
-  isPausedVariable: {fileID: 0}
-  narratorChannel: {fileID: 0}
+  addXPChannel: {fileID: 11400000, guid: c18ad7a46b7cdbb4082b9be15a0db903, type: 2}
+  isPausedVariable: {fileID: 11400000, guid: 3b86b037f2d4e6c47907ac8508655ff7, type: 2}
+  triggerDialoguePlayingVar: {fileID: 11400000, guid: 4479933d885e40a4d80cde460d95d375, type: 2}
+  questStartChannel: {fileID: 11400000, guid: 8161970993a2ad342b60111701dc439c, type: 2}
+  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
   paintingClickDialogues:
   - {fileID: 11400000, guid: 6d81f1451a2b11e42a91c53b5a6a5553, type: 2}
   - {fileID: 11400000, guid: 5dac05609e73f854ab9d35d49f098386, type: 2}
@@ -1855,8 +1854,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a0851e4d0a1cbd2489ca30e67aedfdda, type: 2}
   - {fileID: 11400000, guid: 7639c3d97d6148044ae83d40291cac46, type: 2}
   seqPostQuest: {fileID: 11400000, guid: 7297832cf12085247a5cd8ce1d6f1274, type: 2}
-  ePromptShakeMagnitude: 10
-  ePromptShakeDuration: 0.35
 --- !u!82 &162033292
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5367,7 +5364,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::XPLevelManager
   xpRequirements: f4010000ee020000e8030000
-  fillDuration: 0.6
   fillCurve:
     serializedVersion: 2
     m_Curve:
@@ -5392,6 +5388,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  config: {fileID: 11400000, guid: 5f8098172b4e553449ceb779ddc23a69, type: 2}
   levelBar: {fileID: 321859515}
   levelLabel: {fileID: 169809794}
   xpLabel: {fileID: 1982753618}
@@ -5401,32 +5398,25 @@ MonoBehaviour:
   upgradeCanvas: {fileID: 308662747}
   rewardLabel: {fileID: 1962149606}
   rewardFormat: "\u041D\u0410\u0413\u0420\u0410\u0414\u0410: {0} XP"
-  _questRewardXP: 1000
   flashColor: {r: 1, g: 1, b: 0, a: 1}
-  levelLabelPunch: 1.35
-  punchDuration: 0.35
   xpTickSound: {fileID: 8300000, guid: ae28dc20d3c14094e8452991aafee73d, type: 3}
   xpTickAudioSource: {fileID: 433521137}
-  tickInterval: 0.08
-  tickPitchMin: 0.8
-  tickPitchMax: 1.4
   levelUpSound: {fileID: 8300000, guid: 4b51cbec72c16d0499dfecc43da8726b, type: 3}
   levelUpAudioSource: {fileID: 433521138}
   promptSound: {fileID: 8300000, guid: 017f1980c41a5f2498c1cf54e6ede1fe, type: 3}
   promptAudioSource: {fileID: 433521138}
-  narratorChannel: {fileID: 0}
+  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
   seqXPBarActivated: {fileID: 11400000, guid: 69fcc969602ba1944b9cda484b16d8bb, type: 2}
   seqLevelUp: {fileID: 11400000, guid: 6c235e945d86a5f45927bcc86b6f73a9, type: 2}
   seqAbilityChosen: {fileID: 11400000, guid: 5778e444f1b2d0645926312db3ff288f, type: 2}
   seqAbilityTried: {fileID: 11400000, guid: 725d69e38fe1e0e49833b9fe58238cc2, type: 2}
   seqDoorUnlocked: {fileID: 11400000, guid: d8987695e569f9b45b2972d8ce9b77c9, type: 2}
   doorObject: {fileID: 1705948113}
-  explorationManager: {fileID: 0}
-  narratorManager: {fileID: 0}
-  isPausedVariable: {fileID: 0}
-  abilityChosenChannel: {fileID: 0}
-  promptShakeMagnitude: 10
-  promptShakeDuration: 0.35
+  isPausedVariable: {fileID: 11400000, guid: 3b86b037f2d4e6c47907ac8508655ff7, type: 2}
+  triggerDialoguePlayingVar: {fileID: 11400000, guid: 4479933d885e40a4d80cde460d95d375, type: 2}
+  narratorPlayingVar: {fileID: 11400000, guid: c0ec6b110cfddd348b906172447fe79a, type: 2}
+  abilityChosenChannel: {fileID: 11400000, guid: 9d9fd03581de21240906b40c68ff90e6, type: 2}
+  addXPChannel: {fileID: 11400000, guid: c18ad7a46b7cdbb4082b9be15a0db903, type: 2}
 --- !u!82 &433521137
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5689,7 +5679,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarratorTrigger
   triggerId: 1
-  explorationManager: {fileID: 0}
+  areaTriggerChannel: {fileID: 0}
 --- !u!54 &449558343
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5974,7 +5964,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsPlayButton
   channel: {fileID: 0}
-  introCrawl: {fileID: 0}
+  startCrawlChannel: {fileID: 0}
   sequence: {fileID: 0}
   buttonsToBlock:
   - {fileID: 1106675928}
@@ -6503,7 +6493,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FinalTrigger
   triggerId: 0
-  finalSequenceManager: {fileID: 0}
+  finalTriggerChannel: {fileID: 0}
 --- !u!1 &486995627
 GameObject:
   m_ObjectHideFlags: 0
@@ -6776,7 +6766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarratorTrigger
   triggerId: 0
-  explorationManager: {fileID: 0}
+  areaTriggerChannel: {fileID: 0}
 --- !u!54 &517283715
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11649,8 +11639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37ecfc56cf3ea6e4abb9e676f3c16938, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FootstepSystem
-  stepDistance: 1.5
-  minMoveSpeed: 0.25
+  config: {fileID: 11400000, guid: d89414268e9b31746978b51e08cfe25d, type: 2}
   footstepClips:
   - {fileID: 8300000, guid: 7e9625597d838c846b0f27a5f3a3602f, type: 3}
   - {fileID: 8300000, guid: 973bb181c013a564c9e09d9c55a97e49, type: 3}
@@ -11670,9 +11659,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 74ad999233684ff4193712ade6150c46, type: 3}
   - {fileID: 8300000, guid: 87994f411823fc249b5ab3462f7f1b6b, type: 3}
   - {fileID: 8300000, guid: 269accc8a19e84a4082261bbd3fc4266, type: 3}
-  pitchMin: 1
-  pitchMax: 1
-  footstepVolume: 1
 --- !u!82 &931120244
 AudioSource:
   m_ObjectHideFlags: 0
@@ -14800,7 +14786,7 @@ MonoBehaviour:
   paintingTransform: {fileID: 909120463}
   codeDigit: 1
   correctLocalEuler: {x: 0, y: 0, z: 0}
-  snapDuration: 0.5
+  config: {fileID: 0}
   paintingQuestManager: {fileID: 0}
   slideClips:
   - {fileID: 8300000, guid: 70e4883b34c76ae4c89d9f0befdd97c6, type: 3}
@@ -15360,7 +15346,7 @@ MonoBehaviour:
   paintingTransform: {fileID: 909120462}
   codeDigit: 1
   correctLocalEuler: {x: 0, y: 0, z: 0}
-  snapDuration: 0.5
+  config: {fileID: 0}
   paintingQuestManager: {fileID: 0}
   slideClips:
   - {fileID: 8300000, guid: 70e4883b34c76ae4c89d9f0befdd97c6, type: 3}
@@ -16168,7 +16154,7 @@ MonoBehaviour:
   paintingTransform: {fileID: 909120461}
   codeDigit: 1
   correctLocalEuler: {x: 0, y: 0, z: 0}
-  snapDuration: 0.5
+  config: {fileID: 0}
   paintingQuestManager: {fileID: 0}
   slideClips:
   - {fileID: 8300000, guid: 70e4883b34c76ae4c89d9f0befdd97c6, type: 3}
@@ -19843,23 +19829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e4c93110793cce4cbc453433f9db3fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ClickerJuice
-  punchStrength: 0.1
-  punchDuration: 0.28
-  punchVibrato: 6
-  punchElasticity: 0.6
-  megaEvery: 25
-  megaStrength: 0.4
-  megaDuration: 0.5
-  megaRotation: 12
-  colorCold: {r: 0.7, g: 0.9, b: 1, a: 1}
-  colorWarm: {r: 1, g: 0.85, b: 0.3, a: 1}
-  colorHot: {r: 1, g: 0.35, b: 0.1, a: 1}
-  colorMega: {r: 1, g: 0, b: 0, a: 1}
-  heatPerClick: 0.05
-  megaHeatMultiplier: 1
-  heatDecayRate: 0.25
-  heatWarmThreshold: 0.35
-  heatHotThreshold: 0.7
+  config: {fileID: 0}
   popClips:
   - {fileID: 8300000, guid: 08079cbf081749e4d89d9c1151468d1e, type: 3}
   - {fileID: 8300000, guid: 8c10925adcfb4814e894b1663452a1f1, type: 3}
@@ -19877,8 +19847,6 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 7b6ed958545092945af1ea1e5eaaf8e9, type: 3}
   - {fileID: 8300000, guid: 0af06c84af52fdd46a2bcf78c8c42e58, type: 3}
   popSource: {fileID: 1673319467}
-  pitchMin: 0.85
-  pitchMax: 1.35
   coinClip: {fileID: 8300000, guid: 46e86c6169dd2f446a9c41dd0cd0d436, type: 3}
   coinSource: {fileID: 1673319466}
 --- !u!82 &1673319466
@@ -21659,11 +21627,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebugSkip
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
-  introCrawl: {fileID: 0}
-  visualNovelManager: {fileID: 0}
-  narratorManager: {fileID: 0}
-  paintingQuestManager: {fileID: 0}
-  explorationManager: {fileID: 0}
+  introCrawl: {fileID: 1966073263}
+  visualNovelManager: {fileID: 1867730425}
+  narratorManager: {fileID: 1867730424}
+  paintingQuestManager: {fileID: 162033291}
+  explorationManager: {fileID: 1867730427}
 --- !u!1001 &1794525460
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -43384,6 +43352,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarratorManager
   channel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  narratorPlayingVar: {fileID: 11400000, guid: c0ec6b110cfddd348b906172447fe79a, type: 2}
   subtitleRoot: {fileID: 2030323107}
   speakerText: {fileID: 946027355}
   lineText: {fileID: 946027355}
@@ -43414,6 +43383,7 @@ MonoBehaviour:
   novelChannel: {fileID: 11400000, guid: fa8aa48318cf0c341b02f252ec3d3536, type: 2}
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
   narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  novelStartChannel: {fileID: 0}
   novelCanvasRoot: {fileID: 6633761}
   speakerText: {fileID: 1646499321}
   lineText: {fileID: 248115550}
@@ -43425,7 +43395,7 @@ MonoBehaviour:
   - {fileID: 1269085756}
   - {fileID: 179337704}
   - {fileID: 1681199828}
-  blendDuration: 0.8
+  config: {fileID: 0}
   blendCurve:
     serializedVersion: 2
     m_Curve:
@@ -43451,8 +43421,6 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   mixerGroup: {fileID: 24300002, guid: 8bd64c2065c534d499948a463e09f4a6, type: 2}
-  charsPerSecond: 45
-  blipEveryNChars: 4
 --- !u!114 &1867730426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43493,9 +43461,10 @@ MonoBehaviour:
   explorationCanvas: {fileID: 1822483910}
   clickerLabel: {fileID: 1673319463}
   clickerJuice: {fileID: 1673319465}
-  narratorManager: {fileID: 0}
-  paintingQuestManager: {fileID: 0}
   isPausedVariable: {fileID: 0}
+  triggerDialoguePlayingVar: {fileID: 0}
+  questStartChannel: {fileID: 0}
+  areaTriggerChannel: {fileID: 0}
 --- !u!114 &1867730430
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43511,12 +43480,11 @@ MonoBehaviour:
   playerTransform: {fileID: 931120238}
   mainCamera: {fileID: 330585545}
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
+  config: {fileID: 0}
   hdriMaterial: {fileID: 2100000, guid: f238b68790978744997eef52bc09b181, type: 2}
-  hdriDarkDuration: 10
   hdriExposureProperty: _Exposure
   seqTrigger0: {fileID: 11400000, guid: 7bee698880f3d4d46a7fff9097f92a91, type: 2}
   cameraEndAnchor: {fileID: 486995628}
-  cameraTravelDuration: 2.5
   cameraCurve:
     serializedVersion: 2
     m_Curve:
@@ -43542,13 +43510,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   cameraFarAnchor: {fileID: 409424224}
-  cameraFarDuration: 1000
   narratorChannel: {fileID: 0}
   seqFinalPart1: {fileID: 11400000, guid: 824817aae0e1b4a46a6b1486255e952a, type: 2}
   seqFinalPart2: {fileID: 11400000, guid: 623ca46f9ee9f274785a880ceb7f8899, type: 2}
-  narratorDelayAfterCamera: 0.5
+  finalTriggerChannel: {fileID: 0}
   escHintUI: {fileID: 405646806}
-  quitDelay: 1.5
 --- !u!114 &1867730431
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43571,7 +43537,7 @@ MonoBehaviour:
   novelChannel: {fileID: 11400000, guid: fa8aa48318cf0c341b02f252ec3d3536, type: 2}
   playerController: {fileID: 0}
   levelUpCanvas: {fileID: 0}
-  isPausedVariable: {fileID: 0}
+  isPausedVariable: {fileID: 11400000, guid: 3b86b037f2d4e6c47907ac8508655ff7, type: 2}
 --- !u!82 &1867730432
 AudioSource:
   m_ObjectHideFlags: 0
@@ -44786,7 +44752,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1966073260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44870,16 +44836,13 @@ MonoBehaviour:
   textTransform: {fileID: 680659153}
   mainCamera: {fileID: 330585545}
   crawlAnchor: {fileID: 1516090855}
-  scrollSpeed: 40
-  holdMultiplier: 6
-  startY: -800
-  endY: 3800
+  config: {fileID: 0}
   skipIcon: {fileID: 1638022965}
-  blinkSpeed: 1.5
   crawlMusic: {fileID: 576977098}
   sceneAudio: {fileID: 1498482686}
   crawlRoot: {fileID: 1966073258}
-  visualNovelManager: {fileID: 0}
+  novelStartChannel: {fileID: 0}
+  startCrawlChannel: {fileID: 0}
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
 --- !u!1 &1971993269
 GameObject:
@@ -45113,7 +45076,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FinalTrigger
   triggerId: 1
-  finalSequenceManager: {fileID: 0}
+  finalTriggerChannel: {fileID: 0}
 --- !u!43 &1975904988
 Mesh:
   m_ObjectHideFlags: 0
@@ -61304,7 +61267,7 @@ MonoBehaviour:
   paintingTransform: {fileID: 909120460}
   codeDigit: 1
   correctLocalEuler: {x: 0, y: 0, z: 0}
-  snapDuration: 0.5
+  config: {fileID: 0}
   paintingQuestManager: {fileID: 0}
   slideClips:
   - {fileID: 8300000, guid: 70e4883b34c76ae4c89d9f0befdd97c6, type: 3}
