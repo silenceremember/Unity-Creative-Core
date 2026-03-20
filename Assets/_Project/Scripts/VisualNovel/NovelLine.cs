@@ -14,14 +14,14 @@ public class NovelLine
     public Speaker Speaker => speaker;
 
     [TextArea(2, 5)]
-    [Tooltip("Line text (RU)")]
-    [SerializeField] private string text;
-    public string Text => text;
-
-    [TextArea(2, 5)]
     [Tooltip("Line text (EN)")]
     [SerializeField] private string textEn;
     public string TextEn => textEn;
+
+    [TextArea(2, 5)]
+    [Tooltip("Line text (RU)")]
+    [SerializeField] private string text;
+    public string Text => text;
 
     /// <summary>Returns text for the given language. Falls back to RU if EN is empty.</summary>
     public string GetText(GameLanguage lang)

@@ -21,74 +21,74 @@ public static class QuestDialogueBuilder
 
         // Click dialogues
         var clicks = new[] {
-            CreateSeq(folder, "QuestClick_0", 5, null, L("Интересный выбор.", 2f)),
-            CreateSeq(folder, "QuestClick_1", 5, null, L("Любопытно...", 2f)),
-            CreateSeq(folder, "QuestClick_2", 5, null, L("Хм. Уверены?", 2f)),
-            CreateSeq(folder, "QuestClick_3", 5, null, L("Ну что ж...", 2f)),
-            CreateSeq(folder, "QuestClick_4", 5, null, L("Смелое решение.", 2f)),
-            CreateSeq(folder, "QuestClick_5", 5, null, L("Допустим.", 2f)),
-            CreateSeq(folder, "QuestClick_6", 5, null, L("Неожиданно.", 2f))
+            CreateSeq(folder, "QuestClick_0", 5, null, L("", "Интересный выбор.", 2f)),
+            CreateSeq(folder, "QuestClick_1", 5, null, L("", "Любопытно...", 2f)),
+            CreateSeq(folder, "QuestClick_2", 5, null, L("", "Хм. Уверены?", 2f)),
+            CreateSeq(folder, "QuestClick_3", 5, null, L("", "Ну что ж...", 2f)),
+            CreateSeq(folder, "QuestClick_4", 5, null, L("", "Смелое решение.", 2f)),
+            CreateSeq(folder, "QuestClick_5", 5, null, L("", "Допустим.", 2f)),
+            CreateSeq(folder, "QuestClick_6", 5, null, L("", "Неожиданно.", 2f))
         };
 
         // Reject dialogues — escalating hints
         var rejects = new[] {
             CreateSeq(folder, "QuestReject_0", 5, null,
-                L("Похоже, картины надо нажать в правильном порядке.", 3.5f)),
+                L("", "Похоже, картины надо нажать в правильном порядке.", 3.5f)),
             CreateSeq(folder, "QuestReject_1", 5, null,
-                L("Похоже, картины нужно нажать в порядке 1-2-3-4.", 3.5f)),
+                L("", "Похоже, картины нужно нажать в порядке 1-2-3-4.", 3.5f)),
             CreateSeq(folder, "QuestReject_2", 5, null,
-                L("Порядок 1-2-3-4. Просто. Нажмите. Их. По. Очереди.", 3.5f)),
+                L("", "Порядок 1-2-3-4. Просто. Нажмите. Их. По. Очереди.", 3.5f)),
             CreateSeq(folder, "QuestReject_3", 5, null,
-                L("Я начинаю сомневаться в Ваших когнитивных способностях.", 3.5f)),
+                L("", "Я начинаю сомневаться в Ваших когнитивных способностях.", 3.5f)),
             CreateSeq(folder, "QuestReject_4", 5, null,
-                L("Господи.", 1.5f),
-                L("Вы ведь даже не стараетесь, да?", 2.5f),
-                L("Ладно. Я выполню эту сложнейшую задачу за Вас.", 3.5f),
-                L("Смотрите и учитесь.", 2.0f))
+                L("", "Господи.", 1.5f),
+                L("", "Вы ведь даже не стараетесь, да?", 2.5f),
+                L("", "Ладно. Я выполню эту сложнейшую задачу за Вас.", 3.5f),
+                L("", "Смотрите и учитесь.", 2.0f))
         };
 
         // Post-quest chain (transitions managed by XPLevelManager)
         var postQuest = CreateSeq(folder, "QuestDone_PostQuest", 5, null,
-            L("Ну вот. Вы выполнили квест.", 2.5f), 
-            L("Правда, картины от этого сломались окончательно...", 3.5f),
-            L("Зато Вы заработали 1000 очков опыта!", 3.0f), 
-            L("Которые Вам абсолютно некуда тратить.", 3.0f),
-            L("Погодите-ка, я кое-что нашёл в интерфейсе.", 3.5f), 
-            L("Здесь есть полоска опыта. Какая классика.", 3.5f));
+            L("", "Ну вот. Вы выполнили квест.", 2.5f),
+            L("", "Правда, картины от этого сломались окончательно...", 3.5f),
+            L("", "Зато Вы заработали 1000 очков опыта!", 3.0f),
+            L("", "Которые Вам абсолютно некуда тратить.", 3.0f),
+            L("", "Погодите-ка, я кое-что нашёл в интерфейсе.", 3.5f),
+            L("", "Здесь есть полоска опыта. Какая классика.", 3.5f));
 
         var xpBar = CreateSeq(folder, "QuestDone_XPBar", 5, null,
-            L("Сейчас мы торжественно начислим Вам опыт...", 3.5f));
+            L("", "Сейчас мы торжественно начислим Вам опыт...", 3.5f));
 
         var levelUp = CreateSeq(folder, "QuestDone_LevelUp", 5, null,
-            L("Ого! Вы повысили уровень!", 2.0f), 
-            L("Давайте посмотрим...", 1.5f),
-            L("Какие же потрясающие навыки предложит Разработчик?", 3.5f));
+            L("", "Ого! Вы повысили уровень!", 2.0f),
+            L("", "Давайте посмотрим...", 1.5f),
+            L("", "Какие же потрясающие навыки предложит Разработчик?", 3.5f));
 
         var abilityChosen = CreateSeq(folder, "QuestDone_AbilityChosen", 5, null,
-            L("Боже, какой богатый выбор...", 2.5f), 
-            L("Новые способности. Прямо как в настоящих RPG.", 3.5f),
-            L("Делайте свой выбор максимально вдумчиво.", 3.5f),
-            L("Вы не сможете откатить эти изменения.", 3.0f));
+            L("", "Боже, какой богатый выбор...", 2.5f),
+            L("", "Новые способности. Прямо как в настоящих RPG.", 3.5f),
+            L("", "Делайте свой выбор максимально вдумчиво.", 3.5f),
+            L("", "Вы не сможете откатить эти изменения.", 3.0f));
 
         var doorEpilogue = CreateSeq(folder, "QuestDone_DoorEpilogue", 5, null,
-            L("Смотрите, дверь пропала.", 2.5f), 
-            L("Теперь Вы можете идти.", 2.5f),
-            L("Если спрыгнете вниз, Вы перейдёте дальше.", 3.5f),
-            L("Но я Вас торопить не буду.", 2.5f),
-            L("Можете находиться здесь, сколько захотите...", 3.0f),
-            L("И наслаждаться результатами своих действий.", 3.5f));
+            L("", "Смотрите, дверь пропала.", 2.5f),
+            L("", "Теперь Вы можете идти.", 2.5f),
+            L("", "Если спрыгнете вниз, Вы перейдёте дальше.", 3.5f),
+            L("", "Но я Вас торопить не буду.", 2.5f),
+            L("", "Можете находиться здесь, сколько захотите...", 3.0f),
+            L("", "И наслаждаться результатами своих действий.", 3.5f));
 
         var doorUnlocked = CreateSeq(folder, "QuestDone_DoorUnlocked", 5, doorEpilogue,
-            L("Кстати, Вам открылся переход...", 2.5f), 
-            L("На новый, неизведанный уровень.", 3.0f));
+            L("", "Кстати, Вам открылся переход...", 2.5f),
+            L("", "На новый, неизведанный уровень.", 3.0f));
 
         var abilityTried = CreateSeq(folder, "QuestDone_AbilityTried", 5, doorUnlocked,
-            L("Великолепный выбор!", 2.0f), 
-            L("Хм... Похоже...", 1.5f),
-            L("Разработчик оставил навыки как UI-заглушку.", 3.5f),
-            L("Они ничего не делают. Совсем.", 2.5f),
-            L("Впрочем, иллюзия выбора — это база современного гейм-дизайна.", 4.0f),
-            L("В любом случае поздравляю с повышением уровня.", 3.5f));
+            L("", "Великолепный выбор!", 2.0f),
+            L("", "Хм... Похоже...", 1.5f),
+            L("", "Разработчик оставил навыки как UI-заглушку.", 3.5f),
+            L("", "Они ничего не делают. Совсем.", 2.5f),
+            L("", "Впрочем, иллюзия выбора — это база современного гейм-дизайна.", 4.0f),
+            L("", "В любом случае поздравляю с повышением уровня.", 3.5f));
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
@@ -180,8 +180,8 @@ public static class QuestDialogueBuilder
         for (int i = 0; i < lines.Length; i++)
         {
             var elem = linesProp.GetArrayElementAtIndex(i);
-            elem.FindPropertyRelative("text").stringValue          = lines[i].Text;
             elem.FindPropertyRelative("textEn").stringValue        = lines[i].TextEn ?? "";
+            elem.FindPropertyRelative("text").stringValue          = lines[i].Text;
             elem.FindPropertyRelative("pauseAfter").floatValue     = lines[i].PauseAfter;
             elem.FindPropertyRelative("activateObject").stringValue = lines[i].ActivateObject ?? "";
         }
@@ -191,12 +191,12 @@ public static class QuestDialogueBuilder
         return asset;
     }
 
-    private static DialogueLine L(string text, float pause, string textEn = "", string activateObject = "")
+    private static DialogueLine L(string en, string ru, float pause, string activateObject = "")
     {
         string json = JsonUtility.ToJson(new DialogueLineData
         {
-            text = text,
-            textEn = textEn,
+            textEn = en,
+            text = ru,
             pauseAfter = pause,
             activateObject = activateObject
         });

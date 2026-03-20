@@ -7,8 +7,8 @@ using System;
 [Serializable]
 public struct DialogueLineData
 {
-    public string text;
     public string textEn;
+    public string text;
     public float pauseAfter;
     public string activateObject;
 }

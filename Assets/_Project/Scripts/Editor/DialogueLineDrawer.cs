@@ -23,30 +23,6 @@ public class DialogueLineDrawer : PropertyDrawer
         float lineH = EditorGUIUtility.singleLineHeight;
         float pad  = 2f;
 
-        // Text RU — red background if > max chars
-        string text     = textProp.stringValue ?? "";
-        bool   overflow = text.Length > DialogueSequence.MAX_CHARS;
-
-        if (overflow)
-        {
-            var warningRect = new Rect(position.x, y, w, lineH * 3 + 4);
-            EditorGUI.DrawRect(warningRect, new Color(1f, 0.2f, 0.2f, 0.15f));
-        }
-
-        Rect textRect = new Rect(position.x, y, w, lineH * 3);
-        EditorGUI.PropertyField(textRect, textProp, new GUIContent("Text (RU)"));
-        y += lineH * 3 + pad;
-
-        // Character counter RU
-        string counter = overflow
-            ? $"⚠ {text.Length}/{DialogueSequence.MAX_CHARS} chars — split into multiple Lines!"
-            : $"{text.Length}/{DialogueSequence.MAX_CHARS} chars";
-
-        GUIStyle style = new GUIStyle(EditorStyles.miniLabel);
-        style.normal.textColor = overflow ? new Color(1f, 0.3f, 0.3f) : Color.gray;
-        EditorGUI.LabelField(new Rect(position.x, y, w, lineH), counter, style);
-        y += lineH + pad;
-
         // Text EN
         string textEn    = textEnProp.stringValue ?? "";
         bool   overflowEn = textEn.Length > DialogueSequence.MAX_CHARS;
@@ -69,6 +45,30 @@ public class DialogueLineDrawer : PropertyDrawer
         GUIStyle styleEn = new GUIStyle(EditorStyles.miniLabel);
         styleEn.normal.textColor = overflowEn ? new Color(1f, 0.3f, 0.3f) : Color.gray;
         EditorGUI.LabelField(new Rect(position.x, y, w, lineH), counterEn, styleEn);
+        y += lineH + pad;
+
+        // Text RU — red background if > max chars
+        string text     = textProp.stringValue ?? "";
+        bool   overflow = text.Length > DialogueSequence.MAX_CHARS;
+
+        if (overflow)
+        {
+            var warningRect = new Rect(position.x, y, w, lineH * 3 + 4);
+            EditorGUI.DrawRect(warningRect, new Color(1f, 0.2f, 0.2f, 0.15f));
+        }
+
+        Rect textRect = new Rect(position.x, y, w, lineH * 3);
+        EditorGUI.PropertyField(textRect, textProp, new GUIContent("Text (RU)"));
+        y += lineH * 3 + pad;
+
+        // Character counter RU
+        string counter = overflow
+            ? $"⚠ {text.Length}/{DialogueSequence.MAX_CHARS} chars — split into multiple Lines!"
+            : $"{text.Length}/{DialogueSequence.MAX_CHARS} chars";
+
+        GUIStyle style = new GUIStyle(EditorStyles.miniLabel);
+        style.normal.textColor = overflow ? new Color(1f, 0.3f, 0.3f) : Color.gray;
+        EditorGUI.LabelField(new Rect(position.x, y, w, lineH), counter, style);
         y += lineH + pad;
 
         // PauseAfter

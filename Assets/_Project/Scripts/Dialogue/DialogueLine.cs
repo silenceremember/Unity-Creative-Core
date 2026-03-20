@@ -7,12 +7,12 @@ using UnityEngine;
 public class DialogueLine
 {
     [TextArea(2, 6)]
-    [Tooltip("Line text (RU)")]
-    [SerializeField] private string text;
-
-    [TextArea(2, 6)]
     [Tooltip("Line text (EN)")]
     [SerializeField] private string textEn;
+
+    [TextArea(2, 6)]
+    [Tooltip("Line text (RU)")]
+    [SerializeField] private string text;
 
     [Tooltip("Pause before next line")]
     [SerializeField] private float pauseAfter = 0.3f;
