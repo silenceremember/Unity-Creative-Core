@@ -7,7 +7,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "Dialogue/Sequence", fileName = "Seq_New")]
 public class DialogueSequence : ScriptableObject
 {
-    public const int MAX_CHARS = 54;
+    public const int MAX_CHARS = 58;
 
     [Header("Реплики")]
     public DialogueLine[] lines;

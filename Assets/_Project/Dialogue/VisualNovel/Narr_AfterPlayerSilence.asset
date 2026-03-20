@@ -13,16 +13,15 @@ MonoBehaviour:
   m_Name: Narr_AfterPlayerSilence
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
-    text: "\u0418\u0433\u0440\u043E\u043A \u043C\u043E\u043B\u0447\u0438\u0442."
+  - text: "\u0418\u0433\u0440\u043E\u043A \u043C\u043E\u043B\u0447\u0438\u0442."
     duration: 0
     pauseAfter: 0.8
-    audioClip: {fileID: 0}
-  - speaker: "\u0420\u0430\u0441\u0441\u043A\u0430\u0437\u0447\u0438\u043A"
-    text: "\u0414\u0436\u043E\u043D \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442
-      \u0441 \u0442\u0435\u043C \u0447\u0442\u043E \u0435\u0441\u0442\u044C."
+    activateObject: 
+  - text: "\u0414\u0436\u043E\u043D \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442
+      \u0441 \u0442\u0435\u043C, \u0447\u0442\u043E \u0435\u0441\u0442\u044C."
     duration: 0
     pauseAfter: 1.5
-    audioClip: {fileID: 0}
+    activateObject: 
   nextSequence: {fileID: 0}
   priority: 0
+  restoreInterrupted: 0

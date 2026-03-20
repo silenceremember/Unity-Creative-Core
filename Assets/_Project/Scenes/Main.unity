@@ -881,10 +881,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd05300ea4b71034780d8b7f293e6e15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BrokenPlayButton
-  channel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
-  brokenSequence: {fileID: 11400000, guid: c54ca6182e3d2db4bbb4ca42d0fbb89d, type: 2}
+  channel: {fileID: 0}
+  brokenSequence: {fileID: 0}
   repeatSequences:
-  - {fileID: 11400000, guid: 607cd8dcad14b524dace33720d8c5d2c, type: 2}
+  - {fileID: 0}
   settingsButton: {fileID: 1258788235}
 --- !u!114 &87551610
 MonoBehaviour:
@@ -1839,7 +1839,7 @@ MonoBehaviour:
   acceptSound: {fileID: 8300000, guid: c2729a6729423a844aa23aaa42d13bfb, type: 3}
   rejectSound: {fileID: 8300000, guid: 1464521a0a13ce44f8ab29dd60ab687a, type: 3}
   questAudioSource: {fileID: 162033292}
-  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  narratorChannel: {fileID: 0}
   paintingClickDialogues:
   - {fileID: 11400000, guid: 6d81f1451a2b11e42a91c53b5a6a5553, type: 2}
   - {fileID: 11400000, guid: 5dac05609e73f854ab9d35d49f098386, type: 2}
@@ -2518,12 +2518,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NarratorChannel, Assembly-CSharp
         m_MethodName: Raise
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: d7fb405c26548ee4d9e9cd21ea59bb20, type: 2}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: DialogueSequence, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -5409,7 +5409,7 @@ MonoBehaviour:
   levelUpAudioSource: {fileID: 433521138}
   promptSound: {fileID: 8300000, guid: 017f1980c41a5f2498c1cf54e6ede1fe, type: 3}
   promptAudioSource: {fileID: 433521138}
-  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  narratorChannel: {fileID: 0}
   seqXPBarActivated: {fileID: 11400000, guid: 69fcc969602ba1944b9cda484b16d8bb, type: 2}
   seqLevelUp: {fileID: 11400000, guid: 6c235e945d86a5f45927bcc86b6f73a9, type: 2}
   seqAbilityChosen: {fileID: 11400000, guid: 5778e444f1b2d0645926312db3ff288f, type: 2}
@@ -5963,8 +5963,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac79ead2d0b8725419e56a51bdadd06d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsPlayButton
-  channel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
-  sequence: {fileID: 11400000, guid: 4733a842aa9365a4e8c20bf8f53ea1e5, type: 2}
+  channel: {fileID: 0}
+  sequence: {fileID: 0}
   buttonsToBlock:
   - {fileID: 1106675928}
   - {fileID: 546158161}
@@ -7286,12 +7286,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: NarratorChannel, Assembly-CSharp
         m_MethodName: Raise
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 11400000, guid: 92d880eadc41c474186392baf80783e9, type: 2}
+          m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: DialogueSequence, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -20473,8 +20473,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanguageButton
   channel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
-  seqToEnglish: {fileID: 11400000, guid: 6ab3c138f24573243a6f0b9b1d9bc933, type: 2}
-  seqToRussian: {fileID: 11400000, guid: 78e5c5756d7773f4aa5ca6cff9c909a9, type: 2}
+  seqToEnglish: {fileID: 0}
+  seqToRussian: {fileID: 0}
 --- !u!114 &1701505390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -43362,7 +43362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10ba8a39e733cf642bd59b436a94b5ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NarratorManager
-  channel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  channel: {fileID: 0}
   subtitleRoot: {fileID: 2030323107}
   speakerText: {fileID: 946027355}
   lineText: {fileID: 946027355}
@@ -43392,7 +43392,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::VisualNovelManager
   novelChannel: {fileID: 11400000, guid: fa8aa48318cf0c341b02f252ec3d3536, type: 2}
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
-  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  narratorChannel: {fileID: 0}
   novelCanvasRoot: {fileID: 6633761}
   speakerText: {fileID: 1646499321}
   lineText: {fileID: 248115550}
@@ -43461,7 +43461,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ExplorationManager
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
-  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  narratorChannel: {fileID: 0}
   seqAmbientStart: {fileID: 11400000, guid: 1d1c259b8e6546141b6da63536788e54, type: 2}
   seqTimerTrigger: {fileID: 11400000, guid: 9578f731e3f91a0449ff138c27d1c14d, type: 2}
   seqClickerTrigger: {fileID: 11400000, guid: d1d9169568ba12949956bc40ed8841b5, type: 2}
@@ -43519,7 +43519,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   cameraFarAnchor: {fileID: 409424224}
   cameraFarDuration: 1000
-  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  narratorChannel: {fileID: 0}
   seqFinalPart1: {fileID: 11400000, guid: 824817aae0e1b4a46a6b1486255e952a, type: 2}
   seqFinalPart2: {fileID: 11400000, guid: 623ca46f9ee9f274785a880ceb7f8899, type: 2}
   narratorDelayAfterCamera: 0.5

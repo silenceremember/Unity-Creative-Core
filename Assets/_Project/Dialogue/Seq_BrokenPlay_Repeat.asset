@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: Seq_BrokenPlay_Repeat
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - speaker: Narrator
-    text: "\u0412\u0441\u0451 \u0435\u0449\u0451 \u043D\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442."
+  - text: "\u0412\u0441\u0451 \u0435\u0449\u0451 \u043D\u0435 \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442."
     duration: 0
     pauseAfter: 1
-    audioClip: {fileID: 0}
+    activateObject: 
   nextSequence: {fileID: 0}
   priority: 0
+  restoreInterrupted: 0
