@@ -29,32 +29,20 @@ public static class DialogueAssetFactory
 
     private static void CreateSeqBrokenPlay()
     {
-        var seq = CreateAsset<DialogueSequence>("Seq_BrokenPlay");
-        seq.priority = 1;
-
-        seq.lines = new DialogueLine[]
-        {
-            new DialogueLine { text = "О. Привет.",                                 pauseAfter = 0.8f },
-            new DialogueLine { text = "Ты нажал Играть.",                          pauseAfter = 1.0f },
-            new DialogueLine { text = "Это не сработает. Игра не закончена.",      pauseAfter = 1.3f },
-            new DialogueLine { text = "И вряд ли будет...",                        pauseAfter = 1.0f },
-            new DialogueLine { text = "Хотя... незавершённость придаёт шарм.",     pauseAfter = 1.0f },
-            new DialogueLine { text = "Наверное.",                                  pauseAfter = 0.8f },
-            new DialogueLine { text = "Попробуй поискать в Настройках.",           pauseAfter = 0.0f },
-        };
-        EditorUtility.SetDirty(seq);
+        CreateSeq("Seq_BrokenPlay", 1,
+            L("О. Привет.",                                 0.8f),
+            L("Ты нажал Играть.",                          1.0f),
+            L("Это не сработает. Игра не закончена.",      1.3f),
+            L("И вряд ли будет...",                        1.0f),
+            L("Хотя... незавершённость придаёт шарм.",     1.0f),
+            L("Наверное.",                                  0.8f),
+            L("Попробуй поискать в Настройках.",           0.0f));
     }
 
     private static void CreateSeqBrokenRepeat()
     {
-        var seq = CreateAsset<DialogueSequence>("Seq_BrokenPlay_Repeat");
-        seq.priority = 0;
-
-        seq.lines = new DialogueLine[]
-        {
-            new DialogueLine { text = "Всё ещё не работает.", pauseAfter = 1.0f },
-        };
-        EditorUtility.SetDirty(seq);
+        CreateSeq("Seq_BrokenPlay_Repeat", 0,
+            L("Всё ещё не работает.", 1.0f));
     }
 
 
@@ -80,73 +68,98 @@ public static class DialogueAssetFactory
 
     private static void CreateSeqTVOn()
     {
-        var seq = CreateAsset<DialogueSequence>("Seq_TVOn");
-        seq.priority = 2;
-        seq.lines = new DialogueLine[]
-        {
-            new DialogueLine { text = "Телевизор включён.",            pauseAfter = 0.8f },
-            new DialogueLine { text = "Программа — атмосферный шум.",  pauseAfter = 1.0f },
-            new DialogueLine { text = "Жильцы скорее всего довольны.", pauseAfter = 0f   },
-        };
-        EditorUtility.SetDirty(seq);
+        CreateSeq("Seq_TVOn", 2,
+            L("Телевизор включён.",            0.8f),
+            L("Программа — атмосферный шум.",  1.0f),
+            L("Жильцы скорее всего довольны.", 0f));
     }
 
     private static void CreateSeqTVOff()
     {
-        var seq = CreateAsset<DialogueSequence>("Seq_TVOff");
-        seq.priority = 2;
-        seq.lines = new DialogueLine[]
-        {
-            new DialogueLine { text = "Телевизор выключен.",            pauseAfter = 0.8f },
-            new DialogueLine { text = "Жильцы чуть менее счастливы.",   pauseAfter = 1.0f },
-            new DialogueLine { text = "Может, и нет.",                  pauseAfter = 0f   },
-        };
-        EditorUtility.SetDirty(seq);
+        CreateSeq("Seq_TVOff", 2,
+            L("Телевизор выключен.",            0.8f),
+            L("Жильцы чуть менее счастливы.",   1.0f),
+            L("Может, и нет.",                  0f));
     }
 
     private static void CreateSeqLangToEnglish()
     {
-        var seq = CreateAsset<DialogueSequence>("Seq_LangToEnglish");
-        seq.priority = 2;
-        seq.lines = new DialogueLine[]
-        {
-            new DialogueLine { text = "Переключаемся.",                 pauseAfter = 0.8f },
-            new DialogueLine { text = "Сейчас я скажу...",              pauseAfter = 1.0f },
-            new DialogueLine { text = "Oh. That actually worked.",      pauseAfter = 1.0f },
-            new DialogueLine { text = "I sound different in English.",  pauseAfter = 1.2f },
-            new DialogueLine { text = "More professional. Less me.",    pauseAfter = 1.0f },
-            new DialogueLine { text = "Anyway.",                        pauseAfter = 0f   },
-        };
-        EditorUtility.SetDirty(seq);
+        CreateSeq("Seq_LangToEnglish", 2,
+            L("Переключаемся.",                 0.8f),
+            L("Сейчас я скажу...",              1.0f),
+            L("Oh. That actually worked.",      1.0f),
+            L("I sound different in English.",  1.2f),
+            L("More professional. Less me.",    1.0f),
+            L("Anyway.",                        0f));
     }
 
     private static void CreateSeqLangToRussian()
     {
-        var seq = CreateAsset<DialogueSequence>("Seq_LangToRussian");
-        seq.priority = 2;
-        seq.lines = new DialogueLine[]
-        {
-            new DialogueLine { text = "Switching language.",            pauseAfter = 0.8f },
-            new DialogueLine { text = "Back to Russian. Here goes.",    pauseAfter = 1.2f },
-            new DialogueLine { text = "О. Это снова я.",               pauseAfter = 1.0f },
-            new DialogueLine { text = "По-русски звучу по-другому.",    pauseAfter = 1.0f },
-            new DialogueLine { text = "Гораздо менее профессионально.", pauseAfter = 1.0f },
-            new DialogueLine { text = "По крайней мере, честно.",       pauseAfter = 0f   },
-        };
-        EditorUtility.SetDirty(seq);
+        CreateSeq("Seq_LangToRussian", 2,
+            L("Switching language.",            0.8f),
+            L("Back to Russian. Here goes.",    1.2f),
+            L("О. Это снова я.",               1.0f),
+            L("По-русски звучу по-другому.",    1.0f),
+            L("Гораздо менее профессионально.", 1.0f),
+            L("По крайней мере, честно.",       0f));
     }
 
     private static void CreateSeqSettingsPlay()
     {
-        var seq = CreateAsset<DialogueSequence>("Seq_SettingsPlay");
-        seq.priority = 3;
-        seq.lines = new DialogueLine[]
+        CreateSeq("Seq_SettingsPlay", 3,
+            L("О, отлично. Ты нашёл ещё одну кнопку.", 1.4f),
+            L("Похоже, она тоже не работает.",         1.0f),
+            L("Разработчик совсем не старался.",       1.0f),
+            L("Ладно. Я запущу нас сам.",              0f));
+    }
+
+    private static void CreateSeq(string assetName, int priority, params DialogueLine[] lines)
+    {
+        string path = $"{FOLDER}/{assetName}.asset";
+        var asset = AssetDatabase.LoadAssetAtPath<DialogueSequence>(path);
+
+        if (asset == null)
         {
-            new DialogueLine { text = "О, отлично. Ты нашёл ещё одну кнопку.", pauseAfter = 1.4f },
-            new DialogueLine { text = "Похоже, она тоже не работает.",         pauseAfter = 1.0f },
-            new DialogueLine { text = "Разработчик совсем не старался.",       pauseAfter = 1.0f },
-            new DialogueLine { text = "Ладно. Я запущу нас сам.",              pauseAfter = 0f   },
-        };
-        EditorUtility.SetDirty(seq);
+            asset = ScriptableObject.CreateInstance<DialogueSequence>();
+            AssetDatabase.CreateAsset(asset, path);
+        }
+
+        var so = new SerializedObject(asset);
+        so.FindProperty("priority").intValue = priority;
+
+        var linesProp = so.FindProperty("lines");
+        linesProp.arraySize = lines.Length;
+        for (int i = 0; i < lines.Length; i++)
+        {
+            var elem = linesProp.GetArrayElementAtIndex(i);
+            elem.FindPropertyRelative("text").stringValue          = lines[i].Text;
+            elem.FindPropertyRelative("pauseAfter").floatValue     = lines[i].PauseAfter;
+            elem.FindPropertyRelative("duration").floatValue       = lines[i].Duration;
+            elem.FindPropertyRelative("activateObject").stringValue = lines[i].ActivateObject ?? "";
+        }
+
+        so.ApplyModifiedProperties();
+        EditorUtility.SetDirty(asset);
+    }
+
+    private static DialogueLine L(string text, float pause)
+    {
+        string json = JsonUtility.ToJson(new DialogueLineData
+        {
+            text = text,
+            pauseAfter = pause,
+            duration = 0f,
+            activateObject = ""
+        });
+        return JsonUtility.FromJson<DialogueLine>(json);
+    }
+
+    [System.Serializable]
+    private struct DialogueLineData
+    {
+        public string text;
+        public float duration;
+        public float pauseAfter;
+        public string activateObject;
     }
 }

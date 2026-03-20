@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float cameraCollisionRadius = 0.1f;
 
     [Tooltip("Camera offset from player pivot in normal state")]
-    [SerializeField] internal Vector3 cameraBaseLocalOffset = new Vector3(0f, 0.7f, 0f);
+    [SerializeField] private Vector3 cameraBaseLocalOffset = new Vector3(0f, 0.7f, 0f);
 
     private CharacterController _cc;
     private Camera _camera;
@@ -65,17 +65,17 @@ public class PlayerController : MonoBehaviour
     /// Gravity and CharacterController remain active — player keeps falling.
     /// </summary>
     [SerializeField, HideInInspector] private bool _lockMovement = false;
-    public bool lockMovement { get => _lockMovement; set => _lockMovement = value; }
+    public bool LockMovement { get => _lockMovement; set => _lockMovement = value; }
 
     /// <summary>
     /// Full X/Z freeze: instantly zeroes horizontal velocity
     /// and prevents it from accumulating. Player falls straight down.
     /// </summary>
     [SerializeField, HideInInspector] private bool _lockXZ = false;
-    public bool lockXZ { get => _lockXZ; set => _lockXZ = value; }
+    public bool LockXZ { get => _lockXZ; set => _lockXZ = value; }
 
     /// <summary>Enable strict vertical-fall mode.</summary>
-    public void LockXZ()
+    public void SetLockXZ()
     {
         _lockMovement       = true;
         _lockXZ             = true;
@@ -207,4 +207,7 @@ public class PlayerController : MonoBehaviour
 
         _cameraTransform.position = desiredPos;
     }
+
+    /// <summary>Set camera offset from player pivot (used by GameplaySetup).</summary>
+    public void SetCameraBaseOffset(Vector3 offset) => cameraBaseLocalOffset = offset;
 }

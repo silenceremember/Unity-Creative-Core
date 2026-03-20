@@ -144,8 +144,8 @@ public class ExplorationManager : MonoBehaviour
 
     private void PlayTrigger(DialogueSequence triggerSeq)
     {
-        int currentPriority = NarratorManager.Instance?.CurrentSequence?.priority ?? 0;
-        bool willPlay = !NarratorManager.Instance.IsPlaying || triggerSeq.priority >= currentPriority;
+        int currentPriority = NarratorManager.Instance?.CurrentSequence?.Priority ?? 0;
+        bool willPlay = !NarratorManager.Instance.IsPlaying || triggerSeq.Priority >= currentPriority;
         if (willPlay)
             _triggerDialoguePlaying = true;
 
@@ -177,7 +177,7 @@ public class ExplorationManager : MonoBehaviour
             ShowClicker();
         }
 
-        if (completed.nextSequence == null)
+        if (completed.NextSequence == null)
             OnAmbientChainCompleted();
     }
 

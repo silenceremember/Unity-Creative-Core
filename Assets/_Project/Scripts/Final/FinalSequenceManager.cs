@@ -114,7 +114,7 @@ public class FinalSequenceManager : MonoBehaviour
             if (playerTransform != null)
             {
                 var pc = playerTransform.GetComponent<PlayerController>();
-                if (pc != null) pc.LockXZ();
+                if (pc != null) pc.SetLockXZ();
             }
 
             FadeHDRI(this.GetCancellationTokenOnDestroy()).Forget();

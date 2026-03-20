@@ -154,34 +154,54 @@ public static class FinalDialogueBuilder
     private static DialogueSequence CreateSeq(string folder, string name, int priority,
         DialogueSequence next, params DialogueLine[] lines)
     {
-        var seq = ScriptableObject.CreateInstance<DialogueSequence>();
-        seq.priority     = priority;
-        seq.nextSequence = next;
-        seq.lines        = lines;
-        var disk = SaveAsset(seq, folder, name);
-        EditorUtility.SetDirty(disk);
-        return disk;
-    }
-
-    private static DialogueSequence SaveAsset(DialogueSequence seq, string folder, string name)
-    {
         string path = $"{folder}/{name}.asset";
-        var existing = AssetDatabase.LoadAssetAtPath<DialogueSequence>(path);
-        if (existing != null)
+        var asset = AssetDatabase.LoadAssetAtPath<DialogueSequence>(path);
+
+        if (asset == null)
         {
-            existing.lines        = seq.lines;
-            existing.priority     = seq.priority;
-            existing.nextSequence = seq.nextSequence;
-            EditorUtility.SetDirty(existing);
-            return existing;
+            asset = ScriptableObject.CreateInstance<DialogueSequence>();
+            AssetDatabase.CreateAsset(asset, path);
         }
-        AssetDatabase.CreateAsset(seq, path);
-        return seq;
+
+        var so = new SerializedObject(asset);
+        so.FindProperty("priority").intValue                 = priority;
+        so.FindProperty("nextSequence").objectReferenceValue = next;
+
+        var linesProp = so.FindProperty("lines");
+        linesProp.arraySize = lines.Length;
+        for (int i = 0; i < lines.Length; i++)
+        {
+            var elem = linesProp.GetArrayElementAtIndex(i);
+            elem.FindPropertyRelative("text").stringValue          = lines[i].Text;
+            elem.FindPropertyRelative("pauseAfter").floatValue     = lines[i].PauseAfter;
+            elem.FindPropertyRelative("duration").floatValue       = lines[i].Duration;
+            elem.FindPropertyRelative("activateObject").stringValue = lines[i].ActivateObject ?? "";
+        }
+
+        so.ApplyModifiedProperties();
+        EditorUtility.SetDirty(asset);
+        return asset;
     }
 
     private static DialogueLine L(string text, float pause)
     {
-        return new DialogueLine { text = text, pauseAfter = pause };
+        string json = JsonUtility.ToJson(new DialogueLineData
+        {
+            text = text,
+            pauseAfter = pause,
+            duration = 0f,
+            activateObject = ""
+        });
+        return JsonUtility.FromJson<DialogueLine>(json);
+    }
+
+    [System.Serializable]
+    private struct DialogueLineData
+    {
+        public string text;
+        public float duration;
+        public float pauseAfter;
+        public string activateObject;
     }
 }
 #endif

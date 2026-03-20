@@ -10,13 +10,13 @@ public class NarratorChannel : ScriptableObject
 {
     [Header("Character Voice")]
     [Tooltip("Voice blip clips. A random clip is picked per character.")]
-    public AudioClip[] voiceBlips;
+    [SerializeField] private AudioClip[] voiceBlips;
 
     [Tooltip("Min pitch (lower bound). 1.0 = original, 0.89 ≈ −2 semitones.")]
-    public float pitchMin = 0.89f;
+    [SerializeField] private float pitchMin = 0.89f;
 
     [Tooltip("Max pitch (upper bound). 1.19 ≈ +3 semitones.")]
-    public float pitchMax = 1.19f;
+    [SerializeField] private float pitchMax = 1.19f;
 
     /// <summary>Subscribe to receive sequences.</summary>
     public event Action<DialogueSequence> OnSequenceRequested;
@@ -57,3 +57,4 @@ public class NarratorChannel : ScriptableObject
         return UnityEngine.Random.Range(pitchMin, pitchMax);
     }
 }
+

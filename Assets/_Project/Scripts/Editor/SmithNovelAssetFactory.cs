@@ -183,14 +183,18 @@ public class SmithNovelAssetFactory : EditorWindow
             AssetDatabase.CreateAsset(seq, path);
         }
 
-        seq.lines = new DialogueLine[lines.Length];
+        var so = new SerializedObject(seq);
+        var linesProp = so.FindProperty("lines");
+        linesProp.arraySize = lines.Length;
         for (int i = 0; i < lines.Length; i++)
-            seq.lines[i] = new DialogueLine
-            {
-                text       = lines[i].text,
-                pauseAfter = lines[i].pauseAfter,
-                duration   = 0f
-            };
+        {
+            var elem = linesProp.GetArrayElementAtIndex(i);
+            elem.FindPropertyRelative("text").stringValue          = lines[i].text;
+            elem.FindPropertyRelative("pauseAfter").floatValue     = lines[i].pauseAfter;
+            elem.FindPropertyRelative("duration").floatValue       = 0f;
+            elem.FindPropertyRelative("activateObject").stringValue = "";
+        }
+        so.ApplyModifiedProperties();
 
         EditorUtility.SetDirty(seq);
         return seq;

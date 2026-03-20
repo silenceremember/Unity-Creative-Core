@@ -110,10 +110,10 @@ public class NarratorManager : MonoBehaviour
 
         if (_currentSequence != null)
         {
-            if (sequence.priority < _currentSequence.priority)
+            if (sequence.Priority < _currentSequence.Priority)
                 return;
 
-            if (sequence.restoreInterrupted)
+            if (sequence.RestoreInterrupted)
                 _savedSequence = _currentSequence;
         }
 
@@ -142,14 +142,14 @@ public class NarratorManager : MonoBehaviour
     {
         try
         {
-            foreach (var line in sequence.lines)
+            foreach (var line in sequence.Lines)
             {
                 if (lineText != null && lineText.text.Length > 0)
                     await EraseText(ct);
 
                 await ShowLine(line, ct);
 
-                float pauseLeft = line.pauseAfter;
+                float pauseLeft = line.PauseAfter;
                 while (pauseLeft > 0f && !_skipLine)
                 {
                     await UniTask.Yield(ct);
@@ -163,11 +163,11 @@ public class NarratorManager : MonoBehaviour
 
             subtitleRoot?.SetActive(false);
 
-            if (sequence.nextSequence != null)
+            if (sequence.NextSequence != null)
             {
                 channel?.NotifyCompleted(sequence);
-                _currentSequence = sequence.nextSequence;
-                await PlaySequence(sequence.nextSequence, ct);
+                _currentSequence = sequence.NextSequence;
+                await PlaySequence(sequence.NextSequence, ct);
             }
             else
             {
@@ -191,9 +191,9 @@ public class NarratorManager : MonoBehaviour
     {
         _skipLine = false;
 
-        if (!string.IsNullOrEmpty(line.activateObject))
+        if (!string.IsNullOrEmpty(line.ActivateObject))
         {
-            if (_sceneObjectMap.TryGetValue(line.activateObject, out var go))
+            if (_sceneObjectMap.TryGetValue(line.ActivateObject, out var go))
                 go.SetActive(true);
         }
 
@@ -205,11 +205,11 @@ public class NarratorManager : MonoBehaviour
         if (lineText != null)
         {
             int delayMs = Mathf.Max(1, Mathf.RoundToInt(1000f / charsPerSecond));
-            foreach (char c in line.text)
+            foreach (char c in line.Text)
             {
                 if (_skipLine)
                 {
-                    lineText.text = line.text;
+                    lineText.text = line.Text;
                     break;
                 }
                 lineText.text += c;
@@ -228,7 +228,7 @@ public class NarratorManager : MonoBehaviour
 
         if (!_skipLine)
         {
-            float elapsed   = line.text.Length / charsPerSecond;
+            float elapsed   = line.Text.Length / charsPerSecond;
             float total     = line.GetDuration();
             float remaining = total - elapsed;
             if (remaining > 0f)

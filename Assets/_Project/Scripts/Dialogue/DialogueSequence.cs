@@ -9,18 +9,23 @@ public class DialogueSequence : ScriptableObject
     public const int MAX_CHARS = 58;
 
     [Header("Lines")]
-    public DialogueLine[] lines;
+    [SerializeField] private DialogueLine[] lines;
 
     [Header("Auto-transition")]
     [Tooltip("Next sequence after this one finishes (null = stop)")]
-    public DialogueSequence nextSequence;
+    [SerializeField] private DialogueSequence nextSequence;
 
     [Header("Settings")]
     [Tooltip("Priority. >= current — interrupts, < current — does not.")]
-    public int priority = 0;
+    [SerializeField] private int priority;
 
     [Tooltip("If true — saves the interrupted dialogue and restores it after this sequence finishes.")]
-    public bool restoreInterrupted = false;
+    [SerializeField] private bool restoreInterrupted;
+
+    public DialogueLine[] Lines => lines;
+    public DialogueSequence NextSequence => nextSequence;
+    public int Priority => priority;
+    public bool RestoreInterrupted => restoreInterrupted;
 
 #if UNITY_EDITOR
     void OnValidate()
@@ -28,11 +33,11 @@ public class DialogueSequence : ScriptableObject
         if (lines == null) return;
         for (int i = 0; i < lines.Length; i++)
         {
-            var text = lines[i]?.text;
-            if (!string.IsNullOrEmpty(text) && text.Length > MAX_CHARS)
+            var t = lines[i]?.Text;
+            if (!string.IsNullOrEmpty(t) && t.Length > MAX_CHARS)
                 Debug.LogWarning(
                     $"<color=orange>[DialogueSequence]</color> <b>{name}</b> · Line [{i}] " +
-                    $"<b>{text.Length} chars</b> (max {MAX_CHARS}): \"{text.Substring(0, Mathf.Min(30, text.Length))}...\"",
+                    $"<b>{t.Length} chars</b> (max {MAX_CHARS}): \"{t.Substring(0, Mathf.Min(30, t.Length))}...\"",
                     this);
         }
     }

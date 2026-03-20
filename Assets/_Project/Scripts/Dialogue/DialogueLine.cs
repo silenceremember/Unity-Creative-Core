@@ -6,19 +6,23 @@ using UnityEngine;
 [System.Serializable]
 public class DialogueLine
 {
-
     [TextArea(2, 6)]
     [Tooltip("Line text")]
-    public string text;
+    [SerializeField] private string text;
 
     [Tooltip("Display duration (0 = auto: text length / 50 chars per sec)")]
-    public float duration = 0f;
+    [SerializeField] private float duration;
 
     [Tooltip("Pause before next line")]
-    public float pauseAfter = 0.3f;
+    [SerializeField] private float pauseAfter = 0.3f;
 
     [Tooltip("GameObject name to SetActive(true) at the start of this line (empty = skip)")]
-    public string activateObject = "";
+    [SerializeField] private string activateObject = "";
+
+    public string Text => text;
+    public float Duration => duration;
+    public float PauseAfter => pauseAfter;
+    public string ActivateObject => activateObject;
 
     public float GetDuration()
     {
