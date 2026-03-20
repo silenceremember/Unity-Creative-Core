@@ -3202,7 +3202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &374480300
 AudioSource:
   m_ObjectHideFlags: 0
@@ -9609,7 +9609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &1117682552
 AudioSource:
   m_ObjectHideFlags: 0
@@ -11164,7 +11164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &1293893968
 AudioSource:
   m_ObjectHideFlags: 0
@@ -16058,7 +16058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &1795160957
 AudioSource:
   m_ObjectHideFlags: 0
@@ -16936,7 +16936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &1936917839
 AudioSource:
   m_ObjectHideFlags: 0
@@ -18895,7 +18895,7 @@ PrefabInstance:
       objectReference: {fileID: 477584480}
     - target: {fileID: 625364258685879862, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_Name
-      value: ArchitecturalRendering_StarterEnvironment
+      value: ArchitecturalRendering
       objectReference: {fileID: 0}
     - target: {fileID: 878974105981041597, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_Mesh
@@ -18907,7 +18907,7 @@ PrefabInstance:
       objectReference: {fileID: 574986568}
     - target: {fileID: 3034948326466576632, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_VersionIndex
-      value: 52
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 3282899505165659627, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_Mesh
@@ -18915,7 +18915,7 @@ PrefabInstance:
       objectReference: {fileID: 2099633175}
     - target: {fileID: 3282899505165659627, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_VersionIndex
-      value: 127
+      value: 130
       objectReference: {fileID: 0}
     - target: {fileID: 4070841601519886589, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_Mesh
@@ -18923,7 +18923,7 @@ PrefabInstance:
       objectReference: {fileID: 477584480}
     - target: {fileID: 4070841601519886589, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_VersionIndex
-      value: 64
+      value: 67
       objectReference: {fileID: 0}
     - target: {fileID: 4223382381738503692, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_Mesh
@@ -18947,7 +18947,7 @@ PrefabInstance:
       objectReference: {fileID: 1975904988}
     - target: {fileID: 7634534654314103255, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_VersionIndex
-      value: 190
+      value: 193
       objectReference: {fileID: 0}
     - target: {fileID: 8106000092762419391, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_LocalPosition.x

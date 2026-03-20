@@ -257,6 +257,7 @@ public class VisualNovelManager : MonoBehaviour
         mainCamera.transform.position = t.position;
         mainCamera.transform.rotation = t.rotation;
         _currentAnchor = anchor;
+        _cameraInitialized = true;
     }
 
     /// <summary>Smooth camera transition (async UniTask).</summary>
