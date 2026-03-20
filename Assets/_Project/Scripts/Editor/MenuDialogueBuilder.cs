@@ -21,19 +21,18 @@ public static class MenuDialogueBuilder
 
         CreateSeq(folder, "Seq_BrokenPlay", 1, null,
             L("О. Привет.",                                 0.8f),
-            L("Ты нажал Играть.",                          1.0f),
-            L("Это не сработает. Игра не закончена.",      1.3f),
-            L("И вряд ли будет...",                        1.0f),
-            L("Хотя... незавершённость придаёт шарм.",     1.0f),
-            L("Наверное.",                                  0.8f),
-            L("Попробуй поискать в Настройках.",           0.0f));
+            L("Вы нажали «Играть».",                        1.0f),
+            L("Это не сработает. Игра не закончена.",      1.5f),
+            L("И вряд ли когда-нибудь будет...",           1.2f),
+            L("Хотя, сейчас это называют «Ранний доступ».", 1.8f),
+            L("Так что всё по стандартам индустрии.",       1.5f),
+            L("Попробуйте покопаться в Настройках.",        0.0f));
 
         CreateSeq(folder, "Seq_BrokenPlay_Repeat", 0, null,
-            L("Всё ещё не работает.", 1.0f));
+            L("Всё ещё не работает. Я же говорил.", 1.2f));
 
         CreateSeq(folder, "Seq_TVOn", 2, null,
             L("Телевизор включён.",            0.8f),
-            L("Программа — атмосферный шум.",  1.0f),
             L("Жильцы скорее всего довольны.", 0f));
 
         CreateSeq(folder, "Seq_TVOff", 2, null,
@@ -44,22 +43,22 @@ public static class MenuDialogueBuilder
         CreateSeq(folder, "Seq_LangToEnglish", 2, null,
             L("Переключаемся.",                 0.8f),
             L("Сейчас я скажу...",              1.0f),
-            L("Oh. That actually worked.",      1.0f),
-            L("I sound different in English.",  1.2f),
-            L("More professional. Less me.",    1.0f),
+            L("That actually worked.",          1.2f),
+            L("I sound like a default Unity asset.", 1.5f),
+            L("More professional. Completely soulless.", 1.5f),
             L("Anyway.",                        0f));
 
         CreateSeq(folder, "Seq_LangToRussian", 2, null,
             L("Switching language.",            0.8f),
             L("Back to Russian. Here goes.",    1.2f),
-            L("О. Это снова я.",               1.0f),
-            L("По-русски звучу по-другому.",    1.0f),
-            L("Гораздо менее профессионально.", 1.0f),
-            L("По крайней мере, честно.",       0f));
+            L("Эти родные депрессивные интонации.", 1.5f),
+            L("Снова звучу как дилетант.",      1.2f),
+            L("Зато искренне.",                 1.0f),
+            L("Наверное.",                      0f));
 
         CreateSeq(folder, "Seq_SettingsPlay", 3, null,
-            L("О, отлично. Ты нашёл ещё одну кнопку.", 1.4f),
-            L("Похоже, она тоже не работает.",         1.0f),
+            L("Отлично. Вы нашли ещё одну кнопку.", 1.4f),
+            L("Но похоже, она тоже не работает.",         1.0f),
             L("Разработчик совсем не старался.",       1.0f),
             L("Ладно. Я запущу нас сам.",              0f));
 

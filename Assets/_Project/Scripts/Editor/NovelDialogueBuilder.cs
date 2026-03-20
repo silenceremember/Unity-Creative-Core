@@ -118,7 +118,7 @@ public static class NovelDialogueBuilder
             new object[] { Speaker.John,   "А как работает?",                    CameraAnchor.John,      seqJohnNarr1 },
             new object[] { Speaker.John,   "Я стою.",                            CameraAnchor.John,      seqJohnNarr2 },
             new object[] { Speaker.John,   "Я стою и разговариваю.",             CameraAnchor.John,      seqJohnNarr3 },
-            new object[] { Speaker.John,   "Я многофункциональный.",             CameraAnchor.John,      null },
+            new object[] { Speaker.John,   "Я невероятно многофункциональный.",   CameraAnchor.John,      null },
             new object[] { Speaker.Mary,   "Джон.",                              CameraAnchor.Mary,      null },
             new object[] { Speaker.Mary,   "Он вообще уйдёт?",                  CameraAnchor.Mary,      null },
             new object[] { Speaker.John,   "Не знаю.",                           CameraAnchor.John,      null },
