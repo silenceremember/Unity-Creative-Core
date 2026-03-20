@@ -682,7 +682,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &87551611
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1215,7 +1215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &159926430
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1692,7 +1692,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 179337701}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -1848,12 +1848,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: NarratorChannel, Assembly-CSharp
-        m_MethodName: Raise
+      - m_Target: {fileID: 1502920593}
+        m_TargetAssemblyTypeName: NarratorManager, Assembly-CSharp
+        m_MethodName: Play
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgument: {fileID: 11400000, guid: d7fb405c26548ee4d9e9cd21ea59bb20, type: 2}
           m_ObjectArgumentAssemblyTypeName: DialogueSequence, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -1910,7 +1910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &191724218
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4245,9 +4245,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac79ead2d0b8725419e56a51bdadd06d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SettingsPlayButton
-  channel: {fileID: 0}
-  startCrawlChannel: {fileID: 0}
-  sequence: {fileID: 0}
+  channel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  startCrawlChannel: {fileID: 11400000, guid: a06c8e458788af8499c59c87ca85a1bb, type: 2}
+  sequence: {fileID: 11400000, guid: 4733a842aa9365a4e8c20bf8f53ea1e5, type: 2}
   buttonsToBlock:
   - {fileID: 1106675928}
   - {fileID: 546158161}
@@ -4266,7 +4266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &465506933
 AudioSource:
   m_ObjectHideFlags: 0
@@ -5172,8 +5172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345426b393eb7ad4484c0d01052d93a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::VolumeSlider
-  audioMixer: {fileID: 24100000, guid: 8bd64c2065c534d499948a463e09f4a6, type: 2}
-  audioConfig: {fileID: 0}
+  audioConfig: {fileID: 11400000, guid: b0f9155b64d5f74499cf15fc67fe2f91, type: 2}
   slider: {fileID: 533944255}
 --- !u!1 &538239269
 GameObject:
@@ -5409,12 +5408,12 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: NarratorChannel, Assembly-CSharp
-        m_MethodName: Raise
+      - m_Target: {fileID: 1502920593}
+        m_TargetAssemblyTypeName: NarratorManager, Assembly-CSharp
+        m_MethodName: Play
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgument: {fileID: 11400000, guid: 92d880eadc41c474186392baf80783e9, type: 2}
           m_ObjectArgumentAssemblyTypeName: DialogueSequence, Assembly-CSharp
           m_IntArgument: 0
           m_FloatArgument: 0
@@ -5471,7 +5470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &546158165
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6544,7 +6543,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 3468.2}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1800, y: 100}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &680659154
@@ -7617,7 +7616,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 848989910}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -7721,7 +7720,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenuManager
   pauseMenuCanvas: {fileID: 1098753686}
-  audioMixer: {fileID: 24100000, guid: 8bd64c2065c534d499948a463e09f4a6, type: 2}
   audioConfig: {fileID: 0}
   volumeSlider: {fileID: 1392466603}
   tvController: {fileID: 383498468}
@@ -9333,7 +9331,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &1106675932
 AudioSource:
   m_ObjectHideFlags: 0
@@ -10366,7 +10364,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1246529440}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -10572,7 +10570,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &1258788239
 AudioSource:
   m_ObjectHideFlags: 0
@@ -10750,7 +10748,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1269085753}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -12956,7 +12954,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1516090852}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -13434,7 +13432,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1572382376}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -14614,7 +14612,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1681199827}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -14944,8 +14942,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanguageButton
   channel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
-  seqToEnglish: {fileID: 0}
-  seqToRussian: {fileID: 0}
+  seqToEnglish: {fileID: 11400000, guid: 6ab3c138f24573243a6f0b9b1d9bc933, type: 2}
+  seqToRussian: {fileID: 11400000, guid: 78e5c5756d7773f4aa5ca6cff9c909a9, type: 2}
 --- !u!114 &1701505390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14958,7 +14956,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &1701505391
 AudioSource:
   m_ObjectHideFlags: 0
@@ -17015,7 +17013,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1966073260
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17104,8 +17102,8 @@ MonoBehaviour:
   crawlMusic: {fileID: 576977098}
   sceneAudio: {fileID: 1498482686}
   crawlRoot: {fileID: 1966073258}
-  novelStartChannel: {fileID: 0}
-  startCrawlChannel: {fileID: 0}
+  novelStartChannel: {fileID: 11400000, guid: 1a88f922a4b33874abbdf38147762368, type: 2}
+  startCrawlChannel: {fileID: 11400000, guid: a06c8e458788af8499c59c87ca85a1bb, type: 2}
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
 --- !u!1 &1971993269
 GameObject:
