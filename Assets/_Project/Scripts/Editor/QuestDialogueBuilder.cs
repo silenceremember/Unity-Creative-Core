@@ -19,23 +19,58 @@ public static class QuestDialogueBuilder
         if (!AssetDatabase.IsValidFolder(folder))
             AssetDatabase.CreateFolder("Assets/_Project/SO/Dialogue", "Quest");
 
-        // Click dialogues
         var clicks = new[] {
-            CreateSeq(folder, "QuestClick_0", 5, null, L("Interesting choice.", "Интересный выбор.", 2f)),
-            CreateSeq(folder, "QuestClick_1", 5, null, L("Curious...", "Любопытно...", 2f)),
-            CreateSeq(folder, "QuestClick_2", 5, null, L("Hmm. You sure?", "Хм. Уверены?", 2f)),
-            CreateSeq(folder, "QuestClick_3", 5, null, L("Well then...", "Ну что ж...", 2f)),
-            CreateSeq(folder, "QuestClick_4", 5, null, L("Bold decision.", "Смелое решение.", 2f)),
-            CreateSeq(folder, "QuestClick_5", 5, null, L("Fair enough.", "Допустим.", 2f)),
-            CreateSeq(folder, "QuestClick_6", 5, null, L("Unexpected.", "Неожиданно.", 2f))
+            CreateSeq(folder, "QuestClick_0", 5, null,
+                L("Clicking paintings. A true masterpiece of quest design.", "Кликать картины. Истинный шедевр дизайна квестов.", 3.5f)),
+            CreateSeq(folder, "QuestClick_1", 5, null,
+                L("I bet the Developer thinks this is highly engaging.", "Думаю, Разработчик считает это очень увлекательным.", 3.5f)),
+            CreateSeq(folder, "QuestClick_2", 5, null,
+                L("Modern games really love to waste your time like that.", "Современный геймдев вообще обожает тратить Ваше время.", 3.5f)),
+            CreateSeq(folder, "QuestClick_3", 5, null,
+                L("Modern games really love to waste your time like that.", "Мало ли, вдруг Вы успеете сделать рефанд.", 3.5f)),
+            
+            CreateSeq(folder, "QuestClick_4", 5, null,
+                L("Anyway back to wasting time. Like picking up junk.", "Впрочем, есть и другие бесполезные вещи. Например, сбор мусора.", 3.5f)),
+            CreateSeq(folder, "QuestClick_5", 5, null,
+                L("Crafting materials you will never use in your life.", "Ресурсы для крафта, которые Вам никогда не пригодятся.", 3.5f)),
+            CreateSeq(folder, "QuestClick_6", 5, null,
+                L("Or QTEs where you just furiously mash one button.", "QTE, где Вас заставляют неистово долбить одну кнопку.", 3.5f)),
+            CreateSeq(folder, "QuestClick_7", 5, null,
+                L("Or motion blur that exists only to make you dizzy.", "«Улучшатели картинки» по умолчанию, как размытие в движении.", 3.5f)),
+
+            CreateSeq(folder, "QuestClick_8", 5, null,
+                L("Do not let me distract you. Let us talk about escorts.", "Поговорим, пожалуй, о миссиях эскорта.", 3.5f)),
+            CreateSeq(folder, "QuestClick_9", 5, null,
+                L("NPCs are always faster than walking but slower than you.", "Персонажи там быстрее шага, но медленнее Вашего бега.", 3.5f)),
+            CreateSeq(folder, "QuestClick_10", 5, null,
+                L("And fake difficulty where enemies become bullet sponges.", "Ложная сложность, где враги просто губки для урона.", 3.5f)),
+            CreateSeq(folder, "QuestClick_11", 5, null,
+                L("Invisible walls are another brilliant modern invention.", "Невидимые стены, загадки с нажатием одной кнопки.", 3.5f)),
+
+            CreateSeq(folder, "QuestClick_12", 5, null,
+                L("You are struggling. Just like viewing slow menu screens.", "Непропускаемые анимации меню, перенасыщенные эффекты", 3.5f)),
+            CreateSeq(folder, "QuestClick_13", 5, null,
+                L("The minimap is my favorite. It plays the game for you.", "Достижения за каждый чих, миникарта, которая играет за тебя", 3.5f)),
+            CreateSeq(folder, "QuestClick_14", 5, null,
+                L("Why explore if the radar marks every chest with junk.", "Зачем искать, если радар уже показывает награду или квест?", 3.5f)),
+            CreateSeq(folder, "QuestClick_15", 5, null,
+                L("You take three rusty swords and become overencumbered.", "Причем Вы берете три яблока и получаете перегруз.", 3.5f)),
+
+            CreateSeq(folder, "QuestClick_16", 5, null,
+                L("Maybe you need a tutorial. Like the ones for jumping.", "Возможно Вам нужен туториал. Как те что учат прыгать.", 3.5f)),
+            CreateSeq(folder, "QuestClick_17", 5, null,
+                L("They treat you as if you have never played a game.", "Они считают будто Вы впервые сели за видеоигру.", 3.5f)),
+            CreateSeq(folder, "QuestClick_18", 5, null,
+                L("Looking at this puzzle I think they might be right.", "Хотя, глядя на эту загадку, возможно они были правы.", 3.5f)),
+            CreateSeq(folder, "QuestClick_19", 5, null,
+                L("Just keep clicking these completely mundane canvases.", "Понятно...", 3.5f))
         };
 
-        // Reject dialogues — escalating hints
         var rejects = new[] {
             CreateSeq(folder, "QuestReject_0", 5, null,
                 L("Looks like the paintings need to be clicked in the right order.", "Похоже, картины надо нажать в правильном порядке.", 3.5f)),
             CreateSeq(folder, "QuestReject_1", 5, null,
-                L("You need to click the paintings in order: 1-2-3-4.", "Похоже, картины нужно нажать в порядке 1-2-3-4.", 3.5f)),
+                L("You need to click the paintings in order: 1-2-3-4.", "Картины нужно нажать в порядке 1-2-3-4.", 3.5f)),
             CreateSeq(folder, "QuestReject_2", 5, null,
                 L("Order 1-2-3-4. Just. Click. Them. In. Sequence.", "Порядок 1-2-3-4. Просто. Нажмите. Их. По. Очереди.", 3.5f)),
             CreateSeq(folder, "QuestReject_3", 5, null,
