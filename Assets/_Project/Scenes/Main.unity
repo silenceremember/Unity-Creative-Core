@@ -1382,6 +1382,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5dac05609e73f854ab9d35d49f098386, type: 2}
   - {fileID: 11400000, guid: 809c5bba8602eaf40af46c19fcfd3273, type: 2}
   - {fileID: 11400000, guid: 70713951d30c1cf4f8192db243ba03b2, type: 2}
+  - {fileID: 11400000, guid: ae92b66b7493b524280e997760271a64, type: 2}
+  - {fileID: 11400000, guid: 0259dbf3706569245a039972ea177f33, type: 2}
+  - {fileID: 11400000, guid: 1d24abcfadd126d4eaa620c26552f942, type: 2}
   rejectDialogues:
   - {fileID: 11400000, guid: a25b019c222b05743ba7834cfdf48185, type: 2}
   - {fileID: 11400000, guid: be7b04804bd9320479aa55917094e28a, type: 2}
@@ -4262,7 +4265,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SettingsPlayButton
   channel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
   startCrawlChannel: {fileID: 11400000, guid: a06c8e458788af8499c59c87ca85a1bb, type: 2}
-  sequence: {fileID: 11400000, guid: 4733a842aa9365a4e8c20bf8f53ea1e5, type: 2}
+  sequence: {fileID: 11400000, guid: a224b78e0a66152448995c395e0bd331, type: 2}
   buttonsToBlock:
   - {fileID: 1106675928}
   - {fileID: 546158161}
@@ -7753,11 +7756,11 @@ MonoBehaviour:
   audioConfig: {fileID: 11400000, guid: b0f9155b64d5f74499cf15fc67fe2f91, type: 2}
   volumeSlider: {fileID: 1392466603}
   tvController: {fileID: 383498468}
-  config: {fileID: 0}
+  config: {fileID: 11400000, guid: b713687a9e7e056438cae17f17ca5dc3, type: 2}
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
   novelChannel: {fileID: 11400000, guid: fa8aa48318cf0c341b02f252ec3d3536, type: 2}
-  playerController: {fileID: 0}
-  levelUpCanvas: {fileID: 0}
+  playerController: {fileID: 931120245}
+  levelUpCanvas: {fileID: 308662747}
   isPausedVariable: {fileID: 11400000, guid: 3b86b037f2d4e6c47907ac8508655ff7, type: 2}
 --- !u!1 &905843610
 GameObject:
@@ -10522,7 +10525,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraAnchorRegistrar
   registry: {fileID: 11400000, guid: edfcdf395bef5654fad8eae862d94e1c, type: 2}
-  anchor: 0
+  anchor: 1
 --- !u!1 &1258788233
 GameObject:
   m_ObjectHideFlags: 0
@@ -11504,6 +11507,7 @@ MonoBehaviour:
   mainCamera: {fileID: 330585545}
   cameraAnchors: {fileID: 11400000, guid: edfcdf395bef5654fad8eae862d94e1c, type: 2}
   config: {fileID: 11400000, guid: 61a78e8a2a164c44282fa449da77f6cf, type: 2}
+  languageVar: {fileID: 11400000, guid: 9996dc4c53aa261408d95e5d9817d942, type: 2}
 --- !u!82 &1341826917
 AudioSource:
   m_ObjectHideFlags: 0
@@ -12943,6 +12947,7 @@ MonoBehaviour:
   lineText: {fileID: 946027355}
   activateChannel: {fileID: 11400000, guid: 3406efb24d9996a4fb63bbf740d2cc1e, type: 2}
   config: {fileID: 11400000, guid: f59b3881caa5aa441880f94306964ba9, type: 2}
+  languageVar: {fileID: 11400000, guid: 9996dc4c53aa261408d95e5d9817d942, type: 2}
 --- !u!82 &1502920594
 AudioSource:
   m_ObjectHideFlags: 0
@@ -15111,9 +15116,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6abdf0008bb0874d91e0560eb12d809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LanguageButton
+  languageVar: {fileID: 11400000, guid: 9996dc4c53aa261408d95e5d9817d942, type: 2}
   channel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
-  seqToEnglish: {fileID: 11400000, guid: db9a9897c81bd1748b238261cf26907b, type: 2}
-  seqToRussian: {fileID: 11400000, guid: 6d85219ef6ebd9f45ba22ece8a0404f1, type: 2}
+  transitionSequence: {fileID: 11400000, guid: 31cbb0cc34647ec4ca1d94466532731c, type: 2}
 --- !u!114 &1701505390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15901,11 +15906,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebugSkip
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
-  introCrawl: {fileID: 0}
+  introCrawl: {fileID: 1202422736}
   visualNovelManager: {fileID: 1341826916}
   narratorManager: {fileID: 1502920593}
   paintingQuestManager: {fileID: 162033291}
-  explorationManager: {fileID: 0}
+  explorationManager: {fileID: 995318809}
 --- !u!1 &1795160951
 GameObject:
   m_ObjectHideFlags: 0

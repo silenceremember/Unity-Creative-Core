@@ -17,18 +17,18 @@ MonoBehaviour:
     textEn: I'm standing by the door because...
     text: "\u042F \u0441\u0442\u043E\u044E \u0443 \u0434\u0432\u0435\u0440\u0438,
       \u043F\u043E\u0442\u043E\u043C\u0443 \u0447\u0442\u043E..."
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 11400000, guid: 517d1283f39f7d848a5f6faf8cdfe53a, type: 2}
   - speaker: 0
     textEn: ...because it feels right here.
     text: "...\u043F\u043E\u0442\u043E\u043C\u0443 \u0447\u0442\u043E \u043C\u043D\u0435
       \u0437\u0434\u0435\u0441\u044C \u0445\u043E\u0440\u043E\u0448\u043E."
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 0}
   - speaker: 0
     textEn: I sense skepticism.
     text: "\u0421\u043B\u044B\u0448\u0443 \u0441\u043A\u0435\u043F\u0441\u0438\u0441."
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 11400000, guid: 1d746b22a2ad0f34786ae1d089df2ecb, type: 2}
   - speaker: 1
     textEn: It's beautiful here.
@@ -38,7 +38,7 @@ MonoBehaviour:
   - speaker: 0
     textEn: Mary.
     text: "\u041C\u044D\u0440\u0438."
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 0}
   - speaker: 1
     textEn: What.
@@ -49,7 +49,7 @@ MonoBehaviour:
     textEn: There's someone in the living room.
     text: "\u0412 \u0433\u043E\u0441\u0442\u0438\u043D\u043E\u0439 \u043A\u0442\u043E-\u0442\u043E
       \u0435\u0441\u0442\u044C."
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 0}
   - speaker: 1
     textEn: Are you sure?
@@ -60,7 +60,7 @@ MonoBehaviour:
     textEn: I... I can feel it. Someone's there.
     text: "\u042F... \u0447\u0443\u0432\u0441\u0442\u0432\u0443\u044E. \u0422\u0430\u043C
       \u043A\u0442\u043E-\u0442\u043E \u0435\u0441\u0442\u044C."
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 0}
   - speaker: 2
     textEn: ...
@@ -76,7 +76,7 @@ MonoBehaviour:
   - speaker: 0
     textEn: I didn't call a repairman.
     text: "\u042F \u043D\u0435 \u0432\u044B\u0437\u044B\u0432\u0430\u043B \u043C\u0430\u0441\u0442\u0435\u0440\u0430."
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 0}
   - speaker: 1
     textEn: I did.
@@ -86,7 +86,7 @@ MonoBehaviour:
   - speaker: 0
     textEn: When?
     text: "\u041A\u043E\u0433\u0434\u0430?"
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 0}
   - speaker: 1
     textEn: I don't remember.
@@ -96,7 +96,7 @@ MonoBehaviour:
   - speaker: 0
     textEn: Hey. Who are you?
     text: "\u042D\u0439. \u0422\u044B \u043A\u0442\u043E?"
-    cameraAnchor: 1
+    cameraAnchor: 0
     narratorSequenceBefore: {fileID: 11400000, guid: 2ddee7679b5a49848b01d6076dc38ec6, type: 2}
   - speaker: 2
     textEn: ...
@@ -107,7 +107,7 @@ MonoBehaviour:
     textEn: Do you know how to fix TVs?
     text: "\u0422\u044B \u0443\u043C\u0435\u0435\u0448\u044C \u0447\u0438\u043D\u0438\u0442\u044C
       \u0442\u0435\u043B\u0435\u0432\u0438\u0437\u043E\u0440\u044B?"
-    cameraAnchor: 1
+    cameraAnchor: 0
     narratorSequenceBefore: {fileID: 11400000, guid: 2c4de8093a151ac488e3c93605f4039e, type: 2}
   - speaker: 2
     textEn: ...
@@ -118,27 +118,27 @@ MonoBehaviour:
     textEn: Perhaps that's a sign of agreement.
     text: "\u0412\u043E\u0437\u043C\u043E\u0436\u043D\u043E, \u044D\u0442\u043E \u0437\u043D\u0430\u043A
       \u0441\u043E\u0433\u043B\u0430\u0441\u0438\u044F."
-    cameraAnchor: 1
+    cameraAnchor: 0
     narratorSequenceBefore: {fileID: 0}
   - speaker: 0
     textEn: And how does this work?
     text: "\u0418 \u043A\u0430\u043A \u044D\u0442\u043E \u0440\u0430\u0431\u043E\u0442\u0430\u0435\u0442?"
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 11400000, guid: d2fc75dfa7c1ccd40b3025eef9e476c9, type: 2}
   - speaker: 0
     textEn: I'm standing.
     text: "\u042F \u0441\u0442\u043E\u044E."
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 11400000, guid: 51a712fc3e49a2a44ac794a2cf133d57, type: 2}
   - speaker: 0
     textEn: I'm standing and talking.
     text: "\u042F \u0441\u0442\u043E\u044E \u0438 \u0440\u0430\u0437\u0433\u043E\u0432\u0430\u0440\u0438\u0432\u0430\u044E."
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 11400000, guid: e4362cfbc35eb07478c5e229997a7353, type: 2}
   - speaker: 0
     textEn: I'm incredibly multifunctional.
     text: "\u042F \u043D\u0435\u0432\u0435\u0440\u043E\u044F\u0442\u043D\u043E \u043C\u043D\u043E\u0433\u043E\u0444\u0443\u043D\u043A\u0446\u0438\u043E\u043D\u0430\u043B\u044C\u043D\u044B\u0439."
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 0}
   - speaker: 1
     textEn: John.
@@ -153,7 +153,7 @@ MonoBehaviour:
   - speaker: 0
     textEn: I don't know.
     text: "\u041D\u0435 \u0437\u043D\u0430\u044E."
-    cameraAnchor: 0
+    cameraAnchor: 1
     narratorSequenceBefore: {fileID: 0}
   - speaker: 0
     textEn: No point asking, he's silent.
