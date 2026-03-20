@@ -12,12 +12,12 @@ public static class QuestDialogueBuilder
     [MenuItem("Game/Dialogue/Build Quest")]
     public static void Build()
     {
-        const string folder = "Assets/_Project/Dialogue/Quest";
+        const string folder = "Assets/_Project/SO/Dialogue/Quest";
 
-        if (!AssetDatabase.IsValidFolder("Assets/_Project/Dialogue"))
-            AssetDatabase.CreateFolder("Assets/_Project", "Dialogue");
+        if (!AssetDatabase.IsValidFolder("Assets/_Project/SO/Dialogue"))
+            AssetDatabase.CreateFolder("Assets/_Project/SO", "Dialogue");
         if (!AssetDatabase.IsValidFolder(folder))
-            AssetDatabase.CreateFolder("Assets/_Project/Dialogue", "Quest");
+            AssetDatabase.CreateFolder("Assets/_Project/SO/Dialogue", "Quest");
 
         // Click dialogues
         var click0 = CreateSeq(folder, "QuestClick_0", 5, null, L("Интересный выбор.", 2f));

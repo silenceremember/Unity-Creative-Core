@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 0
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 1327831908}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1634,8 +1634,9 @@ GameObject:
   - component: {fileID: 179337704}
   - component: {fileID: 179337703}
   - component: {fileID: 179337702}
+  - component: {fileID: 179337705}
   m_Layer: 0
-  m_Name: Player Novel Camera
+  m_Name: John Novel Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1749,8 +1750,22 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 691070682}
+  m_Father: {fileID: 1335457695}
   m_LocalEulerAnglesHint: {x: 0, y: -125.949, z: 0}
+--- !u!114 &179337705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 179337701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb0d8cf09dee13b4ab7f439aaeddfd95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraAnchorRegistrar
+  registry: {fileID: 11400000, guid: edfcdf395bef5654fad8eae862d94e1c, type: 2}
+  anchor: 0
 --- !u!1 &191724212
 GameObject:
   m_ObjectHideFlags: 0
@@ -6411,7 +6426,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bf90b2cdbc1c7c46bfd046deb93a9ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundEffect
-  uiAudioConfig: {fileID: 0}
+  uiAudioConfig: {fileID: 11400000, guid: 82238c29ec234244a8a5db820890f5b9, type: 2}
 --- !u!82 &668787685
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6748,10 +6763,7 @@ Transform:
   - {fileID: 848989913}
   - {fileID: 1572382380}
   - {fileID: 1516090855}
-  - {fileID: 1246529443}
-  - {fileID: 1269085756}
-  - {fileID: 179337704}
-  - {fileID: 1681199828}
+  - {fileID: 1335457695}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &708020169
@@ -7720,7 +7732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenuManager
   pauseMenuCanvas: {fileID: 1098753686}
-  audioConfig: {fileID: 0}
+  audioConfig: {fileID: 11400000, guid: b0f9155b64d5f74499cf15fc67fe2f91, type: 2}
   volumeSlider: {fileID: 1392466603}
   tvController: {fileID: 383498468}
   config: {fileID: 0}
@@ -10284,6 +10296,61 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1190804705}
   m_CullTransparentMesh: 1
+--- !u!1 &1202422734
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1202422735}
+  - component: {fileID: 1202422736}
+  m_Layer: 0
+  m_Name: CrawlManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1202422735
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202422734}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1867730422}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1202422736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1202422734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd27cf3383daf91458793a5fa71e511f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IntroCrawl
+  textTransform: {fileID: 680659153}
+  mainCamera: {fileID: 330585545}
+  crawlAnchor: {fileID: 1516090855}
+  config: {fileID: 11400000, guid: dcd3b95feaad9ee44b7a6696b971de59, type: 2}
+  skipIcon: {fileID: 1638022965}
+  crawlMusic: {fileID: 576977098}
+  sceneAudio: {fileID: 1498482686}
+  crawlRoot: {fileID: 1966073258}
+  novelStartChannel: {fileID: 11400000, guid: 1a88f922a4b33874abbdf38147762368, type: 2}
+  startCrawlChannel: {fileID: 11400000, guid: a06c8e458788af8499c59c87ca85a1bb, type: 2}
+  gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
 --- !u!114 &1234435754 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 275527191614201857, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
@@ -10306,8 +10373,9 @@ GameObject:
   - component: {fileID: 1246529443}
   - component: {fileID: 1246529442}
   - component: {fileID: 1246529441}
+  - component: {fileID: 1246529444}
   m_Layer: 0
-  m_Name: John Novel Camera
+  m_Name: John Close Novel Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10421,8 +10489,22 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 691070682}
+  m_Father: {fileID: 1335457695}
   m_LocalEulerAnglesHint: {x: 25.67, y: 136.108, z: 0}
+--- !u!114 &1246529444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1246529440}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb0d8cf09dee13b4ab7f439aaeddfd95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraAnchorRegistrar
+  registry: {fileID: 11400000, guid: edfcdf395bef5654fad8eae862d94e1c, type: 2}
+  anchor: 0
 --- !u!1 &1258788233
 GameObject:
   m_ObjectHideFlags: 0
@@ -10690,8 +10772,9 @@ GameObject:
   - component: {fileID: 1269085756}
   - component: {fileID: 1269085755}
   - component: {fileID: 1269085754}
+  - component: {fileID: 1269085757}
   m_Layer: 0
-  m_Name: Jane Novel Camera
+  m_Name: Mary Novel Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10805,8 +10888,22 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 691070682}
+  m_Father: {fileID: 1335457695}
   m_LocalEulerAnglesHint: {x: 15.802, y: -11.138, z: 0}
+--- !u!114 &1269085757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1269085753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb0d8cf09dee13b4ab7f439aaeddfd95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraAnchorRegistrar
+  registry: {fileID: 11400000, guid: edfcdf395bef5654fad8eae862d94e1c, type: 2}
+  anchor: 2
 --- !u!1 &1292744640
 GameObject:
   m_ObjectHideFlags: 0
@@ -11292,6 +11389,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c67ebc34db5aa142890ba0de55255de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PaintingInteractable
+--- !u!108 &1327831908 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 7001091043798592481, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+  m_PrefabInstance: {fileID: 7203986306646085906}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1335457694
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1335457695}
+  m_Layer: 0
+  m_Name: Novel Cameras
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1335457695
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1335457694}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 179337704}
+  - {fileID: 1246529443}
+  - {fileID: 1269085756}
+  - {fileID: 1681199828}
+  m_Father: {fileID: 691070682}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1341826914
 GameObject:
   m_ObjectHideFlags: 0
@@ -14539,6 +14676,7 @@ GameObject:
   - component: {fileID: 1681199828}
   - component: {fileID: 1681199830}
   - component: {fileID: 1681199829}
+  - component: {fileID: 1681199831}
   m_Layer: 0
   m_Name: Player Focus Novel Camera
   m_TagString: Untagged
@@ -14559,7 +14697,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 691070682}
+  m_Father: {fileID: 1335457695}
   m_LocalEulerAnglesHint: {x: 7.148, y: -94.757, z: 0}
 --- !u!114 &1681199829
 MonoBehaviour:
@@ -14656,6 +14794,20 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1681199831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1681199827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb0d8cf09dee13b4ab7f439aaeddfd95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraAnchorRegistrar
+  registry: {fileID: 11400000, guid: edfcdf395bef5654fad8eae862d94e1c, type: 2}
+  anchor: 3
 --- !u!1 &1686912714
 GameObject:
   m_ObjectHideFlags: 0
@@ -15731,7 +15883,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebugSkip
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
-  introCrawl: {fileID: 1966073263}
+  introCrawl: {fileID: 0}
   visualNovelManager: {fileID: 1341826916}
   narratorManager: {fileID: 1502920593}
   paintingQuestManager: {fileID: 162033291}
@@ -16403,8 +16555,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1502920592}
   - {fileID: 873273745}
+  - {fileID: 1502920592}
+  - {fileID: 1202422735}
   - {fileID: 1341826915}
   - {fileID: 1429750141}
   - {fileID: 1792654393}
@@ -17006,7 +17159,6 @@ GameObject:
   - component: {fileID: 1966073262}
   - component: {fileID: 1966073261}
   - component: {fileID: 1966073260}
-  - component: {fileID: 1966073263}
   m_Layer: 5
   m_Name: CrawlIntroCanvas
   m_TagString: Untagged
@@ -17082,29 +17234,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1920.0001, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1966073263
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1966073258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cd27cf3383daf91458793a5fa71e511f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::IntroCrawl
-  textTransform: {fileID: 680659153}
-  mainCamera: {fileID: 330585545}
-  crawlAnchor: {fileID: 1516090855}
-  config: {fileID: 0}
-  skipIcon: {fileID: 1638022965}
-  crawlMusic: {fileID: 576977098}
-  sceneAudio: {fileID: 1498482686}
-  crawlRoot: {fileID: 1966073258}
-  novelStartChannel: {fileID: 11400000, guid: 1a88f922a4b33874abbdf38147762368, type: 2}
-  startCrawlChannel: {fileID: 11400000, guid: a06c8e458788af8499c59c87ca85a1bb, type: 2}
-  gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
 --- !u!1 &1971993269
 GameObject:
   m_ObjectHideFlags: 0

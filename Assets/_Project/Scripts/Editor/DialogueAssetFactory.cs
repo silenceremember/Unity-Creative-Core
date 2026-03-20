@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public static class DialogueAssetFactory
 {
-    private const string FOLDER = "Assets/_Project/Dialogue";
+    private const string FOLDER = "Assets/_Project/SO/Dialogue";
 
     [MenuItem("Game/Dialogue/Build Menu Dialogues")]
     public static void CreateAll()

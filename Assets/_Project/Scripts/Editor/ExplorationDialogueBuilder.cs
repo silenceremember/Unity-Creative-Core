@@ -12,12 +12,12 @@ public static class ExplorationDialogueBuilder
     [MenuItem("Game/Dialogue/Build Exploration")]
     public static void Build()
     {
-        const string folder = "Assets/_Project/Dialogue/Exploration";
+        const string folder = "Assets/_Project/SO/Dialogue/Exploration";
 
-        if (!AssetDatabase.IsValidFolder("Assets/_Project/Dialogue"))
-            AssetDatabase.CreateFolder("Assets/_Project", "Dialogue");
+        if (!AssetDatabase.IsValidFolder("Assets/_Project/SO/Dialogue"))
+            AssetDatabase.CreateFolder("Assets/_Project/SO", "Dialogue");
         if (!AssetDatabase.IsValidFolder(folder))
-            AssetDatabase.CreateFolder("Assets/_Project/Dialogue", "Exploration");
+            AssetDatabase.CreateFolder("Assets/_Project/SO/Dialogue", "Exploration");
 
         //  AMBIENT — linear chain.
         //  Quest starts on last segment completion

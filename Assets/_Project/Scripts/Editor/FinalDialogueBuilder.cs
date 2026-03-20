@@ -12,12 +12,12 @@ public static class FinalDialogueBuilder
     [MenuItem("Game/Dialogue/Build Final")]
     public static void Build()
     {
-        const string folder = "Assets/_Project/Dialogue/Final";
+        const string folder = "Assets/_Project/SO/Dialogue/Final";
 
-        if (!AssetDatabase.IsValidFolder("Assets/_Project/Dialogue"))
-            AssetDatabase.CreateFolder("Assets/_Project", "Dialogue");
+        if (!AssetDatabase.IsValidFolder("Assets/_Project/SO/Dialogue"))
+            AssetDatabase.CreateFolder("Assets/_Project/SO", "Dialogue");
         if (!AssetDatabase.IsValidFolder(folder))
-            AssetDatabase.CreateFolder("Assets/_Project/Dialogue", "Final");
+            AssetDatabase.CreateFolder("Assets/_Project/SO/Dialogue", "Final");
 
         var trigger0 = CreateSeq(folder, "Final_Trigger0", 11, null,
             L("Интересно, что дальше?", 4f));
