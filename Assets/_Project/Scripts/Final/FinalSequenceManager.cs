@@ -15,8 +15,6 @@ using UnityEngine.Rendering;
 /// </summary>
 public class FinalSequenceManager : MonoBehaviour
 {
-    public static FinalSequenceManager Instance { get; private set; }
-
     [Header("Player")]
     [SerializeField] private Transform playerTransform;
     [SerializeField] private Camera mainCamera;
@@ -74,8 +72,6 @@ public class FinalSequenceManager : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
-
         if (hdriMaterial != null)
         {
             _hdriClone = new Material(hdriMaterial);

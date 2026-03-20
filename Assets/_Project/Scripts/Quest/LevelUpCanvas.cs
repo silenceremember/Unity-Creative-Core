@@ -8,10 +8,11 @@ using UnityEngine.UI;
 /// </summary>
 public class LevelUpCanvas : MonoBehaviour
 {
-    public static LevelUpCanvas Instance { get; private set; }
+    [Tooltip("Fires when the player presses any button")]
+    [SerializeField] private VoidChannel abilityChosenChannel;
 
-    /// <summary>Fires when the player presses any button (i.e., "chose" an ability).</summary>
-    public static event Action OnAbilityChosen;
+    [Tooltip("Player controller to disable/enable on show/hide")]
+    [SerializeField] private PlayerController playerController;
 
     [Tooltip("Root object of this canvas")]
     [SerializeField] private GameObject root;
@@ -21,7 +22,6 @@ public class LevelUpCanvas : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
         if (root != null) root.SetActive(false);
 
         foreach (var btn in buttons)
@@ -35,8 +35,8 @@ public class LevelUpCanvas : MonoBehaviour
         if (root != null) root.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible   = true;
-        if (PlayerController.Instance != null)
-            PlayerController.Instance.enabled = false;
+        if (playerController != null)
+            playerController.enabled = false;
     }
 
     public void Hide()
@@ -45,9 +45,9 @@ public class LevelUpCanvas : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible   = false;
         gameObject.SetActive(false);
-        if (PlayerController.Instance != null)
-            PlayerController.Instance.enabled = true;
+        if (playerController != null)
+            playerController.enabled = true;
 
-        OnAbilityChosen?.Invoke();
+        abilityChosenChannel?.Raise();
     }
 }

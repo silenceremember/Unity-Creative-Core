@@ -14,8 +14,6 @@ using UnityEngine.UI;
 /// </summary>
 public class XPLevelManager : MonoBehaviour
 {
-    public static XPLevelManager Instance { get; private set; }
-
     [Header("Data")]
     [Tooltip("XP for each level. [0] = Lv.0→1, [1] = Lv.1→2 etc.")]
     [SerializeField] private int[] xpRequirements = { 500, 750, 1000 };
@@ -81,6 +79,14 @@ public class XPLevelManager : MonoBehaviour
     [Tooltip("Door object — disabled during seqDoorUnlocked narrative")]
     [SerializeField] private GameObject doorObject;
 
+    [Header("Dependencies")]
+    [SerializeField] private ExplorationManager explorationManager;
+    [SerializeField] private NarratorManager narratorManager;
+    [SerializeField] private BoolVariable isPausedVariable;
+
+    [Header("Channels")]
+    [SerializeField] private VoidChannel abilityChosenChannel;
+
     [Header("Reject Animation")]
     [Tooltip("X prompt shake amplitude (pixels)")]
     [SerializeField] private float promptShakeMagnitude = 10f;
@@ -106,10 +112,6 @@ public class XPLevelManager : MonoBehaviour
             ? xpRequirements[_level]
             : xpRequirements[xpRequirements.Length - 1];
 
-    void Awake()
-    {
-        Instance = this;
-    }
 
     void Start()
     {
@@ -125,7 +127,9 @@ public class XPLevelManager : MonoBehaviour
         }
 
         RefreshUI();
-        LevelUpCanvas.OnAbilityChosen += HandleAbilityChosen;
+
+        if (abilityChosenChannel != null)
+            abilityChosenChannel.OnRaised += HandleAbilityChosen;
     }
 
     void OnEnable()
@@ -142,7 +146,8 @@ public class XPLevelManager : MonoBehaviour
 
     void OnDestroy()
     {
-        LevelUpCanvas.OnAbilityChosen -= HandleAbilityChosen;
+        if (abilityChosenChannel != null)
+            abilityChosenChannel.OnRaised -= HandleAbilityChosen;
         CancelAnim();
         _blinkCts?.Cancel(); _blinkCts?.Dispose();
     }
@@ -173,12 +178,12 @@ public class XPLevelManager : MonoBehaviour
     {
         var kb = UnityEngine.InputSystem.Keyboard.current;
         if (!_promptVisible || kb == null || !kb.xKey.wasPressedThisFrame) return;
-        if (PauseMenuManager.IsPaused) return;
+        if (isPausedVariable != null && isPausedVariable.Value) return;
 
-        bool triggerDialogue = ExplorationManager.Instance != null &&
-                               ExplorationManager.Instance.TriggerDialoguePlaying;
-        bool narratorActive  = NarratorManager.Instance != null &&
-                               NarratorManager.Instance.IsPlaying;
+        bool triggerDialogue = explorationManager != null &&
+                               explorationManager.TriggerDialoguePlaying;
+        bool narratorActive  = narratorManager != null &&
+                               narratorManager.IsPlaying;
 
         if (triggerDialogue || narratorActive)
         {

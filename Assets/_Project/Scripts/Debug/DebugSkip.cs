@@ -14,6 +14,13 @@ public class DebugSkip : MonoBehaviour
     [Tooltip("Game state SO channel")]
     [SerializeField] private GameStateChannel gameStateChannel;
 
+    [Header("Dependencies")]
+    [SerializeField] private IntroCrawl introCrawl;
+    [SerializeField] private VisualNovelManager visualNovelManager;
+    [SerializeField] private NarratorManager narratorManager;
+    [SerializeField] private PaintingQuestManager paintingQuestManager;
+    [SerializeField] private ExplorationManager explorationManager;
+
     void Update()
     {
         if (Keyboard.current == null) return;
@@ -33,22 +40,22 @@ public class DebugSkip : MonoBehaviour
 
     void SkipToNovel()
     {
-        if (IntroCrawl.Instance != null && IntroCrawl.Instance.crawlRoot != null)
-            IntroCrawl.Instance.crawlRoot.SetActive(false);
+        if (introCrawl != null)
+            introCrawl.HideCrawl();
 
         gameStateChannel?.Raise(GameState.VisualNovel);
 
-        if (VisualNovelManager.Instance != null)
-            VisualNovelManager.Instance.StartNovel();
+        if (visualNovelManager != null)
+            visualNovelManager.StartNovel();
     }
 
     void SkipToGameplay()
     {
-        if (IntroCrawl.Instance != null && IntroCrawl.Instance.crawlRoot != null)
-            IntroCrawl.Instance.crawlRoot.SetActive(false);
+        if (introCrawl != null)
+            introCrawl.HideCrawl();
 
-        if (VisualNovelManager.Instance != null)
-            VisualNovelManager.Instance.ForceHideNovelCanvas();
+        if (visualNovelManager != null)
+            visualNovelManager.ForceHideNovelCanvas();
 
         gameStateChannel?.Raise(GameState.Gameplay);
     }
@@ -59,8 +66,8 @@ public class DebugSkip : MonoBehaviour
 
         gameStateChannel?.Raise(GameState.Quest);
 
-        if (NarratorManager.Instance != null)
-            NarratorManager.Instance.Stop();
+        if (narratorManager != null)
+            narratorManager.Stop();
 
         var shiftController = FindFirstObjectByType<PaintingShiftController>(FindObjectsInactive.Include);
         if (shiftController != null)
@@ -69,17 +76,17 @@ public class DebugSkip : MonoBehaviour
             shiftController.ForceShift();
         }
 
-        if (PaintingQuestManager.Instance != null)
-            PaintingQuestManager.Instance.StartQuest();
+        if (paintingQuestManager != null)
+            paintingQuestManager.StartQuest();
 
-        if (ExplorationManager.Instance != null)
-            ExplorationManager.Instance.DebugShowTimerAndClicker();
+        if (explorationManager != null)
+            explorationManager.DebugShowTimerAndClicker();
     }
 
     void CompleteQuest()
     {
-        if (PaintingQuestManager.Instance == null) return;
-        PaintingQuestManager.Instance.DebugCompleteQuest();
+        if (paintingQuestManager == null) return;
+        paintingQuestManager.DebugCompleteQuest();
     }
 }
 #endif

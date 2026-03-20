@@ -14,8 +14,6 @@ using UnityEngine.UI;
 /// </summary>
 public class PauseMenuManager : MonoBehaviour
 {
-    public static PauseMenuManager Instance { get; private set; }
-
     [Header("UI")]
     [Tooltip("Root GameObject of the ESC menu")]
     [SerializeField] private GameObject pauseMenuCanvas;
@@ -40,17 +38,21 @@ public class PauseMenuManager : MonoBehaviour
     [Header("Novel")]
     [SerializeField] private NovelChannel novelChannel;
 
+    [Header("Dependencies")]
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private LevelUpCanvas levelUpCanvas;
+
+    [Header("Shared State")]
+    [Tooltip("BoolVariable SO — true while pause menu is open")]
+    [SerializeField] private BoolVariable isPausedVariable;
+
     private bool      _isPaused   = false;
     private GameState _curState   = GameState.Menu;
-
-    /// <summary>True while pause menu is open — used by other systems to block input.</summary>
-    public static bool IsPaused => Instance != null && Instance._isPaused;
 
     private const string PREFS_KEY = "MasterVolumeV2";
 
     void Awake()
     {
-        Instance = this;
         if (pauseMenuCanvas != null)
             pauseMenuCanvas.SetActive(false);
     }
@@ -87,8 +89,7 @@ public class PauseMenuManager : MonoBehaviour
             _curState == GameState.Final)
             return;
 
-        if (LevelUpCanvas.Instance != null &&
-            LevelUpCanvas.Instance.gameObject.activeSelf)
+        if (levelUpCanvas != null && levelUpCanvas.gameObject.activeSelf)
             return;
 
         TogglePause();
@@ -117,7 +118,7 @@ public class PauseMenuManager : MonoBehaviour
     public void GoToMainMenu()
     {
         Time.timeScale = 1f;
-        _isPaused = false;
+        SetPaused(false);
         SceneManager.LoadScene(0);
     }
 
@@ -172,7 +173,7 @@ public class PauseMenuManager : MonoBehaviour
 
     private void OpenPause()
     {
-        _isPaused      = true;
+        SetPaused(true);
         Time.timeScale = 0f;
 
         if (pauseMenuCanvas != null)
@@ -181,13 +182,13 @@ public class PauseMenuManager : MonoBehaviour
         if (volumeSlider != null)
             volumeSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat(PREFS_KEY, 0.25f));
 
-        if (PlayerController.Instance != null && PlayerController.Instance.enabled)
-            PlayerController.Instance.enabled = false;
+        if (playerController != null && playerController.enabled)
+            playerController.enabled = false;
     }
 
     private void ClosePause()
     {
-        _isPaused      = false;
+        SetPaused(false);
         Time.timeScale = 1f;
 
         if (pauseMenuCanvas != null)
@@ -195,8 +196,15 @@ public class PauseMenuManager : MonoBehaviour
 
         // Re-enable PlayerController only in Gameplay/Quest, NOT in VisualNovel
         if (_curState != GameState.VisualNovel &&
-            PlayerController.Instance != null && !PlayerController.Instance.enabled)
-            PlayerController.Instance.enabled = true;
+            playerController != null && !playerController.enabled)
+            playerController.enabled = true;
+    }
+
+    private void SetPaused(bool value)
+    {
+        _isPaused = value;
+        if (isPausedVariable != null)
+            isPausedVariable.Value = value;
     }
 
     void OnDestroy()

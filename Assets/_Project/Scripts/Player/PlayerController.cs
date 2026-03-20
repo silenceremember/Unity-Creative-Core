@@ -58,8 +58,6 @@ public class PlayerController : MonoBehaviour
 
     private int _wallMask;
 
-    public static PlayerController Instance { get; private set; }
-
     /// <summary>
     /// Lock horizontal movement (WASD).
     /// Gravity and CharacterController remain active — player keeps falling.
@@ -85,7 +83,6 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
         _cc = GetComponent<CharacterController>();
         _wallMask = ~(1 << gameObject.layer);
     }

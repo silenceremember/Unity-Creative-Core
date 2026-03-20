@@ -13,8 +13,6 @@ using UnityEngine;
 /// </summary>
 public class ExplorationManager : MonoBehaviour
 {
-    public static ExplorationManager Instance { get; private set; }
-
     [Header("Channels")]
     [SerializeField] private GameStateChannel gameStateChannel;
     [SerializeField] private NarratorChannel  narratorChannel;
@@ -50,6 +48,11 @@ public class ExplorationManager : MonoBehaviour
     [SerializeField] private TMP_Text clickerLabel;
     [SerializeField] private ClickerJuice clickerJuice;
 
+    [Header("Dependencies")]
+    [SerializeField] private NarratorManager narratorManager;
+    [SerializeField] private PaintingQuestManager paintingQuestManager;
+    [SerializeField] private BoolVariable isPausedVariable;
+
     private bool             _explorationActive;
     private bool             _triggerAUsed;
     private bool             _triggerBUsed;
@@ -61,7 +64,6 @@ public class ExplorationManager : MonoBehaviour
     private CancellationTokenSource _timerCts;
     private bool             _clickerActive;
 
-    void Awake() => Instance = this;
 
     void Start()
     {
@@ -96,7 +98,7 @@ public class ExplorationManager : MonoBehaviour
         var mouse = UnityEngine.InputSystem.Mouse.current;
         if (_clickerActive && mouse != null && mouse.leftButton.wasPressedThisFrame)
         {
-            if (PauseMenuManager.IsPaused) return;
+            if (isPausedVariable != null && isPausedVariable.Value) return;
             if (clickerJuice != null)
                 clickerJuice.RegisterClick();
         }
@@ -144,8 +146,8 @@ public class ExplorationManager : MonoBehaviour
 
     private void PlayTrigger(DialogueSequence triggerSeq)
     {
-        int currentPriority = NarratorManager.Instance?.CurrentSequence?.Priority ?? 0;
-        bool willPlay = !NarratorManager.Instance.IsPlaying || triggerSeq.Priority >= currentPriority;
+        int currentPriority = narratorManager?.CurrentSequence?.Priority ?? 0;
+        bool willPlay = narratorManager == null || !narratorManager.IsPlaying || triggerSeq.Priority >= currentPriority;
         if (willPlay)
             _triggerDialoguePlaying = true;
 
@@ -189,8 +191,8 @@ public class ExplorationManager : MonoBehaviour
 
         gameStateChannel?.Raise(GameState.Quest);
 
-        if (PaintingQuestManager.Instance != null)
-            PaintingQuestManager.Instance.StartQuest();
+        if (paintingQuestManager != null)
+            paintingQuestManager.StartQuest();
     }
 
     private async UniTask DecorativeCountdownAsync(CancellationToken ct)

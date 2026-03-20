@@ -20,8 +20,6 @@ using UnityEngine.UI;
 [RequireComponent(typeof(AudioSource))]
 public class VisualNovelManager : MonoBehaviour
 {
-    public static VisualNovelManager Instance { get; private set; }
-
     [Header("SO Channels")]
     [SerializeField] private NovelChannel novelChannel;
     [SerializeField] private GameStateChannel gameStateChannel;
@@ -72,7 +70,6 @@ public class VisualNovelManager : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
         _audioSource = GetComponent<AudioSource>();
         _audioSource.outputAudioMixerGroup = mixerGroup;
         if (novelCanvasRoot != null) novelCanvasRoot.SetActive(false);

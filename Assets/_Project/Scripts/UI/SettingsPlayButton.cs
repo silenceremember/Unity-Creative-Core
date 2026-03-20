@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class SettingsPlayButton : MonoBehaviour
 {
     [SerializeField] private NarratorChannel channel;
+    [SerializeField] private IntroCrawl introCrawl;
 
     [Tooltip("What the narrator says on press")]
     [SerializeField] private DialogueSequence sequence;
@@ -51,7 +52,7 @@ public class SettingsPlayButton : MonoBehaviour
     private void OnNarratorDone(DialogueSequence completed)
     {
         if (completed != sequence) return;
-        if (IntroCrawl.Instance != null)
-            IntroCrawl.Instance.Play();
+        if (introCrawl != null)
+            introCrawl.Play();
     }
 }

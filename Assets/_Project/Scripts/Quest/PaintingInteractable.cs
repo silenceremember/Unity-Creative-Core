@@ -25,6 +25,9 @@ public class PaintingInteractable : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private float snapDuration = 0.5f;
 
+    [Header("Dependencies")]
+    [SerializeField] private PaintingQuestManager paintingQuestManager;
+
     [Header("Slide Sounds (3D)")]
     [Tooltip("1-4 clips. A random one is picked on each painting rotation.")]
     [SerializeField] private AudioClip[] slideClips;
@@ -73,13 +76,13 @@ public class PaintingInteractable : MonoBehaviour
     {
         if (IsUsed) return;
         if (!other.CompareTag("Player")) return;
-        PaintingQuestManager.Instance?.OnPaintingEnter(this);
+        paintingQuestManager?.OnPaintingEnter(this);
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
-        PaintingQuestManager.Instance?.OnPaintingExit(this);
+        paintingQuestManager?.OnPaintingExit(this);
     }
 
     /// <summary>Smoothly returns painting to correct position (one-shot).</summary>

@@ -48,8 +48,6 @@ public class NarratorManager : MonoBehaviour
 
     private bool _skipLine;
 
-    public static NarratorManager Instance { get; private set; }
-
     /// <summary>True while any dialogue is playing.</summary>
     public bool IsPlaying => _cts != null && !_cts.IsCancellationRequested;
 
@@ -70,7 +68,6 @@ public class NarratorManager : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
         _audioSource = GetComponent<AudioSource>();
         _audioSource.outputAudioMixerGroup = mixerGroup;
 

@@ -13,7 +13,6 @@ using UnityEngine.UI;
 /// </summary>
 public class IntroCrawl : MonoBehaviour
 {
-    public static IntroCrawl Instance { get; private set; }
 
     [Header("References")]
     [Tooltip("RectTransform of the text block")]
@@ -47,7 +46,16 @@ public class IntroCrawl : MonoBehaviour
     [SerializeField] private AudioSource sceneAudio;
 
     [Header("Canvas")]
-    [SerializeField] internal GameObject crawlRoot;
+    [SerializeField] private GameObject crawlRoot;
+
+    [Header("Visual Novel")]
+    [SerializeField] private VisualNovelManager visualNovelManager;
+
+    /// <summary>Hides the crawl root. Called by external systems instead of direct crawlRoot access.</summary>
+    public void HideCrawl()
+    {
+        if (crawlRoot != null) crawlRoot.SetActive(false);
+    }
 
     [Header("State")]
     [SerializeField] private GameStateChannel gameStateChannel;
@@ -59,7 +67,7 @@ public class IntroCrawl : MonoBehaviour
 
     void Awake()
     {
-        Instance = this;
+
         if (crawlRoot != null) crawlRoot.SetActive(false);
     }
 
@@ -139,8 +147,8 @@ public class IntroCrawl : MonoBehaviour
 
         gameStateChannel?.Raise(GameState.VisualNovel);
 
-        if (VisualNovelManager.Instance != null)
-            VisualNovelManager.Instance.StartNovel();
+        if (visualNovelManager != null)
+            visualNovelManager.StartNovel();
     }
 
     private async UniTask BlinkIconAsync(CancellationToken ct)

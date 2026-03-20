@@ -28,8 +28,7 @@ public class PaintingShiftController : MonoBehaviour
 
     private bool _triggered;
 
-    public static PaintingShiftController Instance { get; private set; }
-    void Awake() => Instance = this;
+
 
     /// <summary>[DEBUG] Force shift all paintings.</summary>
     public void ForceShift()

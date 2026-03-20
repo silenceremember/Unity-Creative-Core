@@ -13,6 +13,9 @@ public class NarratorTrigger : MonoBehaviour
     [Tooltip("0 = Trigger A, 1 = Trigger B")]
     [SerializeField] private int triggerId;
 
+    [Header("Dependencies")]
+    [SerializeField] private ExplorationManager explorationManager;
+
     private void Awake()
     {
         var rb = GetComponent<Rigidbody>();
@@ -24,8 +27,8 @@ public class NarratorTrigger : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
-        if (ExplorationManager.Instance != null)
-            ExplorationManager.Instance.OnAreaTrigger(triggerId);
+        if (explorationManager != null)
+            explorationManager.OnAreaTrigger(triggerId);
 
         gameObject.SetActive(false);
     }

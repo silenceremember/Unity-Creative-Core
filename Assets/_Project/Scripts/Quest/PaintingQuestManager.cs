@@ -17,8 +17,6 @@ using UnityEngine;
 /// </summary>
 public class PaintingQuestManager : MonoBehaviour
 {
-    public static PaintingQuestManager Instance { get; private set; }
-
     [Header("Paintings (all 4 interactables)")]
     [SerializeField] private PaintingInteractable[] interactables = new PaintingInteractable[4];
 
@@ -56,6 +54,11 @@ public class PaintingQuestManager : MonoBehaviour
     [SerializeField] private AudioClip rejectSound;
     [SerializeField] private AudioSource questAudioSource;
 
+    [Header("Dependencies")]
+    [SerializeField] private XPLevelManager xpLevelManager;
+    [SerializeField] private ExplorationManager explorationManager;
+    [SerializeField] private BoolVariable isPausedVariable;
+
     [Header("Narrator")]
     [SerializeField] private NarratorChannel narratorChannel;
 
@@ -90,7 +93,6 @@ public class PaintingQuestManager : MonoBehaviour
 
     private CancellationTokenSource _questCts;
 
-    void Awake() => Instance = this;
 
     void Start()
     {
@@ -118,9 +120,9 @@ public class PaintingQuestManager : MonoBehaviour
 
     private void OnNarratorCompleted(DialogueSequence completed)
     {
-        if (completed == seqPostQuest && XPLevelManager.Instance != null)
+        if (completed == seqPostQuest && xpLevelManager != null)
         {
-            XPLevelManager.Instance.AddXP(XPLevelManager.Instance.questRewardXP);
+            xpLevelManager.AddXP(xpLevelManager.questRewardXP);
         }
     }
 
@@ -169,9 +171,9 @@ public class PaintingQuestManager : MonoBehaviour
         var kb = UnityEngine.InputSystem.Keyboard.current;
         if (kb != null && kb.eKey.wasPressedThisFrame)
         {
-            if (PauseMenuManager.IsPaused) return;
-            bool triggerDialogue = ExplorationManager.Instance != null &&
-                                   ExplorationManager.Instance.TriggerDialoguePlaying;
+            if (isPausedVariable != null && isPausedVariable.Value) return;
+            bool triggerDialogue = explorationManager != null &&
+                                   explorationManager.TriggerDialoguePlaying;
             if (triggerDialogue)
             {
                 if (!_ePromptShaking && ePrompt != null)
@@ -291,7 +293,7 @@ public class PaintingQuestManager : MonoBehaviour
                 if (seqPostQuest != null)
                     narratorChannel?.Raise(seqPostQuest);
                 else
-                    XPLevelManager.Instance?.AddXP(XPLevelManager.Instance != null ? XPLevelManager.Instance.questRewardXP : 1000);
+                    xpLevelManager?.AddXP(xpLevelManager != null ? xpLevelManager.questRewardXP : 1000);
             }
             else
             {
