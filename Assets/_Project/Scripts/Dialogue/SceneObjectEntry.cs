@@ -2,15 +2,15 @@ using System;
 using UnityEngine;
 
 /// <summary>
-/// Пара ключ→объект для словаря activateObject в NarratorManager.
-/// Назначается в Inspector — работает даже с изначально неактивными объектами.
+/// Key→object pair for the activateObject dictionary in NarratorManager.
+/// Assigned in Inspector — works even with initially inactive objects.
 /// </summary>
 [Serializable]
 public class SceneObjectEntry
 {
-    [Tooltip("Имя ключа — должно совпадать с DialogueLine.activateObject")]
+    [Tooltip("Key name — must match DialogueLine.activateObject")]
     public string key;
 
-    [Tooltip("Объект сцены, который будет активирован")]
+    [Tooltip("Scene object to be activated")]
     public GameObject gameObject;
 }

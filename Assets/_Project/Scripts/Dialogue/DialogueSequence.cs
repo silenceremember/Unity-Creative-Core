@@ -1,26 +1,25 @@
 using UnityEngine;
 
 /// <summary>
-/// Последовательность реплик. Один asset = одна сцена/момент.
-/// Создай через ПКМ → Create → Dialogue → Sequence
+/// Dialogue sequence. One asset = one scene/moment.
 /// </summary>
-[CreateAssetMenu(menuName = "Dialogue/Sequence", fileName = "Seq_New")]
+[CreateAssetMenu(menuName = "Game/Dialogue/Sequence", fileName = "Seq_New")]
 public class DialogueSequence : ScriptableObject
 {
     public const int MAX_CHARS = 58;
 
-    [Header("Реплики")]
+    [Header("Lines")]
     public DialogueLine[] lines;
 
-    [Header("Автопереход")]
-    [Tooltip("Следующая последовательность после завершения этой (null = стоп)")]
+    [Header("Auto-transition")]
+    [Tooltip("Next sequence after this one finishes (null = stop)")]
     public DialogueSequence nextSequence;
 
-    [Header("Настройки")]
-    [Tooltip("Приоритет. >= текущего — прерывает, < текущего — не прерывает.")]
+    [Header("Settings")]
+    [Tooltip("Priority. >= current — interrupts, < current — does not.")]
     public int priority = 0;
 
-    [Tooltip("Если true — при запуске сохраняет прерванный диалог и восстанавливает его после завершения этой последовательности.")]
+    [Tooltip("If true — saves the interrupted dialogue and restores it after this sequence finishes.")]
     public bool restoreInterrupted = false;
 
 #if UNITY_EDITOR

@@ -2,115 +2,105 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 /// <summary>
-/// First-person контроллер игрока:
-///   - WASD движение с плавным ускорением/торможением
-///   - Вращение мышью (горизонталь игрок, вертикаль камера)
-///   - Camera wall-push: SphereCast предотвращает прохождение камеры через стены
-///   - Near clip plane уменьшается до 0.02 чтобы убрать отсечение близкой геометрии
+/// First-person player controller:
+///   - WASD movement with smooth acceleration/deceleration
+///   - Mouse look (horizontal = player, vertical = camera)
+///   - Camera wall-push: SphereCast prevents camera from clipping through walls
+///   - Near clip plane reduced to 0.02 to avoid close geometry clipping
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
-    // ─── Movement ────────────────────────────────────────────
     [Header("Movement")]
-    [Tooltip("Максимальная скорость ходьбы (м/с)")]
-    public float moveSpeed = 4f;
+    [Tooltip("Max walk speed (m/s)")]
+    [SerializeField] private float moveSpeed = 4f;
 
-    [Tooltip("Время разгона до максимальной скорости (чем меньше — тем резче)")]
+    [Tooltip("Time to reach max speed")]
     [Range(0.05f, 0.5f)]
-    public float acceleration = 0.12f;
+    [SerializeField] private float acceleration = 0.12f;
 
-    [Tooltip("Время торможения (чем меньше — тем резче)")]
+    [Tooltip("Time to stop")]
     [Range(0.05f, 0.5f)]
-    public float deceleration = 0.08f;
+    [SerializeField] private float deceleration = 0.08f;
 
-    [Tooltip("Сила гравитации")]
-    public float gravity = -18f;   // реалистичнее чем -9.81
+    [Tooltip("Gravity force")]
+    [SerializeField] private float gravity = -18f;
 
-    [Tooltip("Максимальная скорость падения (м/с). Ограничивает чтобы не пролетать тонкие триггеры.")]
-    public float maxFallSpeed = 10f;
+    [Tooltip("Max fall speed (m/s)")]
+    [SerializeField] private float maxFallSpeed = 10f;
 
-    // ─── Look ────────────────────────────────────────────────
     [Header("Look")]
-    [Tooltip("Чувствительность мыши")]
+    [Tooltip("Mouse sensitivity")]
     [Range(0.5f, 5f)]
-    public float mouseSensitivity = 1.8f;
+    [SerializeField] private float mouseSensitivity = 1.8f;
 
-    [Tooltip("Мин/макс угол взгляда вверх/вниз")]
-    public float pitchMin = -75f;
-    public float pitchMax = 75f;
+    [Tooltip("Min/max vertical look angle")]
+    [SerializeField] private float pitchMin = -75f;
+    [SerializeField] private float pitchMax = 75f;
 
-    // ─── Camera wall push ────────────────────────────────────
     [Header("Camera Wall Clip Prevention")]
-    [Tooltip("Радиус сферы при проверке столкновения камеры со стеной")]
+    [Tooltip("Sphere radius for camera collision check")]
     [Range(0.01f, 0.3f)]
-    public float cameraCollisionRadius = 0.1f;
+    [SerializeField] private float cameraCollisionRadius = 0.1f;
 
-    [Tooltip("Смещение камеры от пивота игрока в нормальном состоянии")]
-    public Vector3 cameraBaseLocalOffset = new Vector3(0f, 0.7f, 0f);
+    [Tooltip("Camera offset from player pivot in normal state")]
+    [SerializeField] internal Vector3 cameraBaseLocalOffset = new Vector3(0f, 0.7f, 0f);
 
-    // ─── Private ─────────────────────────────────────────────
     private CharacterController _cc;
     private Camera _camera;
     private Transform _cameraTransform;
 
-    private Vector3 _currentVelocityXZ;   // горизонтальная скорость для SmoothDamp
-    private Vector3 _smoothDampVelocity;  // внутренний ref для SmoothDamp
+    private Vector3 _currentVelocityXZ;
+    private Vector3 _smoothDampVelocity;
 
     private float _cameraPitch = 0f;
     private float _verticalVelocity;
 
-    // Маски для camera raycast — исключаем игрока
     private int _wallMask;
 
     public static PlayerController Instance { get; private set; }
 
     /// <summary>
-    /// Заблокировать горизонтальное движение (WASD).
-    /// Гравитация и CharacterController остаются активными — игрок продолжает падать.
-    /// Устанавливается FinalSequenceManager при триггере 0.
+    /// Lock horizontal movement (WASD).
+    /// Gravity and CharacterController remain active — player keeps falling.
     /// </summary>
-    public bool lockMovement = false;
+    [SerializeField, HideInInspector] private bool _lockMovement = false;
+    public bool lockMovement { get => _lockMovement; set => _lockMovement = value; }
 
     /// <summary>
-    /// Полная заморозка X/Z: мгновенно обнуляет горизонтальную скорость
-    /// и не даёт ей накапливаться. Игрок летит строго вниз по Y.
-    /// Устанавливается FinalSequenceManager при триггере 0.
+    /// Full X/Z freeze: instantly zeroes horizontal velocity
+    /// and prevents it from accumulating. Player falls straight down.
     /// </summary>
-    public bool lockXZ = false;
+    [SerializeField, HideInInspector] private bool _lockXZ = false;
+    public bool lockXZ { get => _lockXZ; set => _lockXZ = value; }
 
-    /// <summary>Включить режим строго-вертикального падения.</summary>
+    /// <summary>Enable strict vertical-fall mode.</summary>
     public void LockXZ()
     {
-        lockMovement = true;   // тоже блокируем ввод WASD
-        lockXZ       = true;
+        _lockMovement       = true;
+        _lockXZ             = true;
         _currentVelocityXZ  = Vector3.zero;
         _smoothDampVelocity = Vector3.zero;
     }
-
-    // ─────────────────────────────────────────────────────────
 
     void Awake()
     {
         Instance = this;
         _cc = GetComponent<CharacterController>();
-        // Игнорируем слой самого игрока при camera raycast
         _wallMask = ~(1 << gameObject.layer);
     }
 
     /// <summary>
-    /// Вызывается из GameplaySetup при входе в Gameplay.
+    /// Called from GameplaySetup when entering Gameplay.
     /// </summary>
     public void Init(Transform cameraTransform)
     {
         _cameraTransform = cameraTransform;
         _camera = cameraTransform != null ? cameraTransform.GetComponent<Camera>() : null;
 
-        // Уменьшаем near clip plane — убирает артефакты клиппинга вблизи
         if (_camera != null)
             _camera.nearClipPlane = 0.02f;
 
-        // Начальный pitch
         _cameraPitch = cameraTransform != null
             ? cameraTransform.localEulerAngles.x
             : 0f;
@@ -137,24 +127,18 @@ public class PlayerController : MonoBehaviour
 
     void LateUpdate()
     {
-        // Camera wall push — вызываем ПОСЛЕ физики (LateUpdate)
         if (_cameraTransform != null)
             PushCameraFromWalls();
     }
-
-    // ─── Rotation ─────────────────────────────────────────────
 
     private void HandleRotation()
     {
         if (Mouse.current == null) return;
 
-        // delta.ReadValue() возвращает пиксели/фрейм → нормируем
         Vector2 delta = Mouse.current.delta.ReadValue() * (mouseSensitivity * 0.08f);
 
-        // Горизонталь — поворот игрока
         transform.Rotate(Vector3.up, delta.x, Space.World);
 
-        // Вертикаль — наклон камеры
         if (_cameraTransform != null)
         {
             _cameraPitch -= delta.y;
@@ -163,26 +147,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // ─── Movement ─────────────────────────────────────────────
-
     private void HandleMovement()
     {
         var kb = Keyboard.current;
         if (kb == null) return;
 
-        // Входной вектор — блокируем если lockMovement (падаем ровно вниз)
-        float h = lockMovement ? 0f : (kb.dKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed ? 1f : 0f);
-        float v = lockMovement ? 0f : (kb.wKey.isPressed ? 1f : 0f) - (kb.sKey.isPressed ? 1f : 0f);
+        float h = _lockMovement ? 0f : (kb.dKey.isPressed ? 1f : 0f) - (kb.aKey.isPressed ? 1f : 0f);
+        float v = _lockMovement ? 0f : (kb.wKey.isPressed ? 1f : 0f) - (kb.sKey.isPressed ? 1f : 0f);
 
         Vector3 wishDir = transform.right * h + transform.forward * v;
         wishDir = Vector3.ClampMagnitude(wishDir, 1f);
 
         Vector3 targetVelocity = wishDir * moveSpeed;
 
-        // Плавно интерполируем горизонтальную скорость
-        if (lockXZ)
+        if (_lockXZ)
         {
-            // Строгое вертикальное падение: X/Z всегда 0
             _currentVelocityXZ  = Vector3.zero;
             _smoothDampVelocity = Vector3.zero;
         }
@@ -193,49 +172,35 @@ public class PlayerController : MonoBehaviour
                 _currentVelocityXZ, targetVelocity, ref _smoothDampVelocity, smoothTime);
         }
 
-        // Гравитация
         if (_cc.isGrounded && _verticalVelocity < 0f)
-            _verticalVelocity = -4f;   // прижимаем к земле чтобы isGrounded не мигал
+            _verticalVelocity = -4f;
 
         _verticalVelocity += gravity * Time.deltaTime;
-        // Ограничиваем максимальную скорость падения — иначе при длинном
-        // падении можно пролететь триггер за один кадр
         _verticalVelocity = Mathf.Max(_verticalVelocity, -maxFallSpeed);
 
-        // Итоговый вектор движения
         Vector3 move = _currentVelocityXZ;
         move.y = _verticalVelocity;
 
         _cc.Move(move * Time.deltaTime);
     }
 
-    // ─── Camera Wall Push ─────────────────────────────────────
-
     /// <summary>
-    /// SphereCast от головы игрока к камере.
-    /// Если по пути есть стена — двигаем камеру перед ней.
+    /// SphereCast from player head to camera.
+    /// If a wall is in the way — pushes the camera in front of it.
     /// </summary>
     private void PushCameraFromWalls()
     {
-        // Мировая позиция базовой точки (голова игрока)
         Vector3 origin = transform.position + cameraBaseLocalOffset;
+        Vector3 desiredPos = origin;
 
-        // Желаемое положение камеры (без коллизии)
-        Vector3 desiredPos = origin;  // first-person: камера прямо в голове
-
-        // Для первого лица: камера УЖЕ в голове, клиппинг идёт от геометрии
-        // которая вплотную к камере. Небольшой SphereCast назад (от головы
-        // по look-direction) помогает при движении вплотную к стене.
         Vector3 lookDir = _cameraTransform.forward;
         float checkDist = 0.15f;
 
-        // Проверяем есть ли стена прямо перед камерой (в 15 см)
         if (Physics.SphereCast(origin, cameraCollisionRadius,
                                lookDir, out RaycastHit hit,
                                checkDist, _wallMask,
                                QueryTriggerInteraction.Ignore))
         {
-            // Отодвигаем камеру немного назад от стены
             float pushBack = checkDist - hit.distance + cameraCollisionRadius;
             desiredPos = origin - lookDir * pushBack;
         }

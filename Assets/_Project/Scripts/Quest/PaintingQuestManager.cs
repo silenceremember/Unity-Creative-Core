@@ -1,0 +1,440 @@
+using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using TMPro;
+using UnityEngine;
+
+/// <summary>
+/// Main manager for the "fix paintings" quest.
+///
+/// Logic:
+///   - Fixed slot order: [2, 0, 3, 1] (0-based Picture indices)
+///     Means: 1st press → Picture3, 2nd → Picture1, 3rd → Picture4, 4th → Picture2
+///   - Each PaintingInteractable has a codeDigit (1-4)
+///   - Code = string of codeDigit values in press order
+///   - Correct code = "1234"
+///   - Accept = green; Reject = red + shake
+/// </summary>
+public class PaintingQuestManager : MonoBehaviour
+{
+    public static PaintingQuestManager Instance { get; private set; }
+
+    [Header("Paintings (all 4 interactables)")]
+    [SerializeField] private PaintingInteractable[] interactables = new PaintingInteractable[4];
+
+    [Header("Quest Canvas")]
+    [SerializeField] private GameObject questCanvas;
+
+    [Header("Quest Lines (Picture1..4 in Group)")]
+    [SerializeField] private TextMeshProUGUI[] pictureLabels = new TextMeshProUGUI[4];
+
+    [Header("E-Prompt")]
+    [Tooltip("UI object with '[E] Fix' hint")]
+    [SerializeField] private GameObject ePrompt;
+
+    [Header("Code")]
+    [Tooltip("Correct code")]
+    [SerializeField] private string correctCode = "1234";
+
+    [Header("Animation")]
+    [SerializeField] private float shakeDuration   = 0.5f;
+    [SerializeField] private float shakeMagnitude  = 12f;
+    [SerializeField] private float pulseDuration   = 0.4f;
+
+    [Header("Colors")]
+    [SerializeField] private Color colorDefault  = Color.yellow;
+    [SerializeField] private Color colorDone     = Color.gray;
+    [SerializeField] private Color colorAccept   = Color.green;
+    [SerializeField] private Color colorReject   = Color.red;
+
+    [Header("Quest Sounds")]
+    [Tooltip("Sound on E press (not reject)")]
+    [SerializeField] private AudioClip interactSound;
+    [Tooltip("Sound on quest success (accept / green)")]
+    [SerializeField] private AudioClip acceptSound;
+    [Tooltip("Sound on quest failure (reject / red)")]
+    [SerializeField] private AudioClip rejectSound;
+    [SerializeField] private AudioSource questAudioSource;
+
+    [Header("Narrator")]
+    [SerializeField] private NarratorChannel narratorChannel;
+
+    [Tooltip("Dialogues on painting click (4 — cycled)")]
+    [SerializeField] private DialogueSequence[] paintingClickDialogues = new DialogueSequence[4];
+
+    [Tooltip("Dialogues on reject (5: reject 1..5)")]
+    [SerializeField] private DialogueSequence[] rejectDialogues = new DialogueSequence[5];
+
+    [Tooltip("Dialogue after successful quest completion")]
+    [SerializeField] private DialogueSequence seqPostQuest;
+
+    private static readonly int[] SlotOrder = { 2, 0, 3, 1 };
+
+    private string         _enteredCode   = "";
+    private int            _pressCount    = 0;
+    private bool           _questActive   = false;
+    private bool           _resolved      = false;
+    private int            _rejectCount   = 0;
+
+    private PaintingInteractable _nearPainting;
+
+    private float _eBlockedUntil  = 0f;
+    private const float ESpamCooldown = 0.5f;
+
+    [Header("Reject E-Prompt Animation")]
+    [Tooltip("E-prompt shake amplitude (pixels)")]
+    [SerializeField] private float ePromptShakeMagnitude = 10f;
+    [Tooltip("Shake duration (sec)")]
+    [SerializeField] private float ePromptShakeDuration  = 0.35f;
+    private bool _ePromptShaking = false;
+
+    private CancellationTokenSource _questCts;
+
+    void Awake() => Instance = this;
+
+    void Start()
+    {
+        if (questCanvas  != null) questCanvas .SetActive(false);
+        if (ePrompt      != null) ePrompt     .SetActive(false);
+    }
+
+    void OnEnable()
+    {
+        if (narratorChannel != null)
+            narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
+    }
+
+    void OnDisable()
+    {
+        if (narratorChannel != null)
+            narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
+    }
+
+    void OnDestroy()
+    {
+        _questCts?.Cancel();
+        _questCts?.Dispose();
+    }
+
+    private void OnNarratorCompleted(DialogueSequence completed)
+    {
+        if (completed == seqPostQuest && XPLevelManager.Instance != null)
+        {
+            XPLevelManager.Instance.AddXP(XPLevelManager.Instance.questRewardXP);
+        }
+    }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+    /// <summary>[DEBUG] Instantly completes the quest (O key).</summary>
+    public void DebugCompleteQuest()
+    {
+        if (!_questActive) StartQuest();
+
+        _questCts?.Cancel();
+        _questCts?.Dispose();
+        _questCts = null;
+
+        for (int i = 0; i < interactables.Length && i < 4; i++)
+        {
+            var p = interactables[i];
+            if (p == null || p.IsUsed) continue;
+            if (p.AssignedSlotIndex == -1)
+                p.AssignedSlotIndex = SlotOrder[_pressCount];
+            p.SnapToCorrect();
+            _enteredCode += (p.AssignedSlotIndex + 1).ToString();
+
+            int slotIndex = p.AssignedSlotIndex;
+            if (slotIndex < pictureLabels.Length && pictureLabels[slotIndex] != null)
+            {
+                pictureLabels[slotIndex].color     = colorDone;
+                pictureLabels[slotIndex].fontStyle |= FontStyles.Strikethrough;
+            }
+            _pressCount++;
+        }
+
+        _enteredCode  = correctCode;
+        _resolved     = true;
+        _questActive  = false;
+
+        _questCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
+        ResolveAsync(_questCts.Token).Forget();
+    }
+#endif
+
+    void Update()
+    {
+        if (!_questActive || _resolved) return;
+        if (_nearPainting == null)      return;
+
+        var kb = UnityEngine.InputSystem.Keyboard.current;
+        if (kb != null && kb.eKey.wasPressedThisFrame)
+        {
+            if (PauseMenuManager.IsPaused) return;
+            bool triggerDialogue = ExplorationManager.Instance != null &&
+                                   ExplorationManager.Instance.TriggerDialoguePlaying;
+            if (triggerDialogue)
+            {
+                if (!_ePromptShaking && ePrompt != null)
+                {
+                    if (questAudioSource != null && rejectSound != null)
+                        questAudioSource.PlayOneShot(rejectSound);
+                    ShakeEPromptAsync(destroyCancellationToken).Forget();
+                }
+                return;
+            }
+            _eBlockedUntil = Time.unscaledTime + ESpamCooldown;
+            InteractPainting(_nearPainting);
+        }
+    }
+
+    /// <summary>Called from ExplorationManager — starts the quest.</summary>
+    public void StartQuest()
+    {
+        foreach (var interactable in interactables)
+            if (interactable != null)
+                interactable.CaptureQuestStart();
+
+        _questActive  = true;
+        _resolved     = false;
+        _enteredCode  = "";
+        _pressCount   = 0;
+        _rejectCount  = 0;
+
+        if (questCanvas != null) questCanvas.SetActive(true);
+    }
+
+    /// <summary>PaintingInteractable calls this when the player enters the zone.</summary>
+    public void OnPaintingEnter(PaintingInteractable painting)
+    {
+        if (!_questActive || _resolved || painting.IsUsed) return;
+        _nearPainting = painting;
+        if (ePrompt != null) ePrompt.SetActive(true);
+    }
+
+    /// <summary>PaintingInteractable calls this when the player exits the zone.</summary>
+    public void OnPaintingExit(PaintingInteractable painting)
+    {
+        if (_nearPainting != painting) return;
+        _nearPainting = null;
+        if (ePrompt != null) ePrompt.SetActive(false);
+    }
+
+    private void InteractPainting(PaintingInteractable painting)
+    {
+        if (painting.IsUsed) return;
+
+        if (questAudioSource != null && interactSound != null)
+            questAudioSource.PlayOneShot(interactSound);
+
+        painting.SnapToCorrect();
+
+        if (painting.AssignedSlotIndex == -1)
+            painting.AssignedSlotIndex = SlotOrder[_pressCount];
+
+        _enteredCode += (painting.AssignedSlotIndex + 1).ToString();
+
+        int slotIndex = painting.AssignedSlotIndex;
+        if (slotIndex < pictureLabels.Length && pictureLabels[slotIndex] != null)
+        {
+            pictureLabels[slotIndex].color = colorDone;
+            pictureLabels[slotIndex].fontStyle |= FontStyles.Strikethrough;
+        }
+
+        _pressCount++;
+
+        if (paintingClickDialogues != null && paintingClickDialogues.Length > 0)
+        {
+            int idx = (_pressCount - 1) % paintingClickDialogues.Length;
+            var seq = paintingClickDialogues[idx];
+            if (seq != null) narratorChannel?.Raise(seq);
+        }
+
+        if (ePrompt != null) ePrompt.SetActive(false);
+        _nearPainting = null;
+
+        if (_pressCount >= 4)
+        {
+            _questCts?.Cancel();
+            _questCts?.Dispose();
+            _questCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
+            ResolveAsync(_questCts.Token).Forget();
+        }
+    }
+
+    private async UniTask ResolveAsync(CancellationToken ct)
+    {
+        _resolved    = true;
+        _questActive = false;
+
+        try
+        {
+            await UniTask.Delay(System.TimeSpan.FromSeconds(0.3f), cancellationToken: ct);
+
+            bool accepted = _enteredCode == correctCode;
+
+            Color resultColor = accepted ? colorAccept : colorReject;
+
+            foreach (var lbl in pictureLabels)
+                if (lbl != null)
+                {
+                    lbl.color = resultColor;
+                    lbl.fontStyle &= ~FontStyles.Strikethrough;
+                }
+
+            if (accepted)
+            {
+                if (questAudioSource != null && acceptSound != null)
+                    questAudioSource.PlayOneShot(acceptSound);
+
+                await PulseLabelsAsync(ct);
+
+                if (seqPostQuest != null)
+                    narratorChannel?.Raise(seqPostQuest);
+                else
+                    XPLevelManager.Instance?.AddXP(XPLevelManager.Instance != null ? XPLevelManager.Instance.questRewardXP : 1000);
+            }
+            else
+            {
+                if (questAudioSource != null && rejectSound != null)
+                    questAudioSource.PlayOneShot(rejectSound);
+
+                await ShakeLabelsAsync(ct);
+
+                _rejectCount++;
+
+                int rejectIdx = _rejectCount - 1;
+                if (rejectDialogues != null && rejectIdx < rejectDialogues.Length && rejectDialogues[rejectIdx] != null)
+                    narratorChannel?.Raise(rejectDialogues[rejectIdx]);
+
+                if (_rejectCount >= 5)
+                {
+                    await AutoSolveAfterDialogueAsync(ct);
+                }
+                else
+                {
+                    await UniTask.Delay(System.TimeSpan.FromSeconds(0.8f), cancellationToken: ct);
+                    DoReset();
+                }
+            }
+        }
+        catch (System.OperationCanceledException) { }
+    }
+
+    private async UniTask AutoSolveAfterDialogueAsync(CancellationToken ct)
+    {
+        await UniTask.Delay(System.TimeSpan.FromSeconds(5f), cancellationToken: ct);
+
+        foreach (var interactable in interactables)
+            if (interactable != null)
+                interactable.ResetPainting(0.4f);
+
+        await UniTask.Delay(System.TimeSpan.FromSeconds(0.6f), cancellationToken: ct);
+
+        _resolved    = false;
+        _questActive = true;
+        _enteredCode = "";
+        _pressCount  = 0;
+
+        foreach (var lbl in pictureLabels)
+            if (lbl != null)
+            {
+                lbl.color     = colorDefault;
+                lbl.fontStyle &= ~FontStyles.Strikethrough;
+            }
+
+        DebugCompleteQuest();
+    }
+
+    private void DoReset()
+    {
+        foreach (var interactable in interactables)
+            if (interactable != null)
+                interactable.ResetPainting(0.5f);
+
+        _enteredCode  = "";
+        _pressCount   = 0;
+        _resolved     = false;
+        _questActive  = true;
+
+        foreach (var lbl in pictureLabels)
+            if (lbl != null)
+            {
+                lbl.color     = colorDefault;
+                lbl.fontStyle &= ~FontStyles.Strikethrough;
+            }
+    }
+
+    private async UniTask ShakeLabelsAsync(CancellationToken ct)
+    {
+        if (pictureLabels.Length == 0 || pictureLabels[0] == null) return;
+        var groupRT = pictureLabels[0].transform.parent as RectTransform;
+        if (groupRT == null) return;
+
+        Vector2 origin = groupRT.anchoredPosition;
+        float elapsed  = 0f;
+
+        while (elapsed < shakeDuration)
+        {
+            ct.ThrowIfCancellationRequested();
+            elapsed += Time.deltaTime;
+            float x = Random.Range(-shakeMagnitude, shakeMagnitude) * (1f - elapsed / shakeDuration);
+            groupRT.anchoredPosition = origin + new Vector2(x, 0f);
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
+        }
+        groupRT.anchoredPosition = origin;
+    }
+
+    private async UniTask PulseLabelsAsync(CancellationToken ct)
+    {
+        if (pictureLabels.Length == 0 || pictureLabels[0] == null) return;
+        var groupRT = pictureLabels[0].transform.parent as RectTransform;
+        if (groupRT == null) return;
+
+        Vector3 originScale = groupRT.localScale;
+        float elapsed       = 0f;
+
+        while (elapsed < pulseDuration)
+        {
+            ct.ThrowIfCancellationRequested();
+            elapsed += Time.deltaTime;
+            float t  = Mathf.Sin(elapsed / pulseDuration * Mathf.PI);
+            groupRT.localScale = originScale * (1f + 0.12f * t);
+            await UniTask.Yield(PlayerLoopTiming.Update, ct);
+        }
+        groupRT.localScale = originScale;
+    }
+
+    private async UniTask ShakeEPromptAsync(CancellationToken ct)
+    {
+        if (ePrompt == null) return;
+        _ePromptShaking = true;
+
+        var rt = ePrompt.GetComponent<RectTransform>();
+        if (rt == null) { _ePromptShaking = false; return; }
+
+        var txt = ePrompt.GetComponentInChildren<TMPro.TextMeshProUGUI>();
+        Color originalColor = txt != null ? txt.color : Color.white;
+        if (txt != null) txt.color = Color.red;
+
+        Vector2 origin  = rt.anchoredPosition;
+        float   elapsed = 0f;
+
+        try
+        {
+            while (elapsed < ePromptShakeDuration)
+            {
+                ct.ThrowIfCancellationRequested();
+                elapsed += Time.deltaTime;
+                float x = Random.Range(-ePromptShakeMagnitude, ePromptShakeMagnitude) *
+                          (1f - elapsed / ePromptShakeDuration);
+                rt.anchoredPosition = origin + new Vector2(x, 0f);
+                await UniTask.Yield(PlayerLoopTiming.Update, ct);
+            }
+        }
+        catch (System.OperationCanceledException) { }
+
+        rt.anchoredPosition = origin;
+        if (txt != null) txt.color = originalColor;
+        _ePromptShaking = false;
+    }
+}

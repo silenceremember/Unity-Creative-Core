@@ -1,101 +1,78 @@
 using UnityEngine;
 
 /// <summary>
-/// Система звуков шагов для first-person контроллера.
+/// Footstep sound system for first-person controller.
 ///
-/// Принцип (как в Source Engine / Unreal):
-///   - Шаги тикают по ПРОЙДЕННОМУ РАССТОЯНИЮ, а не по таймеру.
-///   - Звук играет ТОЛЬКО при isGrounded + горизонтальное движение > порога.
-
-///   - 18 вариаций + случайный pitch устраняют эффект "машинного пулемёта".
+/// Principle (similar to Source Engine / Unreal):
+///   - Steps tick based on DISTANCE TRAVELED, not a timer.
+///   - Sound plays ONLY when isGrounded + horizontal speed > threshold.
+///   - 18 variations + random pitch eliminate the "machine gun" effect.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(AudioSource))]
 public class FootstepSystem : MonoBehaviour
 {
-    // ─── Step Settings ────────────────────────────────────────────
     [Header("Step Settings")]
-    [Tooltip("Расстояние между шагами в метрах (Half-Life 2 использует ~2.0)")]
-    public float stepDistance = 2.1f;
+    [Tooltip("Distance between steps in meters (Half-Life 2 uses ~2.0)")]
+    [SerializeField] private float stepDistance = 2.1f;
 
-    [Tooltip("Минимальная горизонтальная скорость для воспроизведения шага")]
-    public float minMoveSpeed = 0.5f;
+    [Tooltip("Min horizontal speed to trigger a step")]
+    [SerializeField] private float minMoveSpeed = 0.5f;
 
-    // ─── Audio Clips ──────────────────────────────────────────────
     [Header("Audio Clips")]
-    [Tooltip("Клипы шагов (step-001 … step-018)")]
-    public AudioClip[] footstepClips;
+    [Tooltip("Footstep clips (step-001 … step-018)")]
+    [SerializeField] private AudioClip[] footstepClips;
 
-    // ─── Pitch Variation ──────────────────────────────────────────
     [Header("Pitch Variation")]
-    [Tooltip("Нижняя граница диапазона pitch")]
+    [Tooltip("Pitch lower bound")]
     [Range(0.5f, 1.5f)]
-    public float pitchMin = 0.9f;
+    [SerializeField] private float pitchMin = 0.9f;
 
-    [Tooltip("Верхняя граница диапазона pitch")]
+    [Tooltip("Pitch upper bound")]
     [Range(0.5f, 1.5f)]
-    public float pitchMax = 1.1f;
+    [SerializeField] private float pitchMax = 1.1f;
 
-    // ─── Volume ───────────────────────────────────────────────────
     [Header("Volume")]
     [Range(0f, 1f)]
-    public float footstepVolume = 0.5f;
+    [SerializeField] private float footstepVolume = 0.5f;
 
-    // ─── Private ──────────────────────────────────────────────────
     private CharacterController _cc;
     private AudioSource _audioSource;
-
-    private float _distanceTravelled;   // накопленное расстояние с последнего шага
-
-    private int _lastClipIndex = -1;    // индекс последнего клипа (не повторяем подряд)
-
-    // ─────────────────────────────────────────────────────────────
+    private float _distanceTravelled;
+    private int _lastClipIndex = -1;
 
     void Awake()
     {
         _cc = GetComponent<CharacterController>();
         _audioSource = GetComponent<AudioSource>();
 
-        // AudioSource для шагов не должен играть в loop и иметь свой клип
-        _audioSource.playOnAwake = false;
-        _audioSource.loop        = false;
-        _audioSource.spatialBlend = 0f; // 2D — FPS-шаги не нуждаются в 3D-позиционировании
+        _audioSource.playOnAwake  = false;
+        _audioSource.loop         = false;
+        _audioSource.spatialBlend = 0f;
     }
 
     void Update()
     {
-        bool grounded = _cc.isGrounded;
-
-        // ── Шаги ─────────────────────────────────────────────────
-        if (!grounded)
+        if (!_cc.isGrounded)
         {
-            // В воздухе — сбрасываем накопленное расстояние
             _distanceTravelled = 0f;
             return;
         }
 
-        // Горизонтальная скорость (Y игнорируем — он про гравитацию)
         Vector3 vel = _cc.velocity;
         float horizontalSpeed = new Vector3(vel.x, 0f, vel.z).magnitude;
 
         if (horizontalSpeed < minMoveSpeed)
-        {
-            // Стоим — не накапливаем расстояние, но не сбрасываем
-            // (чтобы не было "половинного" шага при остановке-старте)
             return;
-        }
 
         _distanceTravelled += horizontalSpeed * Time.deltaTime;
 
         if (_distanceTravelled >= stepDistance)
         {
             PlayFootstep();
-            // Вычитаем, а не обнуляем — сохраняем дробный остаток для точности
             _distanceTravelled -= stepDistance;
         }
     }
-
-    // ─── Play helpers ─────────────────────────────────────────────
 
     private void PlayFootstep()
     {
@@ -106,10 +83,9 @@ public class FootstepSystem : MonoBehaviour
         _audioSource.PlayOneShot(clip, footstepVolume);
     }
 
-
     /// <summary>
-    /// Возвращает случайный клип из footstepClips, исключая предыдущий
-    /// (алгоритм "no-repeat" shuffle lite — без тяжёлой перетасовки).
+    /// Returns a random clip from footstepClips, excluding the previous one
+    /// ("no-repeat" shuffle lite — without full shuffling).
     /// </summary>
     private AudioClip GetRandomClip()
     {

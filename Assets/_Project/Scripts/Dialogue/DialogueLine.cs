@@ -1,23 +1,23 @@
 using UnityEngine;
 
 /// <summary>
-/// Одна реплика диалога. Сериализуется инлайн внутри DialogueSequence.
+/// Single dialogue line. Serialized inline inside DialogueSequence.
 /// </summary>
 [System.Serializable]
 public class DialogueLine
 {
 
     [TextArea(2, 6)]
-    [Tooltip("Текст реплики")]
+    [Tooltip("Line text")]
     public string text;
 
-    [Tooltip("Длительность показа (0 = авто: длина текста / 50 символов в сек)")]
+    [Tooltip("Display duration (0 = auto: text length / 50 chars per sec)")]
     public float duration = 0f;
 
-    [Tooltip("Пауза перед следующей репликой")]
+    [Tooltip("Pause before next line")]
     public float pauseAfter = 0.3f;
 
-    [Tooltip("Имя GameObject для SetActive(true) в начале этой реплики (пусто = не трогать)")]
+    [Tooltip("GameObject name to SetActive(true) at the start of this line (empty = skip)")]
     public string activateObject = "";
 
     public float GetDuration()

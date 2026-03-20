@@ -4,33 +4,32 @@ using UnityEditor;
 using UnityEngine;
 
 /// <summary>
-/// Создаёт все DialogueSequence-ассеты для Exploration фазы (60 сек).
-/// Меню: Tools → Create Exploration Dialogues
+/// Creates all DialogueSequence assets for the Exploration phase (60 sec).
+/// Menu: Game → Dialogue → Build Exploration
 /// </summary>
 public static class ExplorationDialogueBuilder
 {
-    [MenuItem("Tools/Create Exploration Dialogues")]
+    [MenuItem("Game/Dialogue/Build Exploration")]
     public static void Build()
     {
         const string folder = "Assets/_Project/Dialogue/Exploration";
 
-        // Убедимся, что папки существуют
         if (!AssetDatabase.IsValidFolder("Assets/_Project/Dialogue"))
             AssetDatabase.CreateFolder("Assets/_Project", "Dialogue");
         if (!AssetDatabase.IsValidFolder(folder))
             AssetDatabase.CreateFolder("Assets/_Project/Dialogue", "Exploration");
 
         // ══════════════════════════════════════════════════════════════
-        //  AMBIENT — линейная цепочка.
-        //  Квест запускается по завершению последнего сегмента
-        //  (nextSequence == null → ExplorationManager стартует квест).
+        //  AMBIENT — linear chain.
+        //  Quest starts on last segment completion
+        //  (nextSequence == null → ExplorationManager starts quest).
         //  Chain: A[0] → A[1] → … → A[19] → null
         // ══════════════════════════════════════════════════════════════
         var a = new DialogueSequence[45];
         for (int i = 0; i < a.Length; i++)
             a[i] = ScriptableObject.CreateInstance<DialogueSequence>();
 
-        // Сегмент 0 — первое впечатление
+        // Segment 0
         a[0].lines = new[]
         {
             L("Итак.", 1.5f),
@@ -38,7 +37,7 @@ public static class ExplorationDialogueBuilder
             L("Никто Вас не звал.", 2f),
         };
 
-        // Сегмент 1 — о природе присутствия
+        // Segment 1
         a[1].lines = new[]
         {
             L("Впрочем, в таких играх всегда так.", 3f),
@@ -46,7 +45,7 @@ public static class ExplorationDialogueBuilder
             L("Ничего не трогаете.", 2f),
         };
 
-        // Сегмент 2 — о механиках
+        // Segment 2
         a[2].lines = new[]
         {
             L("Хотя трогать и нечего.", 2f),
@@ -54,7 +53,7 @@ public static class ExplorationDialogueBuilder
             L("Разработчик не придумал, что с этим делать.", 3f),
         };
 
-        // Сегмент 3 — о разработчике
+        // Segment 3
         a[3].lines = new[]
         {
             L("Он думал, атмосферы будет достаточно.", 3f),
@@ -62,28 +61,28 @@ public static class ExplorationDialogueBuilder
             L("Я не судья.", 1.5f),
         };
 
-        // Сегмент 4 — о Мэри
+        // Segment 4
         a[4].lines = new[]
         {
             L("На балконе Мэри.", 2f),
             L("По задумке сильная, со своим мнением.", 3f),
         };
 
-        // Сегмент 5 — Мэри глубже
+        // Segment 5
         a[5].lines = new[]
         {
             L("Пока что она просто стоит.", 2.5f),
             L("Мнение, видимо, ещё в разработке.", 3f),
         };
 
-        // Сегмент 6 — о Джоне
+        // Segment 6
         a[6].lines = new[]
         {
             L("Джон в дверном проёме. Как всегда.", 2.5f),
             L("Он бы и рад уйти, но нет анимации.", 3.5f),
         };
 
-        // Сегмент 7 — о паре
+        // Segment 7
         a[7].lines = new[]
         {
             L("Они пара с историей.", 2.5f),
@@ -91,21 +90,21 @@ public static class ExplorationDialogueBuilder
             L("Обещает Разработчик.", 1.5f),
         };
 
-        // Сегмент 8 — скептицизм
+        // Segment 8
         a[8].lines = new[]
         {
             L("«Позже» всегда стандартный ответ.", 2f),
             L("Как «в планах» и «баг скоро починят».", 2.5f),
         };
 
-        // Сегмент 9 — о конфликте
+        // Segment 9
         a[9].lines = new[]
         {
             L("Впрочем, тут есть что смотреть.", 2f),
             L("Картины, например.", 1.5f),
         };
 
-        // Сегмент 10 — о рассказчике
+        // Segment 10
         a[10].lines = new[]
         {
             L("Вообще, моя роль...", 3f),
@@ -114,7 +113,7 @@ public static class ExplorationDialogueBuilder
             L("Да, тяжёлая работа.", 3f),
         };
 
-        // Сегмент 11 — о жанре
+        // Segment 11
         a[11].lines = new[]
         {
             L("Жанр таких игр называется Walking Simulator.", 3f),
@@ -122,7 +121,7 @@ public static class ExplorationDialogueBuilder
             L("Получается атмосферно.", 2.5f),
         };
 
-        // Сегмент 12 — о тишине
+        // Segment 12
         a[12].lines = new[]
         {
             L("Тишина, кстати, тоже нарратив.", 2f),
@@ -130,7 +129,7 @@ public static class ExplorationDialogueBuilder
             L("Станет слишком скучно.", 5f),
         };
 
-        // Сегмент 13 — о повторном прохождении
+        // Segment 13
         a[13].lines = new[]
         {
             L("Также...", 1f),
@@ -140,7 +139,7 @@ public static class ExplorationDialogueBuilder
             L("Такова природа Рассказчика.", 2.5f),
         };
 
-        // Сегмент 14 — о поиске смысла
+        // Segment 14
         a[14].lines = new[]
         {
             L("Хотите знать, зачем Вы здесь?", 2f),
@@ -148,7 +147,7 @@ public static class ExplorationDialogueBuilder
             L("Я сам не очень понимаю.", 2.5f),
         };
 
-        // Сегмент 15 — о доме
+        // Segment 15
         a[15].lines = new[]
         {
             L("Дом, в общем, хороший.", 2.5f),
@@ -156,7 +155,7 @@ public static class ExplorationDialogueBuilder
             L("Есть детали.", 1.5f),
         };
 
-        // Сегмент 16 — о шейдерах и материалах
+        // Segment 16
         a[16].lines = new[]
         {
             L("Посмотрите на стены.", 1.5f),
@@ -164,7 +163,7 @@ public static class ExplorationDialogueBuilder
             L("Не идеально. Но и не стоковый материал.", 2.5f),
         };
 
-        // Сегмент 17 — о свете
+        // Segment 17
         a[17].lines = new[]
         {
             L("Свет, кстати, запечённый.", 1.5f),
@@ -172,7 +171,7 @@ public static class ExplorationDialogueBuilder
             L("Звучит проще, чем выглядит в настройках.", 2.5f),
         };
 
-        // Сегмент 18 — об аудио
+        // Segment 18
         a[18].lines = new[]
         {
             L("А звуки?", 1.5f),
@@ -180,7 +179,7 @@ public static class ExplorationDialogueBuilder
             L("Чем на геймплей, по правде говоря.", 2.5f),
         };
 
-        // Сегмент 19 — небольшое примирение с реальностью
+        // Segment 19
         a[19].lines = new[]
         {
             L("Может, и не нужна механика.", 1.5f),
@@ -189,7 +188,7 @@ public static class ExplorationDialogueBuilder
             L("Это называется эскапизм.", 1.5f),
         };
 
-        // Сегмент 20 — лёгкая грусть
+        // Segment 20
         a[20].lines = new[]
         {
             L("Мэри и Джон никуда не уйдут.", 2f),
@@ -198,7 +197,7 @@ public static class ExplorationDialogueBuilder
             L("Но есть что-то в этом.", 2f),
         };
 
-        // Сегмент 21 — рассказчик скучает
+        // Segment 21
         a[21].lines = new[]
         {
             L("Похоже, становится скучновато.", 2f),
@@ -206,15 +205,14 @@ public static class ExplorationDialogueBuilder
             L("Но Разработчик выделил мне несколько инструментов.", 2.5f),
         };
 
-        // Сегмент 22 — ТАЙМЕР (назначь это поле в seqTimerTrigger в ExplorationManager)
-        // После завершения этого сегмента ExplorationManager запустит декоративный таймер
+        // Segment 22 — TIMER (assign to seqTimerTrigger in ExplorationManager)
         a[22].lines = new[]
         {
             L("Смотрите...", 1.5f),
             L("Таймер!", 2.5f),
         };
 
-        // Сегмент 23 — объяснение таймера
+        // Segment 23
         a[23].lines = new[]
         {
             L("Это среднее время прохождения игры.", 2f),
@@ -223,7 +221,7 @@ public static class ExplorationDialogueBuilder
             L("Не Ваше.", 2f),
         };
 
-        // Сегмент 24 — успокоение
+        // Segment 24
         a[24].lines = new[]
         {
             L("По его истечению с Вами ничего не случится.", 3.5f),
@@ -235,14 +233,14 @@ public static class ExplorationDialogueBuilder
             L("Так что не пытайтесь, смысла нет.", 2f),
         };
 
-        // Сегмент 25 — таймер скучен, появляется кликер
+        // Segment 25 — timer boring, clicker appears
         a[25].lines = new[]
         {
             L("Ладно. Похоже, таймер Вас не впечатлил.", 3f),
             L("А что насчёт кликера?", 2f),
         };
 
-        // Сегмент 26 — объяснение кликера
+        // Segment 26
         a[26].lines = new[]
         {
             L("Это обычный счётчик.", 2f),
@@ -250,7 +248,7 @@ public static class ExplorationDialogueBuilder
             L("Это уже действительно интересно.", 2f),
         };
 
-        // Сегмент 27 — рассуждение о жанре
+        // Segment 27
         a[27].lines = new[]
         {
             L("Забавно.", 1.5f),
@@ -260,7 +258,7 @@ public static class ExplorationDialogueBuilder
             L("Получилось бы что-то особенное.", 2f),
         };
 
-        // Сегмент 28 — болтовня про кликеры (~минута)
+        // Segment 28
         a[28].lines = new[]
         {
             L("Cookie Clicker в своё время сломал людей.", 3f),
@@ -268,7 +266,7 @@ public static class ExplorationDialogueBuilder
             L("Миллионы часов.", 2f),
         };
 
-        // Сегмент 29 — болтовня
+        // Segment 29
         a[29].lines = new[]
         {
             L("Что-то в этом есть.", 2f),
@@ -276,7 +274,7 @@ public static class ExplorationDialogueBuilder
             L("Клик. Звук. Число растёт.", 2.5f),
         };
 
-        // Сегмент 30 — болтовня
+        // Segment 30
         a[30].lines = new[]
         {
             L("Немного похоже на ходьбу по комнате.", 2f),
@@ -284,7 +282,7 @@ public static class ExplorationDialogueBuilder
             L("Вы, собственно, этим и занимаетесь.", 2f),
         };
 
-        // Сегмент 31 — болтовня
+        // Segment 31
         a[31].lines = new[]
         {
             L("Разработчик мог бы сделать игру про клики.", 3f),
@@ -294,7 +292,7 @@ public static class ExplorationDialogueBuilder
             L("Уважаю.", 1.5f),
         };
 
-        // Сегмент 32 — болтовня
+        // Segment 32
         a[32].lines = new[]
         {
             L("Хотя разница невелика.", 1.5f),
@@ -302,13 +300,13 @@ public static class ExplorationDialogueBuilder
             L("Просто одно немного интереснее другого.", 2f),
         };
 
-        // Сегмент 33 — болтовня
+        // Segment 33
         a[33].lines = new[]
         {
             L("Кстати, как Вам кликер?", 2.5f),
         };
 
-        // Сегмент 34 — болтовня
+        // Segment 34
         a[34].lines = new[]
         {
             L("Я бы тоже попробовал.", 1.5f),
@@ -316,7 +314,7 @@ public static class ExplorationDialogueBuilder
             L("Только поле текста Text Mesh Pro.", 3f),
         };
 
-        // Сегмент 35 — дополнительная минута кликера
+        // Segment 35
         a[35].lines = new[]
         {
             L("Знаете, в чём прелесть простых кликеров?", 3f),
@@ -324,7 +322,7 @@ public static class ExplorationDialogueBuilder
             L("Вот Вы кликаете, и видите, что происходит.", 3f),
         };
 
-        // Сегмент 36 — болтовня
+        // Segment 36
         a[36].lines = new[]
         {
             L("Нет скрытой цели.", 2f),
@@ -334,7 +332,7 @@ public static class ExplorationDialogueBuilder
             L("Метапрогрессией.", 2f),
         };
 
-        // Сегмент 37 — болтовня
+        // Segment 37
         a[37].lines = new[]
         {
             L("Но раньше...", 2f),
@@ -343,7 +341,7 @@ public static class ExplorationDialogueBuilder
             L("И продолжал кликать.", 2f),
         };
 
-        // Сегмент 38 — болтовня
+        // Segment 38
         a[38].lines = new[]
         {
             L("Я думаю, человечество ищет успокоение...", 3f),
@@ -351,7 +349,7 @@ public static class ExplorationDialogueBuilder
             L("И действительно иногда находит.", 2f),
         };
 
-        // Сегмент 39 — болтовня
+        // Segment 39
         a[39].lines = new[]
         {
             L("Я читал, что idle-игры редуцируют тревогу.", 3.5f),
@@ -359,7 +357,7 @@ public static class ExplorationDialogueBuilder
             L("Может, и здесь что-то в этом есть.", 3f),
         };
 
-        // Сегмент 40 — болтовня
+        // Segment 40
         a[40].lines = new[]
         {
             L("Хотя с другой стороны...", 2f),
@@ -371,7 +369,7 @@ public static class ExplorationDialogueBuilder
             L("Всю глубину замысла Разработчика.", 2f),
         };
 
-        // Сегмент 41 — кликер надоел
+        // Segment 41 — clicker gets boring
         a[41].lines = new[]
         {
             L("Ладно.", 1.5f),
@@ -379,14 +377,14 @@ public static class ExplorationDialogueBuilder
             L("Как и таймер.", 2f),
         };
 
-        // Сегмент 42 — переход к квесту
+        // Segment 42 — transition to quest
         a[42].lines = new[]
         {
             L("Что насчёт небольшого квеста?", 3f),
             L("...", 1f),
         };
 
-        // Сегмент 43 — ужас картин (картины сдвигаются при первой реплике)
+        // Segment 43 — paintings shift on first line
         a[43].lines = new[]
         {
             L("...Какой ужас.", 2f, "PaintingShift"),
@@ -394,28 +392,25 @@ public static class ExplorationDialogueBuilder
             L("Их надо поместить на прежнее место.", 3f),
         };
 
-        // Сегмент 44 — финал цепочки, квест стартует (nextSequence = null)
-        // Квест-канвас появляется вместе с последней репликой
+        // Segment 44 — final chain segment, quest starts (nextSequence = null)
         a[44].lines = new[]
         {
             L("Помогите жильцам разобраться с этим.", 4f, "QuestCanvas"),
         };
 
-        // Ключевые индексы для авто-назначения в ExplorationManager
+        // Key indices for auto-assignment in ExplorationManager
         const int idxTimerTrigger   = 22;
         const int idxClickerTrigger = 25;
 
         foreach (var seg in a)
             seg.priority = 0;
 
-        // ── Проход 1: сохраняем/перезаписываем данные на диск ──────────
-        // Важно: nextSequence НЕ прошиваем пока — ссылки ещё in-memory.
-        // SaveAsset возвращает реальный дисковый объект (с живым GUID).
+        // Pass 1: save/overwrite assets to disk
         var disk = new DialogueSequence[a.Length];
         for (int i = 0; i < a.Length; i++)
             disk[i] = SaveAsset(a[i], folder, $"Seq_Ambient_{i:D2}");
 
-        // ── Проход 2: прошиваем nextSequence между ДИСКОВЫМИ объектами ─
+        // Pass 2: wire nextSequence between disk objects
         for (int i = 0; i < disk.Length - 1; i++)
         {
             disk[i].nextSequence = disk[i + 1];
@@ -424,15 +419,12 @@ public static class ExplorationDialogueBuilder
         disk[disk.Length - 1].nextSequence = null;
         EditorUtility.SetDirty(disk[disk.Length - 1]);
 
-        // Переключаемся на дисковые объекты для авто-назначения
-        // (AutoAssignInScene получит корректные ссылки)
         var diskStart          = disk[0];
         var diskTimerTrigger   = disk[idxTimerTrigger];
         var diskClickerTrigger = disk[idxClickerTrigger];
 
         // ══════════════════════════════════════════════════════════════
-        //  TRIGGER A — замечание о перфекционизме (~48с), одноразовый
-        //  nextSequence = null: ExplorationManager сам возобновит ambient
+        //  TRIGGER A — one-shot (~48s)
         // ══════════════════════════════════════════════════════════════
         var trigA = CreateSeq(folder, "Seq_Trigger_A", 10, null,
             L("Стой!", 1.5f),
@@ -458,7 +450,7 @@ public static class ExplorationDialogueBuilder
         );
 
         // ══════════════════════════════════════════════════════════════
-        //  TRIGGER B — одноразовый (~67с), секретный лаз / Stanley Parable
+        //  TRIGGER B — one-shot (~67s), secret passage / Stanley Parable
         // ══════════════════════════════════════════════════════════════
         var trigB = CreateSeq(folder, "Seq_Trigger_B", 10, null,
             L("Поздравляю!", 1.5f),
@@ -486,7 +478,7 @@ public static class ExplorationDialogueBuilder
             L("Возвращаемся.", 1f)
         );
 
-        // Триггеры A и B восстанавливают прерванный диалог (ambient / quest / XP / любой)
+        // Triggers A and B restore interrupted dialogue
         trigA.restoreInterrupted = true;
         EditorUtility.SetDirty(trigA);
         trigB.restoreInterrupted = true;
@@ -495,7 +487,7 @@ public static class ExplorationDialogueBuilder
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        // ── Авто-назначение в ExplorationManager в сцене ─────────────
+        // Auto-assign in ExplorationManager in scene
         int assignedCount = AutoAssignInScene(
             ambientStart:   diskStart,
             timerTrigger:   diskTimerTrigger,
@@ -503,20 +495,18 @@ public static class ExplorationDialogueBuilder
             triggerA:       trigA,
             triggerB:       trigB);
 
-        Debug.Log($"[ExplorationDialogueBuilder] ✓ Создано/обновлено {a.Length + 2} ассетов в {folder}");
+        Debug.Log($"[ExplorationDialogueBuilder] ✓ Created/updated {a.Length + 2} assets in {folder}");
         string autoMsg = assignedCount > 0
-            ? $"ExplorationManager в сцене обновлён автоматически ({assignedCount} поля)."
-            : "⚠ ExplorationManager не найден в открытой сцене — назначь вручную.";
-        EditorUtility.DisplayDialog("Готово!",
-            $"Обновлено {a.Length} ambient-сегментов + 2 триггера.\n\n{autoMsg}",
+            ? $"ExplorationManager in scene updated automatically ({assignedCount} fields)."
+            : "⚠ ExplorationManager not found in open scene — assign manually.";
+        EditorUtility.DisplayDialog("Done!",
+            $"Updated {a.Length} ambient segments + 2 triggers.\n\n{autoMsg}",
             "OK");
     }
 
-    // ── Авто-назначение ────────────────────────────────────────────────
-
     /// <summary>
-    /// Находит ExplorationManager в открытой сцене и через SerializedObject
-    /// прописывает все dialogue-ссылки. Возвращает количество обновлённых полей.
+    /// Finds ExplorationManager in the open scene and wires all dialogue refs
+    /// via SerializedObject. Returns number of updated fields.
     /// </summary>
     private static int AutoAssignInScene(
         DialogueSequence ambientStart,
@@ -528,7 +518,7 @@ public static class ExplorationDialogueBuilder
         var mgr = Object.FindFirstObjectByType<ExplorationManager>();
         if (mgr == null)
         {
-            Debug.LogWarning("[ExplorationDialogueBuilder] ExplorationManager не найден в сцене.");
+            Debug.LogWarning("[ExplorationDialogueBuilder] ExplorationManager not found in scene.");
             return 0;
         }
 
@@ -540,29 +530,25 @@ public static class ExplorationDialogueBuilder
         so.FindProperty("seqTriggerB")      .objectReferenceValue = triggerB;
         so.ApplyModifiedProperties();
 
-        // Помечаем сцену как изменённую (чтобы Unity предложила сохранить)
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
             mgr.gameObject.scene);
 
-        Debug.Log("[ExplorationDialogueBuilder] ExplorationManager обновлён: " +
+        Debug.Log("[ExplorationDialogueBuilder] ExplorationManager updated: " +
                   "seqAmbientStart, seqTimerTrigger, seqClickerTrigger, seqTriggerA, seqTriggerB");
         return 5;
     }
-
-    // ── Helpers ───────────────────────────────────────────────────────
 
     private static DialogueSequence CreateSeq(string folder, string name, int priority,
         DialogueSequence next, params DialogueLine[] lines)
     {
         var seq = ScriptableObject.CreateInstance<DialogueSequence>();
         seq.priority = priority;
-        seq.nextSequence = next; // для триггеров next = null, поэтому in-memory ссылка не нужна
+        seq.nextSequence = next;
         seq.lines = lines;
         var disk = SaveAsset(seq, folder, name);
-        // Прошиваем nextSequence на дисковом объекте (для триггеров это null)
         disk.nextSequence = next;
         EditorUtility.SetDirty(disk);
-        return disk; // возвращаем дисковый объект, а не временный
+        return disk;
     }
 
     private static DialogueSequence SaveAsset(DialogueSequence seq, string folder, string name)
@@ -572,12 +558,9 @@ public static class ExplorationDialogueBuilder
         var existing = AssetDatabase.LoadAssetAtPath<DialogueSequence>(path);
         if (existing != null)
         {
-            // Перезаписываем данные существующего ассета — GUID сохраняется.
-            // nextSequence специально НЕ копируем здесь — он прошивается отдельно
-            // в проходе 2 через дисковые объекты (иначе ссылки были бы на in-memory мусор).
+            // Overwrite existing asset data — GUID preserved.
             existing.lines    = seq.lines;
             existing.priority = seq.priority;
-            // nextSequence — будет задан снаружи в проходе 2
             EditorUtility.SetDirty(existing);
             return existing;
         }

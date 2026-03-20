@@ -1,12 +1,11 @@
 using UnityEngine;
 
 /// <summary>
-/// SO-ассет: список реплик визуальной новеллы.
-/// Создай через ПКМ → Create → VisualNovel → Novel Sequence
+/// SO asset: list of visual novel lines.
 /// </summary>
-[CreateAssetMenu(menuName = "VisualNovel/Novel Sequence", fileName = "NovelSeq_New")]
+[CreateAssetMenu(menuName = "Game/VisualNovel/Novel Sequence", fileName = "NovelSeq_New")]
 public class NovelSequence : ScriptableObject
 {
-    [Header("Реплики новеллы")]
+    [Header("Novel Lines")]
     public NovelLine[] lines;
 }

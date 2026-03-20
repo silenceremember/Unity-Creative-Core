@@ -1,24 +1,24 @@
 using UnityEngine;
 
 /// <summary>
-/// Одна строка визуальной новеллы.
-/// cameraIndex — индекс в массиве якорей камеры (0-3).
-/// narratorSequence — если не null, рассказчик озвучит эту последовательность
-/// ПОСЛЕ скрытия NovelCanvas (то есть между двумя репликами новеллы).
+/// Single visual novel line.
+/// cameraIndex — index in the camera anchors array (0-3).
+/// narratorSequenceBefore — if not null, narrator will play this sequence
+/// AFTER hiding NovelCanvas (i.e., between two novel lines).
 /// </summary>
 [System.Serializable]
 public class NovelLine
 {
-    [Tooltip("Имя говорящего (отображается в NovelCanvas)")]
+    [Tooltip("Speaker name (displayed in NovelCanvas)")]
     public string speaker;
 
     [TextArea(2, 5)]
-    [Tooltip("Текст реплики")]
+    [Tooltip("Line text")]
     public string text;
 
-    [Tooltip("Индекс якоря камеры (0-3). -1 = не менять.")]
+    [Tooltip("Camera anchor index (0-3). -1 = don't change.")]
     public int cameraIndex = 0;
 
-    [Tooltip("Если задано — перед показом этой реплики рассказчик произнесёт эту последовательность (NovelCanvas будет скрыт).")]
+    [Tooltip("If set — narrator will play this sequence before showing this line (NovelCanvas is hidden).")]
     public DialogueSequence narratorSequenceBefore;
 }

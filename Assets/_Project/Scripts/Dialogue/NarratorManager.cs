@@ -6,60 +6,57 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 /// <summary>
-/// Воспроизводит DialogueSequence через NarratorChannel.
-/// Повесь на GameObject в сцене. Назначь channel и UI-элементы.
+/// Plays DialogueSequence via NarratorChannel.
+/// Attach to a GameObject in the scene. Assign channel and UI elements.
 /// </summary>
 [RequireComponent(typeof(AudioSource))]
 public class NarratorManager : MonoBehaviour
 {
     [Header("SO Channel")]
-    public NarratorChannel channel;
+    [SerializeField] private NarratorChannel channel;
 
     [Header("UI")]
-    public GameObject subtitleRoot;   // корневой объект с фоном
-    public TextMeshProUGUI speakerText;
-    public TextMeshProUGUI lineText;
+    [SerializeField] private GameObject subtitleRoot;
+    [SerializeField] private TextMeshProUGUI speakerText;
+    [SerializeField] private TextMeshProUGUI lineText;
 
-    [Header("Объекты сцены (activateObject)")]
-    [Tooltip("Список объектов сцены, на которые ссылаются DialogueLine.activateObject. " +
-             "Перетащи GameObject сюда — работает даже если объект изначально неактивен.")]
-    public List<SceneObjectEntry> sceneObjects = new();
+    [Header("Scene Objects (activateObject)")]
+    [Tooltip("Scene objects referenced by DialogueLine.activateObject. " +
+             "Drag GameObjects here — works even if the object is initially inactive.")]
+    [SerializeField] private List<SceneObjectEntry> sceneObjects = new();
 
-    [Header("Аудио")]
-    [Tooltip("AudioMixerGroup для голоса нарратора — управляет громкостью через микшер")]
-    public AudioMixerGroup mixerGroup;
+    [Header("Audio")]
+    [Tooltip("AudioMixerGroup for narrator voice")]
+    [SerializeField] private AudioMixerGroup mixerGroup;
 
-    [Header("Настройки")]
+    [Header("Settings")]
     [Range(20, 200)]
-    public float charsPerSecond = 50f;
+    [SerializeField] private float charsPerSecond = 50f;
     [Range(50, 500)]
-    public float eraseSpeed = 1000f;  // быстрее чем печать
-    public float fadeSpeed = 4f;
+    [SerializeField] private float eraseSpeed = 1000f;
+    [SerializeField] private float fadeSpeed = 4f;
 
-    [Tooltip("Звук играет раз в N непробельных символов (Undertale-стиль).\n" +
-             "При 50 симв/сек: 2 = 25 блипов/сек, 4 = ~12, 6 = ~8.")]
+    [Tooltip("Sound plays every N non-whitespace characters (Undertale-style).")]
     [Range(1, 10)]
-    public int blipEveryNChars = 4;
+    [SerializeField] private int blipEveryNChars = 4;
 
-    // ──────────────────────────────
     private AudioSource _audioSource;
     private CancellationTokenSource _cts;
     private DialogueSequence _currentSequence;
     private Dictionary<string, GameObject> _sceneObjectMap;
-    private int _blipCounter;  // считает непробельные символы между блипами
+    private int _blipCounter;
 
-    // Debug skip
     private bool _skipLine;
 
     public static NarratorManager Instance { get; private set; }
 
-    /// <summary>True пока воспроизводится любой диалог.</summary>
+    /// <summary>True while any dialogue is playing.</summary>
     public bool IsPlaying => _cts != null && !_cts.IsCancellationRequested;
 
-    /// <summary>Текущая последовательность (null если ничего не играет).</summary>
+    /// <summary>Current sequence (null if nothing is playing).</summary>
     public DialogueSequence CurrentSequence => _currentSequence;
 
-    /// <summary>Сохранённая последовательность для восстановления после restoreInterrupted=true.</summary>
+    /// <summary>Saved sequence for restoration after restoreInterrupted=true.</summary>
     private DialogueSequence _savedSequence;
 
     void Update()
@@ -107,8 +104,6 @@ public class NarratorManager : MonoBehaviour
         _cts?.Dispose();
     }
 
-    // ── Public API ───────────────
-
     public void Play(DialogueSequence sequence)
     {
         if (sequence == null) return;
@@ -116,9 +111,8 @@ public class NarratorManager : MonoBehaviour
         if (_currentSequence != null)
         {
             if (sequence.priority < _currentSequence.priority)
-                return; // приоритет ниже — не прерываем
+                return;
 
-            // Если новая последовательность хочет восстановить прерванную — сохраняем
             if (sequence.restoreInterrupted)
                 _savedSequence = _currentSequence;
         }
@@ -140,12 +134,9 @@ public class NarratorManager : MonoBehaviour
         }
         _currentSequence = null;
 
-        // Очищаем текст чтобы не было наложений
         if (lineText != null) lineText.text = "";
         if (subtitleRoot != null) subtitleRoot.SetActive(false);
     }
-
-    // ── Playback ─────────────────
 
     private async UniTask PlaySequence(DialogueSequence sequence, CancellationToken ct)
     {
@@ -153,13 +144,11 @@ public class NarratorManager : MonoBehaviour
         {
             foreach (var line in sequence.lines)
             {
-                // Стираем предыдущий текст быстро (пропускаем для первой строки)
                 if (lineText != null && lineText.text.Length > 0)
                     await EraseText(ct);
 
                 await ShowLine(line, ct);
 
-                // Пауза между строками — прерывается по P
                 float pauseLeft = line.pauseAfter;
                 while (pauseLeft > 0f && !_skipLine)
                 {
@@ -169,31 +158,24 @@ public class NarratorManager : MonoBehaviour
                 _skipLine = false;
             }
 
-            // Стираем последнюю реплику в конце последовательности
             if (lineText != null && lineText.text.Length > 0)
                 await EraseText(ct);
 
             subtitleRoot?.SetActive(false);
 
-            // Автопереход / завершение цепочки
             if (sequence.nextSequence != null)
             {
-                // Промежуточный сегмент: уведомляем пока ещё "играем" (для таймера/кликера),
-                // затем сразу переходим к следующему.
                 channel?.NotifyCompleted(sequence);
                 _currentSequence = sequence.nextSequence;
                 await PlaySequence(sequence.nextSequence, ct);
             }
             else
             {
-                // Терминальный сегмент: очищаем состояние ДО NotifyCompleted,
-                // чтобы подписчики могли сделать Raise нового диалога без блокировки по приоритету.
                 _cts?.Dispose();
                 _cts = null;
                 _currentSequence = null;
                 channel?.NotifyCompleted(sequence);
 
-                // Восстанавливаем прерванный диалог (если был сохранён через restoreInterrupted)
                 if (_savedSequence != null)
                 {
                     var toRestore = _savedSequence;
@@ -202,31 +184,24 @@ public class NarratorManager : MonoBehaviour
                 }
             }
         }
-        catch (System.OperationCanceledException)
-        {
-            // Нормальное прерывание через Stop() — UI уже очищен в Stop()
-        }
+        catch (System.OperationCanceledException) { }
     }
 
     private async UniTask ShowLine(DialogueLine line, CancellationToken ct)
     {
         _skipLine = false;
 
-        // Если задан, активируем объект сцены перед показом реплики
         if (!string.IsNullOrEmpty(line.activateObject))
         {
             if (_sceneObjectMap.TryGetValue(line.activateObject, out var go))
                 go.SetActive(true);
-            else
-                Debug.LogWarning($"[NarratorManager] activateObject '{line.activateObject}' не назначен в списке sceneObjects");
         }
 
         if (subtitleRoot != null) subtitleRoot.SetActive(true);
         if (speakerText != null) speakerText.text = "";
         if (lineText != null)    lineText.text = "";
-        _blipCounter = 0;  // сброс счётчика на каждую реплику
+        _blipCounter = 0;
 
-        // Печатаем по символам (P — мгновенно допечатать)
         if (lineText != null)
         {
             int delayMs = Mathf.Max(1, Mathf.RoundToInt(1000f / charsPerSecond));
@@ -234,11 +209,10 @@ public class NarratorManager : MonoBehaviour
             {
                 if (_skipLine)
                 {
-                    lineText.text = line.text; // допечатать всё сразу
+                    lineText.text = line.text;
                     break;
                 }
                 lineText.text += c;
-                // Undertale-стиль: блип раз в N непробельных символов
                 if (!char.IsWhiteSpace(c))
                 {
                     _blipCounter++;
@@ -252,7 +226,6 @@ public class NarratorManager : MonoBehaviour
             }
         }
 
-        // Ждём остаток времени (P — пропустить)
         if (!_skipLine)
         {
             float elapsed   = line.text.Length / charsPerSecond;
@@ -265,9 +238,6 @@ public class NarratorManager : MonoBehaviour
                     await UniTask.Yield(ct);
             }
         }
-
-        // Не сбрасываем _skipLine здесь — пусть флаг «протечёт» в pauseAfter-цикл
-        // PlaySequence, который сам его сбросит.
     }
 
     private async UniTask EraseText(CancellationToken ct)
