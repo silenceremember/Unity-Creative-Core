@@ -6,7 +6,7 @@ using UnityEngine;
 /// Assigned in Inspector — works even with initially inactive objects.
 /// </summary>
 [Serializable]
-public class SceneObjectEntry
+public struct SceneObjectEntry
 {
     [Tooltip("Key name — must match DialogueLine.activateObject")]
     public string key;

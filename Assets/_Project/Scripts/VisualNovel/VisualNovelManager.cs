@@ -100,7 +100,7 @@ public class VisualNovelManager : MonoBehaviour
     /// </summary>
     public void StartNovel()
     {
-        if (sequence == null || sequence.lines == null || sequence.lines.Length == 0)
+        if (sequence == null || sequence.Lines == null || sequence.Lines.Length == 0)
             return;
 
         _cts?.Cancel();
@@ -141,12 +141,12 @@ public class VisualNovelManager : MonoBehaviour
     {
         try
         {
-            SnapCamera(sequence.lines[0].cameraIndex);
+            SnapCamera(sequence.Lines[0].CameraIndex);
 
-            if (sequence.lines[0].narratorSequenceBefore != null)
+            if (sequence.Lines[0].NarratorSequenceBefore != null)
             {
                 HideNovelCanvas();
-                TriggerNarrator(sequence.lines[0].narratorSequenceBefore);
+                TriggerNarrator(sequence.Lines[0].NarratorSequenceBefore);
                 _waitingForNarrator = true;
                 await WaitForNarratorAsync(ct);
             }
@@ -161,23 +161,23 @@ public class VisualNovelManager : MonoBehaviour
 
                 _lineIndex++;
 
-                if (sequence == null || _lineIndex >= sequence.lines.Length)
+                if (sequence == null || _lineIndex >= sequence.Lines.Length)
                 {
                     EndNovel();
                     return;
                 }
 
-                var line = sequence.lines[_lineIndex];
+                var line = sequence.Lines[_lineIndex];
 
-                if (line.narratorSequenceBefore != null)
+                if (line.NarratorSequenceBefore != null)
                 {
                     HideNovelCanvas();
                     _waitingForNarrator = true;
 
-                    if (line.cameraIndex != _currentCameraIndex)
-                        await BlendCameraAsync(line.cameraIndex, ct);
+                    if (line.CameraIndex != _currentCameraIndex)
+                        await BlendCameraAsync(line.CameraIndex, ct);
 
-                    TriggerNarrator(line.narratorSequenceBefore);
+                    TriggerNarrator(line.NarratorSequenceBefore);
                     await WaitForNarratorAsync(ct);
                 }
 
@@ -189,16 +189,16 @@ public class VisualNovelManager : MonoBehaviour
 
     private async UniTask ShowLineAndWaitAsync(CancellationToken ct)
     {
-        if (sequence == null || _lineIndex < 0 || _lineIndex >= sequence.lines.Length) return;
+        if (sequence == null || _lineIndex < 0 || _lineIndex >= sequence.Lines.Length) return;
 
-        var line = sequence.lines[_lineIndex];
+        var line = sequence.Lines[_lineIndex];
 
-        if (line.cameraIndex != _currentCameraIndex)
+        if (line.CameraIndex != _currentCameraIndex)
         {
             if (_currentCameraIndex == -1)
-                _currentCameraIndex = line.cameraIndex;
+                _currentCameraIndex = line.CameraIndex;
             else
-                await BlendCameraAsync(line.cameraIndex, ct);
+                await BlendCameraAsync(line.CameraIndex, ct);
         }
 
         await DisplayLineAsync(line, ct);
@@ -208,13 +208,13 @@ public class VisualNovelManager : MonoBehaviour
     {
         ShowNovelCanvas();
 
-        if (speakerText != null) speakerText.text = line.speaker;
+        if (speakerText != null) speakerText.text = line.Speaker;
         if (lineText != null) lineText.text = "";
         _blipCounter = 0;
 
         _typewriterRunning = true;
         _skipTypewriter = false;
-        await TypewriterAsync(line.text, line.speaker, ct);
+        await TypewriterAsync(line.Text, line.Speaker, ct);
         _typewriterRunning = false;
     }
 

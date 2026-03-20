@@ -147,7 +147,7 @@ public static class FinalDialogueBuilder
         so.FindProperty("seqFinalPart2").objectReferenceValue = part2;
         so.ApplyModifiedProperties();
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(fsm.gameObject.scene);
-        Debug.Log("[FinalDialogueBuilder] FinalSequenceManager updated.");
+
         return 3;
     }
 
@@ -193,15 +193,6 @@ public static class FinalDialogueBuilder
             activateObject = ""
         });
         return JsonUtility.FromJson<DialogueLine>(json);
-    }
-
-    [System.Serializable]
-    private struct DialogueLineData
-    {
-        public string text;
-        public float duration;
-        public float pauseAfter;
-        public string activateObject;
     }
 }
 #endif

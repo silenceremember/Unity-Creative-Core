@@ -10,15 +10,19 @@ using UnityEngine;
 public class NovelLine
 {
     [Tooltip("Speaker name (displayed in NovelCanvas)")]
-    public string speaker;
+    [SerializeField] private string speaker;
+    public string Speaker => speaker;
 
     [TextArea(2, 5)]
     [Tooltip("Line text")]
-    public string text;
+    [SerializeField] private string text;
+    public string Text => text;
 
     [Tooltip("Camera anchor index (0-3). -1 = don't change.")]
-    public int cameraIndex = 0;
+    [SerializeField] private int cameraIndex;
+    public int CameraIndex => cameraIndex;
 
     [Tooltip("If set — narrator will play this sequence before showing this line (NovelCanvas is hidden).")]
-    public DialogueSequence narratorSequenceBefore;
+    [SerializeField] private DialogueSequence narratorSequenceBefore;
+    public DialogueSequence NarratorSequenceBefore => narratorSequenceBefore;
 }

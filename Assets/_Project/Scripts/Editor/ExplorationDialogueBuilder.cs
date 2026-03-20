@@ -19,12 +19,10 @@ public static class ExplorationDialogueBuilder
         if (!AssetDatabase.IsValidFolder(folder))
             AssetDatabase.CreateFolder("Assets/_Project/Dialogue", "Exploration");
 
-        // ══════════════════════════════════════════════════════════════
         //  AMBIENT — linear chain.
         //  Quest starts on last segment completion
         //  (nextSequence == null → ExplorationManager starts quest).
         //  Chain: A[0] → A[1] → … → A[44] → null
-        // ══════════════════════════════════════════════════════════════
         var segmentLines = new DialogueLine[45][];
 
         segmentLines[0] = new[] {
@@ -232,9 +230,7 @@ public static class ExplorationDialogueBuilder
         var diskTimerTrigger   = disk[idxTimerTrigger];
         var diskClickerTrigger = disk[idxClickerTrigger];
 
-        // ══════════════════════════════════════════════════════════════
         //  TRIGGER A — one-shot (~48s)
-        // ══════════════════════════════════════════════════════════════
         var trigA = CreateSeq(folder, "Seq_Trigger_A", 10, null,
             L("Стой!", 1.5f),
             L("Присмотритесь...", 2f),
@@ -258,9 +254,7 @@ public static class ExplorationDialogueBuilder
             L("Вернёмся, пожалуй, к предыдущей реплике...", 2f)
         );
 
-        // ══════════════════════════════════════════════════════════════
         //  TRIGGER B — one-shot (~67s), secret passage / Stanley Parable
-        // ══════════════════════════════════════════════════════════════
         var trigB = CreateSeq(folder, "Seq_Trigger_B", 10, null,
             L("Поздравляю!", 1.5f),
             L("Вы нашли секретный лаз Разработчика.", 2f),
@@ -302,7 +296,7 @@ public static class ExplorationDialogueBuilder
             triggerA:       trigA,
             triggerB:       trigB);
 
-        Debug.Log($"[ExplorationDialogueBuilder] ✓ Created/updated {segmentLines.Length + 2} assets in {folder}");
+
         string autoMsg = assignedCount > 0
             ? $"ExplorationManager in scene updated automatically ({assignedCount} fields)."
             : "⚠ ExplorationManager not found in open scene — assign manually.";
@@ -340,8 +334,6 @@ public static class ExplorationDialogueBuilder
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(
             mgr.gameObject.scene);
 
-        Debug.Log("[ExplorationDialogueBuilder] ExplorationManager updated: " +
-                  "seqAmbientStart, seqTimerTrigger, seqClickerTrigger, seqTriggerA, seqTriggerB");
         return 5;
     }
 
@@ -403,15 +395,6 @@ public static class ExplorationDialogueBuilder
             activateObject = activateObject
         });
         return JsonUtility.FromJson<DialogueLine>(json);
-    }
-
-    [System.Serializable]
-    private struct DialogueLineData
-    {
-        public string text;
-        public float duration;
-        public float pauseAfter;
-        public string activateObject;
     }
 }
 #endif

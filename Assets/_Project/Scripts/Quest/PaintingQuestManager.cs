@@ -370,40 +370,14 @@ public class PaintingQuestManager : MonoBehaviour
     {
         if (pictureLabels.Length == 0 || pictureLabels[0] == null) return;
         var groupRT = pictureLabels[0].transform.parent as RectTransform;
-        if (groupRT == null) return;
-
-        Vector2 origin = groupRT.anchoredPosition;
-        float elapsed  = 0f;
-
-        while (elapsed < shakeDuration)
-        {
-            ct.ThrowIfCancellationRequested();
-            elapsed += Time.deltaTime;
-            float x = Random.Range(-shakeMagnitude, shakeMagnitude) * (1f - elapsed / shakeDuration);
-            groupRT.anchoredPosition = origin + new Vector2(x, 0f);
-            await UniTask.Yield(PlayerLoopTiming.Update, ct);
-        }
-        groupRT.anchoredPosition = origin;
+        await UIAnimationHelper.ShakeAsync(groupRT, shakeDuration, shakeMagnitude, ct);
     }
 
     private async UniTask PulseLabelsAsync(CancellationToken ct)
     {
         if (pictureLabels.Length == 0 || pictureLabels[0] == null) return;
         var groupRT = pictureLabels[0].transform.parent as RectTransform;
-        if (groupRT == null) return;
-
-        Vector3 originScale = groupRT.localScale;
-        float elapsed       = 0f;
-
-        while (elapsed < pulseDuration)
-        {
-            ct.ThrowIfCancellationRequested();
-            elapsed += Time.deltaTime;
-            float t  = Mathf.Sin(elapsed / pulseDuration * Mathf.PI);
-            groupRT.localScale = originScale * (1f + 0.12f * t);
-            await UniTask.Yield(PlayerLoopTiming.Update, ct);
-        }
-        groupRT.localScale = originScale;
+        await UIAnimationHelper.PulseAsync(groupRT, pulseDuration, 0.12f, ct);
     }
 
     private async UniTask ShakeEPromptAsync(CancellationToken ct)
@@ -418,24 +392,8 @@ public class PaintingQuestManager : MonoBehaviour
         Color originalColor = txt != null ? txt.color : Color.white;
         if (txt != null) txt.color = Color.red;
 
-        Vector2 origin  = rt.anchoredPosition;
-        float   elapsed = 0f;
+        await UIAnimationHelper.ShakeAsync(rt, ePromptShakeDuration, ePromptShakeMagnitude, ct);
 
-        try
-        {
-            while (elapsed < ePromptShakeDuration)
-            {
-                ct.ThrowIfCancellationRequested();
-                elapsed += Time.deltaTime;
-                float x = Random.Range(-ePromptShakeMagnitude, ePromptShakeMagnitude) *
-                          (1f - elapsed / ePromptShakeDuration);
-                rt.anchoredPosition = origin + new Vector2(x, 0f);
-                await UniTask.Yield(PlayerLoopTiming.Update, ct);
-            }
-        }
-        catch (System.OperationCanceledException) { }
-
-        rt.anchoredPosition = origin;
         if (txt != null) txt.color = originalColor;
         _ePromptShaking = false;
     }

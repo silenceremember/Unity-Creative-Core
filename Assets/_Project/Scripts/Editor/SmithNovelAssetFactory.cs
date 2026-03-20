@@ -80,41 +80,54 @@ public class SmithNovelAssetFactory : EditorWindow
 
         // Novel sequence
         var novelSeq = MakeOrOverwrite<NovelSequence>(folder, "NovelSeq_SmithOpening");
-        novelSeq.lines = new NovelLine[]
+        var so = new SerializedObject(novelSeq);
+        var linesProp = so.FindProperty("lines");
+
+        object[][] lineData = new object[][]
         {
-            new NovelLine { speaker = "Джон",     text = "Я стою у двери потому что...",       cameraIndex = 0, narratorSequenceBefore = seqIntroJohn },
-            new NovelLine { speaker = "Джон",     text = "...потому что мне здесь хорошо.",    cameraIndex = 0 },
-            new NovelLine { speaker = "Джон",     text = "Слышу скепсис.",                     cameraIndex = 0, narratorSequenceBefore = seqNarrDisagrees },
-            new NovelLine { speaker = "Мэри",     text = "Красиво здесь.",                     cameraIndex = 1, narratorSequenceBefore = seqIntroMary },
-            new NovelLine { speaker = "Джон",     text = "Мэри.",                              cameraIndex = 0 },
-            new NovelLine { speaker = "Мэри",     text = "Что.",                               cameraIndex = 1 },
-            new NovelLine { speaker = "Джон",     text = "В гостиной кто-то есть.",            cameraIndex = 0 },
-            new NovelLine { speaker = "Мэри",     text = "Ты уверен?",                        cameraIndex = 1 },
-            new NovelLine { speaker = "Джон",     text = "Я... чувствую. Там кто-то есть.",   cameraIndex = 0 },
-            new NovelLine { speaker = "Player 1", text = "...",                                 cameraIndex = 3, narratorSequenceBefore = seqIntroYou },
-            new NovelLine { speaker = "Мэри",     text = "Может, это мастер по телевизору?",   cameraIndex = 1 },
-            new NovelLine { speaker = "Джон",     text = "Я не вызывал мастера.",              cameraIndex = 0 },
-            new NovelLine { speaker = "Мэри",     text = "Я вызывала.",                        cameraIndex = 1 },
-            new NovelLine { speaker = "Джон",     text = "Когда?",                             cameraIndex = 0 },
-            new NovelLine { speaker = "Мэри",     text = "Не помню.",                          cameraIndex = 1 },
-            new NovelLine { speaker = "Джон",     text = "Эй. Ты кто?",                       cameraIndex = 2, narratorSequenceBefore = seqAfterNotRemember },
-            new NovelLine { speaker = "Player 1", text = "...",                                 cameraIndex = 3 },
-            new NovelLine { speaker = "Джон",     text = "Ты умеешь чинить телевизоры?",       cameraIndex = 2, narratorSequenceBefore = seqAfterPlayerSilence },
-            new NovelLine { speaker = "Player 1", text = "...",                                 cameraIndex = 3 },
-            new NovelLine { speaker = "Джон",     text = "Возможно это знак согласия.",          cameraIndex = 2 },
-            new NovelLine { speaker = "Джон",     text = "А как работает?",                    cameraIndex = 0, narratorSequenceBefore = seqJohnNarr1 },
-            new NovelLine { speaker = "Джон",     text = "Я стою.",                            cameraIndex = 0, narratorSequenceBefore = seqJohnNarr2 },
-            new NovelLine { speaker = "Джон",     text = "Я стою и разговариваю.",             cameraIndex = 0, narratorSequenceBefore = seqJohnNarr3 },
-            new NovelLine { speaker = "Джон",     text = "Я многофункциональный.",             cameraIndex = 0 },
-            new NovelLine { speaker = "Мэри",     text = "Джон.",                              cameraIndex = 1 },
-            new NovelLine { speaker = "Мэри",     text = "Он вообще уйдёт?",                  cameraIndex = 1 },
-            new NovelLine { speaker = "Джон",     text = "Не знаю.",                           cameraIndex = 0 },
-            new NovelLine { speaker = "Джон",     text = "Спрашивать бесполезно, он молчит.", cameraIndex = 0 },
-            new NovelLine { speaker = "Мэри",     text = "Понятно.",                           cameraIndex = 1 },
-            new NovelLine { speaker = "Мэри",     text = "Подождём пока сам разберётся.",      cameraIndex = 1 },
-            new NovelLine { speaker = "Player 1", text = "...",                                 cameraIndex = 3, narratorSequenceBefore = seqEnding },
+            new object[] { "Джон",     "Я стою у двери потому что...",       0, seqIntroJohn },
+            new object[] { "Джон",     "...потому что мне здесь хорошо.",    0, null },
+            new object[] { "Джон",     "Слышу скепсис.",                     0, seqNarrDisagrees },
+            new object[] { "Мэри",     "Красиво здесь.",                     1, seqIntroMary },
+            new object[] { "Джон",     "Мэри.",                              0, null },
+            new object[] { "Мэри",     "Что.",                               1, null },
+            new object[] { "Джон",     "В гостиной кто-то есть.",            0, null },
+            new object[] { "Мэри",     "Ты уверен?",                        1, null },
+            new object[] { "Джон",     "Я... чувствую. Там кто-то есть.",   0, null },
+            new object[] { "Player 1", "...",                                 3, seqIntroYou },
+            new object[] { "Мэри",     "Может, это мастер по телевизору?",   1, null },
+            new object[] { "Джон",     "Я не вызывал мастера.",              0, null },
+            new object[] { "Мэри",     "Я вызывала.",                        1, null },
+            new object[] { "Джон",     "Когда?",                             0, null },
+            new object[] { "Мэри",     "Не помню.",                          1, null },
+            new object[] { "Джон",     "Эй. Ты кто?",                       2, seqAfterNotRemember },
+            new object[] { "Player 1", "...",                                 3, null },
+            new object[] { "Джон",     "Ты умеешь чинить телевизоры?",       2, seqAfterPlayerSilence },
+            new object[] { "Player 1", "...",                                 3, null },
+            new object[] { "Джон",     "Возможно это знак согласия.",          2, null },
+            new object[] { "Джон",     "А как работает?",                    0, seqJohnNarr1 },
+            new object[] { "Джон",     "Я стою.",                            0, seqJohnNarr2 },
+            new object[] { "Джон",     "Я стою и разговариваю.",             0, seqJohnNarr3 },
+            new object[] { "Джон",     "Я многофункциональный.",             0, null },
+            new object[] { "Мэри",     "Джон.",                              1, null },
+            new object[] { "Мэри",     "Он вообще уйдёт?",                  1, null },
+            new object[] { "Джон",     "Не знаю.",                           0, null },
+            new object[] { "Джон",     "Спрашивать бесполезно, он молчит.", 0, null },
+            new object[] { "Мэри",     "Понятно.",                           1, null },
+            new object[] { "Мэри",     "Подождём пока сам разберётся.",      1, null },
+            new object[] { "Player 1", "...",                                 3, seqEnding },
         };
-        EditorUtility.SetDirty(novelSeq);
+
+        linesProp.arraySize = lineData.Length;
+        for (int i = 0; i < lineData.Length; i++)
+        {
+            var elem = linesProp.GetArrayElementAtIndex(i);
+            elem.FindPropertyRelative("speaker").stringValue = (string)lineData[i][0];
+            elem.FindPropertyRelative("text").stringValue = (string)lineData[i][1];
+            elem.FindPropertyRelative("cameraIndex").intValue = (int)lineData[i][2];
+            elem.FindPropertyRelative("narratorSequenceBefore").objectReferenceValue = (Object)lineData[i][3];
+        }
+        so.ApplyModifiedPropertiesWithoutUndo();
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
@@ -124,7 +137,7 @@ public class SmithNovelAssetFactory : EditorWindow
             ? "VisualNovelManager in scene updated automatically."
             : "⚠ VisualNovelManager not found in open scene — assign manually.";
 
-        Debug.Log("[SmithNovelAssetFactory] Done — assets in " + folder);
+
         EditorUtility.DisplayDialog("Done!",
             $"Novel assets updated.\n\n{autoMsg}", "OK");
     }
@@ -142,7 +155,7 @@ public class SmithNovelAssetFactory : EditorWindow
         so.FindProperty("sequence").objectReferenceValue = novelSeq;
         so.ApplyModifiedProperties();
         EditorSceneManager.MarkSceneDirty(mgr.gameObject.scene);
-        Debug.Log("[SmithNovelAssetFactory] VisualNovelManager.sequence updated.");
+
         return 1;
     }
 

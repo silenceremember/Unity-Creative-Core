@@ -7,5 +7,6 @@ using UnityEngine;
 public class NovelSequence : ScriptableObject
 {
     [Header("Novel Lines")]
-    public NovelLine[] lines;
+    [SerializeField] private NovelLine[] lines;
+    public NovelLine[] Lines => lines;
 }

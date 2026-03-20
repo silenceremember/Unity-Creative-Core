@@ -430,23 +430,8 @@ public class XPLevelManager : MonoBehaviour
         Color originalColor = txt != null ? txt.color : Color.white;
         if (txt != null) txt.color = Color.red;
 
-        Vector2 origin  = rt.anchoredPosition;
-        float   elapsed = 0f;
+        await UIAnimationHelper.ShakeAsync(rt, promptShakeDuration, promptShakeMagnitude, ct);
 
-        try
-        {
-            while (elapsed < promptShakeDuration)
-            {
-                elapsed += Time.deltaTime;
-                float x = Random.Range(-promptShakeMagnitude, promptShakeMagnitude) *
-                          (1f - elapsed / promptShakeDuration);
-                rt.anchoredPosition = origin + new Vector2(x, 0f);
-                await UniTask.Yield(PlayerLoopTiming.Update, ct);
-            }
-        }
-        catch (System.OperationCanceledException) { }
-
-        rt.anchoredPosition = origin;
         if (txt != null) txt.color = originalColor;
         _promptShaking = false;
     }

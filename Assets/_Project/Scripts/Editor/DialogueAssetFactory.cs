@@ -24,7 +24,7 @@ public static class DialogueAssetFactory
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        Debug.Log("[DialogueAssetFactory] Done: " + FOLDER);
+
     }
 
     private static void CreateSeqBrokenPlay()
@@ -152,14 +152,5 @@ public static class DialogueAssetFactory
             activateObject = ""
         });
         return JsonUtility.FromJson<DialogueLine>(json);
-    }
-
-    [System.Serializable]
-    private struct DialogueLineData
-    {
-        public string text;
-        public float duration;
-        public float pauseAfter;
-        public string activateObject;
     }
 }

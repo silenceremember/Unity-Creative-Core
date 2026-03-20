@@ -124,7 +124,7 @@ public static class QuestDialogueBuilder
             so.FindProperty("seqPostQuest").objectReferenceValue = postQuest;
             so.ApplyModifiedProperties();
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(pqm.gameObject.scene);
-            Debug.Log("[QuestDialogueBuilder] PaintingQuestManager updated.");
+
             count += 8;
         }
         else
@@ -143,7 +143,7 @@ public static class QuestDialogueBuilder
             so.FindProperty("seqDoorUnlocked")  .objectReferenceValue = doorUnlocked;
             so.ApplyModifiedProperties();
             UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(xpm.gameObject.scene);
-            Debug.Log("[QuestDialogueBuilder] XPLevelManager updated.");
+
             count += 5;
         }
         else
@@ -196,15 +196,6 @@ public static class QuestDialogueBuilder
             activateObject = activateObject
         });
         return JsonUtility.FromJson<DialogueLine>(json);
-    }
-
-    [System.Serializable]
-    private struct DialogueLineData
-    {
-        public string text;
-        public float duration;
-        public float pauseAfter;
-        public string activateObject;
     }
 }
 #endif
