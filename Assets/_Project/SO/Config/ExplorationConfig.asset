@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5209d5891686a2842b12a3e15448a043, type: 3}
   m_Name: ExplorationConfig
   m_EditorClassIdentifier: Assembly-CSharp::ExplorationConfig
-  decorativeTimerDuration: 300
+  decorativeTimerDuration: 600
