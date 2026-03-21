@@ -130,13 +130,6 @@ public class PauseMenuManager : MonoBehaviour
     /// <summary>TV Off button.</summary>
     public void TVOff() => tvController?.TurnOff();
 
-    /// <summary>Portfolio image button: opens URL in browser.</summary>
-    public void OpenPortfolio()
-    {
-        if (config != null && !string.IsNullOrEmpty(config.PortfolioUrl))
-            Application.OpenURL(config.PortfolioUrl);
-    }
-
     private void TogglePause()
     {
         if (_isPaused) ClosePause();
