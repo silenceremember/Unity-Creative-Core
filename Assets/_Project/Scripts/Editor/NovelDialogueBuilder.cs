@@ -38,9 +38,7 @@ public static class NovelDialogueBuilder
             L("She's on the balcony. Gazing into the distance.", "Она на балконе. Смотрит вдаль.", 1.2f),
             L("The Developer didn't specify what's there.", "Разработчик не прописал, что там.", 1.8f),
             L("Hence 'the distance'. It's just an HDRI map.", "Поэтому вдаль. Это просто HDRI-карта.", 1.5f),
-            L("Though, in Mary's opinion, a beautiful HDRI map.", "Хотя, по мнению Мэри, красивая HDRI-карта.", 1.5f),
-            L("The camera, by the way, smoothly transitioned.", "Камера, кстати, плавно переместилась.", 1.2f),
-            L("That's Cinemachine. Or just a Lerp. Who knows.", "Это Cinemachine. Или просто Lerp. Кто знает.", 1.5f));
+            L("Though, in Mary's opinion, a beautiful HDRI map.", "Хотя, по мнению Мэри, красивая HDRI-карта.", 1.5f));
 
         var seqIntroYou = CreateSeq(folder, "Narr_IntroYou", 0, null,
             L("And this is you.", "А это Вы.", 1.0f),

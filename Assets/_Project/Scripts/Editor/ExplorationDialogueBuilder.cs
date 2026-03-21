@@ -19,7 +19,7 @@ public static class ExplorationDialogueBuilder
         if (!AssetDatabase.IsValidFolder(folder))
             AssetDatabase.CreateFolder("Assets/_Project/SO/Dialogue", "Exploration");
 
-        var segmentLines = new DialogueLine[43][];
+        var segmentLines = new DialogueLine[42][];
 
         segmentLines[0] = new[] {
             L("So.", "Итак.", 1.5f),
@@ -187,14 +187,6 @@ public static class ExplorationDialogueBuilder
             L("An extremely dramatic plot twist.", "Крайне драматичный поворот сюжета.", 2f),
             L("They urgently need to be put back.", "Их надо срочно вернуть на место.", 2f) };
         segmentLines[41] = new[] {
-            L("When it runs out, nothing will happen to you.", "По его истечении с Вами ничего не случится.", 2f),
-            L("Just a fun little thing.", "Просто забавная вещь.", 1.5f),
-            L("By the way, there's a whole culture...", "Кстати, есть целая культура...", 1.5f),
-            L("Of completing games as fast as possible.", "Прохождения игр на скорость.", 1.5f),
-            L("It's called Speedrunning.", "Называется Speedrun.", 1.5f),
-            L("But everything here is scripted.", "Но тут всё заскриптовано.", 1.5f),
-            L("So don't bother trying, there's no point.", "Так что не пытайтесь, смысла нет.", 2f) };
-        segmentLines[42] = new[] {
             L("Help the tenants with this impossible task.", "Помогите жильцам с этой невыполнимой задачей.", 2f, "QuestCanvas") };
 
         // Pass 1: create/overwrite assets to disk, write lines via SerializedObject
