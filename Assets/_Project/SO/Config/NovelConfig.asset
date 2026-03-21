@@ -51,6 +51,6 @@ MonoBehaviour:
     - {fileID: 8300000, guid: e70a695ecc1075b4eb4bfd1a15687fb1, type: 3}
     - {fileID: 8300000, guid: 9a80be49b04a14141bd61f19d04c1ce7, type: 3}
     - {fileID: 8300000, guid: 9e6d9047ec28ca74a9410ea67419ceb6, type: 3}
-    pitchMin: 0.75
+    pitchMin: 0.8
     pitchMax: 0.9
-    blipInterval: 5
+    blipInterval: 4

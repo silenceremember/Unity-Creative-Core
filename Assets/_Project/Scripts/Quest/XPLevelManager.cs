@@ -124,6 +124,8 @@ public class XPLevelManager : MonoBehaviour
             narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
         if (addXPChannel != null)
             addXPChannel.OnRaised += AddXP;
+        if (languageVar != null)
+            languageVar.OnChanged += OnLanguageChanged;
     }
 
     void OnDisable()
@@ -132,6 +134,8 @@ public class XPLevelManager : MonoBehaviour
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
         if (addXPChannel != null)
             addXPChannel.OnRaised -= AddXP;
+        if (languageVar != null)
+            languageVar.OnChanged -= OnLanguageChanged;
     }
 
     void OnDestroy()
@@ -140,6 +144,12 @@ public class XPLevelManager : MonoBehaviour
             abilityChosenChannel.OnRaised -= HandleAbilityChosen;
         CancelAnim();
         _blinkCts?.Cancel(); _blinkCts?.Dispose();
+    }
+
+    private void OnLanguageChanged(GameLanguage _)
+    {
+        if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
+            rewardLabel.text = FormatReward(config.QuestRewardXP);
     }
 
     private void OnNarratorCompleted(DialogueSequence completed)

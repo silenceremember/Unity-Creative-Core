@@ -23,7 +23,8 @@ public static class MenuDialogueBuilder
             L("You pressed 'Play'.", "Вы нажали «Играть».", 1.0f),
             L("It won't work. The game isn't finished.", "Это не сработает. Игра не закончена.", 1.5f),
             L("And it probably never will be...", "И вряд ли когда-нибудь будет...", 1.2f),
-            L("Although nowadays they call it 'Early Access'.", "Хотя сейчас это называют «Ранний доступ».", 1.8f),
+            L("Then again, it gives the game a certain charm...", "Хотя, это придаёт игре некий шарм...", 1.2f),
+            L("But nowadays they just call it Early Access.", "Но сейчас это называют «Ранний доступ».", 1.8f),
             L("So it's all up to industry standards.", "Так что всё по стандартам индустрии.", 1.5f),
             L("Try poking around in the Settings.", "Попробуйте покопаться в Настройках.", 0.0f));
 

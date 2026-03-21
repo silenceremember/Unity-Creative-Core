@@ -35,6 +35,10 @@ public class ExplorationManager : MonoBehaviour
     [SerializeField] private TMP_Text clickerLabel;
     [SerializeField] private ClickerJuice clickerJuice;
 
+    [Header("Painting Shift")]
+    [Tooltip("GameObject activated")]
+    [SerializeField] private GameObject paintingShiftObject;
+
     [Header("Activation Channel")]
     [Tooltip("Same StringChannel used by NarratorManager's activateChannel")]
     [SerializeField] private StringChannel activateChannel;
@@ -48,6 +52,7 @@ public class ExplorationManager : MonoBehaviour
     private bool             _explorationActive;
     private CancellationTokenSource _timerCts;
     private bool             _clickerActive;
+    private DialogueSequence _lastAmbientSequence;
 
     void Start()
     {
@@ -105,6 +110,11 @@ public class ExplorationManager : MonoBehaviour
         if (_explorationActive) return;
         _explorationActive = true;
 
+        // Walk the chain to find the terminal ambient sequence
+        _lastAmbientSequence = seqAmbientStart;
+        while (_lastAmbientSequence != null && _lastAmbientSequence.NextSequence != null)
+            _lastAmbientSequence = _lastAmbientSequence.NextSequence;
+
         if (explorationCanvas != null)
             explorationCanvas.SetActive(true);
 
@@ -116,7 +126,7 @@ public class ExplorationManager : MonoBehaviour
     {
         if (!_explorationActive) return;
 
-        if (completed.NextSequence == null)
+        if (completed == _lastAmbientSequence)
             OnAmbientChainCompleted();
     }
 
@@ -134,6 +144,11 @@ public class ExplorationManager : MonoBehaviour
         if (key == "Clicker" && clickerLabel != null && !clickerLabel.gameObject.activeSelf)
         {
             ShowClicker();
+        }
+
+        if (key == "PaintingShift" && paintingShiftObject != null && !paintingShiftObject.activeSelf)
+        {
+            paintingShiftObject.SetActive(true);
         }
     }
 

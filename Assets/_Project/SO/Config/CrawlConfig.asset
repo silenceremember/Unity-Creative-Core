@@ -15,7 +15,7 @@ MonoBehaviour:
   scrollSpeed: 60
   holdMultiplier: 3
   startY: -600
-  endY: 4000
+  endY: 4600
   blinkSpeed: 1.5
   holdMusicPitch: 2
   skipIconBaseAlpha: 0.3

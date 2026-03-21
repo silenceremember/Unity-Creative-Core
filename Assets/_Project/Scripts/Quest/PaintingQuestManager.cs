@@ -61,6 +61,7 @@ public class PaintingQuestManager : MonoBehaviour
     private int            _rejectCount   = 0;
     private bool           _pendingXPReward = false;
     private int            _clickDialogueIndex = 0;
+    private bool           _selfNarrating      = false;
 
     private PaintingInteractable _nearPainting;
 
@@ -81,7 +82,10 @@ public class PaintingQuestManager : MonoBehaviour
     void OnEnable()
     {
         if (narratorChannel != null)
+        {
             narratorChannel.OnSequenceCompleted += OnNarratorCompleted;
+            narratorChannel.OnSequenceRequested += OnAnySequenceStarted;
+        }
         if (questStartChannel != null)
             questStartChannel.OnRaised += StartQuest;
     }
@@ -89,7 +93,10 @@ public class PaintingQuestManager : MonoBehaviour
     void OnDisable()
     {
         if (narratorChannel != null)
+        {
             narratorChannel.OnSequenceCompleted -= OnNarratorCompleted;
+            narratorChannel.OnSequenceRequested -= OnAnySequenceStarted;
+        }
         if (questStartChannel != null)
             questStartChannel.OnRaised -= StartQuest;
     }
@@ -102,11 +109,29 @@ public class PaintingQuestManager : MonoBehaviour
 
     private void OnNarratorCompleted(DialogueSequence completed)
     {
-        if (_pendingXPReward)
+        if (_pendingXPReward && completed == seqPostQuest)
         {
             _pendingXPReward = false;
             addXPChannel?.Raise(config.QuestRewardXP);
         }
+    }
+
+    /// <summary>Tracks whether the currently playing sequence belongs to this quest.</summary>
+    private void OnAnySequenceStarted(DialogueSequence seq)
+    {
+        _selfNarrating = IsOwnDialogue(seq);
+    }
+
+    private bool IsOwnDialogue(DialogueSequence seq)
+    {
+        if (seq == seqPostQuest) return true;
+        if (paintingClickDialogues != null)
+            foreach (var d in paintingClickDialogues)
+                if (d == seq) return true;
+        if (rejectDialogues != null)
+            foreach (var d in rejectDialogues)
+                if (d == seq) return true;
+        return false;
     }
 
     /// <summary>
@@ -164,9 +189,10 @@ public class PaintingQuestManager : MonoBehaviour
         if (kb != null && kb.eKey.wasPressedThisFrame)
         {
             if (isPausedVariable != null && isPausedVariable.Value) return;
-            bool narratorActive = narratorPlayingVar != null &&
-                                   narratorPlayingVar.Value;
-            if (narratorActive)
+            bool externalNarrator = narratorPlayingVar != null &&
+                                    narratorPlayingVar.Value &&
+                                    !_selfNarrating;
+            if (externalNarrator)
             {
                 if (!_ePromptShaking && ePrompt != null)
                 {
@@ -263,6 +289,9 @@ public class PaintingQuestManager : MonoBehaviour
 
         await UniTask.Delay(System.TimeSpan.FromSeconds(config.ResolveDelay), cancellationToken: ct);
 
+        while (narratorPlayingVar != null && narratorPlayingVar.Value)
+            await UniTask.Yield(ct);
+
         bool accepted = _enteredCode == config.CorrectCode;
 
         Color resultColor = accepted ? config.ColorAccept : config.ColorReject;
@@ -318,13 +347,11 @@ public class PaintingQuestManager : MonoBehaviour
 
     private async UniTask AutoSolveAfterDialogueAsync(CancellationToken ct)
     {
+        // Wait for the reject dialogue to finish
+        while (narratorPlayingVar != null && narratorPlayingVar.Value)
+            await UniTask.Yield(ct);
+
         await UniTask.Delay(System.TimeSpan.FromSeconds(config.AutoSolveDelay), cancellationToken: ct);
-
-        foreach (var interactable in interactables)
-            if (interactable != null)
-                interactable.ResetPainting(config.AutoSolveResetDuration);
-
-        await UniTask.Delay(System.TimeSpan.FromSeconds(config.AutoSolveResetPause), cancellationToken: ct);
 
         _resolved    = false;
         _questActive = true;

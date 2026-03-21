@@ -21,8 +21,9 @@ MonoBehaviour:
   pitchMin: -75
   pitchMax: 75
   cameraCollisionRadius: 0.1
-  stepDistance: 1.85
-  minMoveSpeed: 0.25
+  stepDistance: 1.65
+  minMoveSpeed: 0.15
   footstepPitchMin: 0.9
   footstepPitchMax: 1.1
-  footstepVolume: 0.5
+  footstepVolume: 0.7
+  cameraLocalOffset: {x: 0, y: 0.7, z: 0}

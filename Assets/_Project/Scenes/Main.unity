@@ -4689,7 +4689,7 @@ MonoBehaviour:
     targetLocalEuler: {x: -110.485, y: 0, z: -90}
   - painting: {fileID: 909120460}
     targetLocalEuler: {x: -109.718, y: 0, z: -90}
-  config: {fileID: 0}
+  config: {fileID: 11400000, guid: 5f8098172b4e553449ceb779ddc23a69, type: 2}
 --- !u!4 &532669192
 Transform:
   m_ObjectHideFlags: 0
@@ -8292,6 +8292,7 @@ MonoBehaviour:
   explorationCanvas: {fileID: 1822483910}
   clickerLabel: {fileID: 1673319463}
   clickerJuice: {fileID: 1673319465}
+  paintingShiftObject: {fileID: 532669190}
   activateChannel: {fileID: 11400000, guid: 3406efb24d9996a4fb63bbf740d2cc1e, type: 2}
   isPausedVariable: {fileID: 11400000, guid: 3b86b037f2d4e6c47907ac8508655ff7, type: 2}
   questStartChannel: {fileID: 11400000, guid: 8161970993a2ad342b60111701dc439c, type: 2}
@@ -17893,6 +17894,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 275527191614201857, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: config
+      value: 
+      objectReference: {fileID: 11400000, guid: 5f8098172b4e553449ceb779ddc23a69, type: 2}
+    - target: {fileID: 275527191614201857, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: paintingQuestManager
+      value: 
+      objectReference: {fileID: 162033291}
     - target: {fileID: 371629057522190945, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -17901,10 +17910,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArchitecturalRendering
       objectReference: {fileID: 0}
+    - target: {fileID: 688451772180286840, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: sequence
+      value: 
+      objectReference: {fileID: 11400000, guid: 63333007b13b67140935ff78043fcfae, type: 2}
+    - target: {fileID: 688451772180286840, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: narratorChannel
+      value: 
+      objectReference: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
     - target: {fileID: 878974105981041597, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 477584480}
+    - target: {fileID: 1971768652429599958, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: config
+      value: 
+      objectReference: {fileID: 11400000, guid: 5f8098172b4e553449ceb779ddc23a69, type: 2}
+    - target: {fileID: 1971768652429599958, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: paintingQuestManager
+      value: 
+      objectReference: {fileID: 162033291}
     - target: {fileID: 3034948326466576632, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -17921,6 +17946,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 130
       objectReference: {fileID: 0}
+    - target: {fileID: 3895504536869811119, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: sequence
+      value: 
+      objectReference: {fileID: 11400000, guid: 8e9218d7b72d00048ad351ca96cb30bc, type: 2}
+    - target: {fileID: 3895504536869811119, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: narratorChannel
+      value: 
+      objectReference: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
     - target: {fileID: 4070841601519886589, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -17953,6 +17986,14 @@ PrefabInstance:
       propertyPath: m_VersionIndex
       value: 193
       objectReference: {fileID: 0}
+    - target: {fileID: 7749210854634840880, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: config
+      value: 
+      objectReference: {fileID: 11400000, guid: 5f8098172b4e553449ceb779ddc23a69, type: 2}
+    - target: {fileID: 7749210854634840880, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: paintingQuestManager
+      value: 
+      objectReference: {fileID: 162033291}
     - target: {fileID: 8106000092762419391, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.005
@@ -17993,6 +18034,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8234690261174863046, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: config
+      value: 
+      objectReference: {fileID: 11400000, guid: 5f8098172b4e553449ceb779ddc23a69, type: 2}
+    - target: {fileID: 8234690261174863046, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: paintingQuestManager
+      value: 
+      objectReference: {fileID: 162033291}
     - target: {fileID: 9039376375250334479, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_Mesh
       value: 
