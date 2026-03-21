@@ -13,15 +13,12 @@ MonoBehaviour:
   m_Name: Seq_Ambient_42
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - textEn: How about a little quest?
-    text: "\u0427\u0442\u043E \u043D\u0430\u0441\u0447\u0451\u0442 \u043D\u0435\u0431\u043E\u043B\u044C\u0448\u043E\u0433\u043E
-      \u043A\u0432\u0435\u0441\u0442\u0430?"
-    pauseAfter: 3
-    activateObject: 
-  - textEn: ...
-    text: ...
-    pauseAfter: 1
-    activateObject: 
-  nextSequence: {fileID: 11400000, guid: 84b1f2287de559d40881244fef27d3f9, type: 2}
+  - textEn: Help the tenants with this impossible task.
+    text: "\u041F\u043E\u043C\u043E\u0433\u0438\u0442\u0435 \u0436\u0438\u043B\u044C\u0446\u0430\u043C
+      \u0441 \u044D\u0442\u043E\u0439 \u043D\u0435\u0432\u044B\u043F\u043E\u043B\u043D\u0438\u043C\u043E\u0439
+      \u0437\u0430\u0434\u0430\u0447\u0435\u0439."
+    pauseAfter: 2
+    activateObject: QuestCanvas
+  nextSequence: {fileID: 0}
   priority: 0
   restoreInterrupted: 0

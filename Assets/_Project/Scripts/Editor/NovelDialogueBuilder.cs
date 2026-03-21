@@ -75,7 +75,7 @@ public static class NovelDialogueBuilder
             L("Not exactly thrilling.", "Не очень-то захватывает.", 1.0f),
             L("So... the next step...", "Поэтому... следующим шагом...", 1.0f),
             L("Literally a step.", "В буквальном смысле шагом.", 1.0f),
-            L("He's unlocked for you...", "Он разблокировал для Вас...", 1.0f),
+            L("He unlocked for you...", "Он разблокировал для Вас...", 1.0f),
             L("Walking.", "Ходьбу.", 1.1f),
             L("WASD. Any key of your choice.", "WASD. Любая кнопка на Ваш выбор.", 1.5f),
             L("Before you lies a room.", "Перед Вами комната.", 1.0f),

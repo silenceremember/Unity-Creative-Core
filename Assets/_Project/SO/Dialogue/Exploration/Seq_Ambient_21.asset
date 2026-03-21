@@ -13,22 +13,19 @@ MonoBehaviour:
   m_Name: Seq_Ambient_21
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - textEn: It seems things are getting a bit dull.
-    text: "\u041F\u043E\u0445\u043E\u0436\u0435, \u0441\u0442\u0430\u043D\u043E\u0432\u0438\u0442\u0441\u044F
-      \u0441\u043A\u0443\u0447\u043D\u043E\u0432\u0430\u0442\u043E."
+  - textEn: The lighting, by the way, is baked.
+    text: "\u0421\u0432\u0435\u0442, \u043A\u0441\u0442\u0430\u0442\u0438, \u0437\u0430\u043F\u0435\u0447\u0451\u043D\u043D\u044B\u0439."
+    pauseAfter: 1.5
+    activateObject: 
+  - textEn: Lightmap. Global illumination.
+    text: "Lightmap. \u0413\u043B\u043E\u0431\u0430\u043B\u044C\u043D\u043E\u0435
+      \u043E\u0441\u0432\u0435\u0449\u0435\u043D\u0438\u0435."
     pauseAfter: 2
     activateObject: 
-  - textEn: I'm not sure I can entertain you much longer.
-    text: "\u041D\u0435 \u0437\u043D\u0430\u044E, \u0441\u043C\u043E\u0433\u0443
-      \u043B\u0438 \u044F \u0412\u0430\u0441 \u0435\u0449\u0451 \u0434\u043E\u043B\u0433\u043E
-      \u0440\u0430\u0437\u0432\u043B\u0435\u043A\u0430\u0442\u044C."
-    pauseAfter: 3
-    activateObject: 
-  - textEn: But the Developer gave me a few tools.
-    text: "\u041D\u043E \u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A
-      \u0432\u044B\u0434\u0435\u043B\u0438\u043B \u043C\u043D\u0435 \u043D\u0435\u0441\u043A\u043E\u043B\u044C\u043A\u043E
-      \u0438\u043D\u0441\u0442\u0440\u0443\u043C\u0435\u043D\u0442\u043E\u0432."
-    pauseAfter: 2.5
+  - textEn: Sounds simpler than it looks in the settings.
+    text: "\u0417\u0432\u0443\u0447\u0438\u0442 \u043F\u0440\u043E\u0449\u0435, \u0447\u0435\u043C
+      \u0432\u044B\u0433\u043B\u044F\u0434\u0438\u0442 \u0432 \u043D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0430\u0445."
+    pauseAfter: 2
     activateObject: 
   nextSequence: {fileID: 11400000, guid: d1d9169568ba12949956bc40ed8841b5, type: 2}
   priority: 0

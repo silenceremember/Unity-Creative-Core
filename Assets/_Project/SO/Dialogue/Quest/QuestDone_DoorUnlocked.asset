@@ -16,12 +16,12 @@ MonoBehaviour:
   - textEn: By the way, a passage has opened up...
     text: "\u041A\u0441\u0442\u0430\u0442\u0438, \u0412\u0430\u043C \u043E\u0442\u043A\u0440\u044B\u043B\u0441\u044F
       \u043F\u0435\u0440\u0435\u0445\u043E\u0434..."
-    pauseAfter: 2.5
+    pauseAfter: 2
     activateObject: 
   - textEn: To a new, uncharted level.
     text: "\u041D\u0430 \u043D\u043E\u0432\u044B\u0439, \u043D\u0435\u0438\u0437\u0432\u0435\u0434\u0430\u043D\u043D\u044B\u0439
       \u0443\u0440\u043E\u0432\u0435\u043D\u044C."
-    pauseAfter: 3
+    pauseAfter: 2
     activateObject: 
   nextSequence: {fileID: 11400000, guid: 4e20480acd6456748996aef72e89358e, type: 2}
   priority: 5

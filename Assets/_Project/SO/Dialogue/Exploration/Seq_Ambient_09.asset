@@ -16,7 +16,7 @@ MonoBehaviour:
   - textEn: Still, there are things to look at.
     text: "\u0412\u043F\u0440\u043E\u0447\u0435\u043C, \u0442\u0443\u0442 \u0435\u0441\u0442\u044C
       \u0447\u0442\u043E \u0441\u043C\u043E\u0442\u0440\u0435\u0442\u044C."
-    pauseAfter: 2
+    pauseAfter: 1.5
     activateObject: 
   - textEn: Paintings, for instance.
     text: "\u041A\u0430\u0440\u0442\u0438\u043D\u044B, \u043D\u0430\u043F\u0440\u0438\u043C\u0435\u0440."

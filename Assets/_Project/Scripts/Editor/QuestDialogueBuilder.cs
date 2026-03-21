@@ -68,63 +68,63 @@ public static class QuestDialogueBuilder
 
         var rejects = new[] {
             CreateSeq(folder, "QuestReject_0", 5, null,
-                L("Looks like the paintings need to be clicked in the right order.", "Похоже, картины надо нажать в правильном порядке.", 3.5f)),
+                L("Looks like the paintings need to be clicked in the right order.", "Похоже, картины надо нажать в правильном порядке.", 2f)),
             CreateSeq(folder, "QuestReject_1", 5, null,
-                L("You need to click the paintings in order: 1-2-3-4.", "Картины нужно нажать в порядке 1-2-3-4.", 3.5f)),
+                L("You need to click the paintings in order: 1-2-3-4.", "Картины нужно нажать в порядке 1-2-3-4.", 2f)),
             CreateSeq(folder, "QuestReject_2", 5, null,
-                L("Order 1-2-3-4. Just. Click. Them. In. Sequence.", "Порядок 1-2-3-4. Просто. Нажмите. Их. По. Очереди.", 3.5f)),
+                L("Order 1-2-3-4. Just. Click. Them. In. Sequence.", "Порядок 1-2-3-4. Просто. Нажмите. Их. По. Очереди.", 2f)),
             CreateSeq(folder, "QuestReject_3", 5, null,
-                L("I'm starting to question your cognitive abilities.", "Я начинаю сомневаться в Ваших когнитивных способностях.", 3.5f)),
+                L("I'm starting to question your cognitive abilities.", "Я начинаю сомневаться в Ваших когнитивных способностях.", 2f)),
             CreateSeq(folder, "QuestReject_4", 5, null,
                 L("Good grief.", "Господи.", 1.5f),
-                L("You're not even trying, are you?", "Вы ведь даже не стараетесь, да?", 2.5f),
-                L("Fine. I'll handle this deeply complex task for you.", "Ладно. Я выполню эту сложнейшую задачу за Вас.", 3.5f),
-                L("Watch and learn.", "Смотрите и учитесь.", 2.0f))
+                L("You're not even trying, are you?", "Вы ведь даже не стараетесь, да?", 2f),
+                L("Fine. I'll handle this deeply complex task for you.", "Ладно. Я выполню эту сложнейшую задачу за Вас.", 2f),
+                L("Watch and learn.", "Смотрите и учитесь.", 2f))
         };
 
         // Post-quest chain (transitions managed by XPLevelManager)
         var postQuest = CreateSeq(folder, "QuestDone_PostQuest", 5, null,
-            L("And there you have it. Quest completed.", "Ну вот. Вы выполнили квест.", 2.5f),
-            L("Though the paintings are now completely broken...", "Правда, картины от этого сломались окончательно...", 3.5f),
-            L("But you earned 1000 experience points!", "Зато Вы заработали 1000 очков опыта!", 3.0f),
-            L("Which you have absolutely nowhere to spend.", "Которые Вам абсолютно некуда тратить.", 3.0f),
-            L("Hold on, I found something in the UI.", "Погодите-ка, я кое-что нашёл в интерфейсе.", 3.5f),
-            L("There's an XP bar. How classic.", "Здесь есть полоска опыта. Какая классика.", 3.5f));
+            L("And there you have it. Quest completed.", "Ну вот. Вы выполнили квест.", 2f),
+            L("Though the paintings are now completely broken...", "Правда, картины от этого сломались окончательно...", 2f),
+            L("But you earned 1000 experience points!", "Зато Вы заработали 1000 очков опыта!", 2f),
+            L("Which you have absolutely nowhere to spend.", "Которые Вам абсолютно некуда тратить.", 2f),
+            L("Hold on, I found something in the UI.", "Погодите-ка, я кое-что нашёл в интерфейсе.", 2f),
+            L("There's an XP bar. How classic.", "Здесь есть полоска опыта. Какая классика.", 2f));
 
         var xpBar = CreateSeq(folder, "QuestDone_XPBar", 5, null,
-            L("Now we shall ceremoniously award you the experience...", "Сейчас мы торжественно начислим Вам опыт...", 3.5f));
+            L("Now we shall ceremoniously award you the experience...", "Сейчас мы торжественно начислим Вам опыт...", 2f));
 
         var levelUp = CreateSeq(folder, "QuestDone_LevelUp", 5, null,
-            L("Wow! You've leveled up!", "Ого! Вы повысили уровень!", 2.0f),
+            L("Wow! You've leveled up!", "Ого! Вы повысили уровень!", 2f),
             L("Let's see...", "Давайте посмотрим...", 1.5f),
-            L("What amazing skills has the Developer to offer?", "Какие же потрясающие навыки предложит Разработчик?", 3.5f));
+            L("What amazing skills has the Developer to offer?", "Какие же потрясающие навыки предложит Разработчик?", 2f));
 
         var abilityChosen = CreateSeq(folder, "QuestDone_AbilityChosen", 5, null,
-            L("My, what a rich selection...", "Боже, какой богатый выбор...", 2.5f),
-            L("New abilities. Just like in a real RPG.", "Новые способности. Прямо как в настоящих RPG.", 3.5f),
-            L("Make your choice as thoughtfully as possible.", "Делайте свой выбор максимально вдумчиво.", 3.5f),
-            L("You won't be able to undo this.", "Вы не сможете откатить эти изменения.", 3.0f));
+            L("My, what a rich selection...", "Боже, какой богатый выбор...", 2f),
+            L("New abilities. Just like in a real RPG.", "Новые способности. Прямо как в настоящих RPG.", 2f),
+            L("Make your choice as thoughtfully as possible.", "Делайте свой выбор максимально вдумчиво.", 2f),
+            L("You won't be able to undo this.", "Вы не сможете откатить эти изменения.", 2f));
 
         var doorEpilogue = CreateSeq(folder, "QuestDone_DoorEpilogue", 5, null,
-            L("Look, the door is gone.", "Смотрите, дверь пропала.", 2.5f),
-            L("Now you can go.", "Теперь Вы можете идти.", 2.5f),
-            L("If you jump down, you'll move on.", "Если спрыгнете вниз, Вы перейдёте дальше.", 3.5f),
-            L("But I won't rush you.", "Но я Вас торопить не буду.", 2.5f),
-            L("You can stay here as long as you like...", "Можете находиться здесь, сколько захотите...", 3.0f),
-            L("And enjoy the results of your actions.", "И наслаждаться результатами своих действий.", 3.5f));
+            L("Look, the door is gone.", "Смотрите, дверь пропала.", 2f),
+            L("Now you can go.", "Теперь Вы можете идти.", 2f),
+            L("If you jump down, you'll move on.", "Если спрыгнете вниз, Вы перейдёте дальше.", 2f),
+            L("But I won't rush you.", "Но я Вас торопить не буду.", 2f),
+            L("You can stay here as long as you like...", "Можете находиться здесь, сколько захотите...", 2f),
+            L("And enjoy the results of your actions.", "И наслаждаться результатами своих действий.", 2f));
 
         var doorUnlocked = CreateSeq(folder, "QuestDone_DoorUnlocked", 5, doorEpilogue,
-            L("By the way, a passage has opened up...", "Кстати, Вам открылся переход...", 2.5f),
-            L("To a new, uncharted level.", "На новый, неизведанный уровень.", 3.0f));
+            L("By the way, a passage has opened up...", "Кстати, Вам открылся переход...", 2f),
+            L("To a new, uncharted level.", "На новый, неизведанный уровень.", 2f));
 
         var abilityTried = CreateSeq(folder, "QuestDone_AbilityTried", 5, doorUnlocked,
-            L("Magnificent choice!", "Великолепный выбор!", 2.0f),
+            L("Magnificent choice!", "Великолепный выбор!", 2f),
             L("Hmm... It seems...", "Хм... Похоже...", 1.5f),
-            L("The Developer left the skills as UI placeholders.", "Разработчик оставил навыки как UI-заглушку.", 3.5f),
-            L("They do absolutely nothing.", "Они ничего не делают. Совсем.", 2.5f),
-            L("Then again, the illusion of choice...", "Впрочем, иллюзия выбора...", 2.0f),
-            L("Is the foundation of modern game design.", "Это база современного гейм-дизайна.", 2.5f),
-            L("In any case, congratulations on leveling up.", "В любом случае поздравляю с повышением уровня.", 3.5f));
+            L("The Developer left the skills as UI placeholders.", "Разработчик оставил навыки как UI-заглушку.", 2f),
+            L("They do absolutely nothing.", "Они ничего не делают. Совсем.", 2f),
+            L("Then again, the illusion of choice...", "Впрочем, иллюзия выбора...", 2f),
+            L("Is the foundation of modern game design.", "Это база современного гейм-дизайна.", 2f),
+            L("In any case, congratulations on leveling up.", "В любом случае поздравляю с повышением уровня.", 2f));
 
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();

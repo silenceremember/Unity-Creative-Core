@@ -16,7 +16,7 @@ MonoBehaviour:
   - textEn: Although there's nothing to touch.
     text: "\u0425\u043E\u0442\u044F \u0442\u0440\u043E\u0433\u0430\u0442\u044C \u0438
       \u043D\u0435\u0447\u0435\u0433\u043E."
-    pauseAfter: 2
+    pauseAfter: 1.5
     activateObject: 
   - textEn: Everything is locked.
     text: "\u0412\u0441\u0451 \u0437\u0430\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u043D\u043E."
@@ -26,7 +26,7 @@ MonoBehaviour:
     text: "\u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A \u043D\u0435
       \u043F\u0440\u0438\u0434\u0443\u043C\u0430\u043B, \u0447\u0442\u043E \u0441
       \u044D\u0442\u0438\u043C \u0434\u0435\u043B\u0430\u0442\u044C."
-    pauseAfter: 3
+    pauseAfter: 2
     activateObject: 
   nextSequence: {fileID: 11400000, guid: c256b6658a4680d458a09e3e1735ed28, type: 2}
   priority: 0

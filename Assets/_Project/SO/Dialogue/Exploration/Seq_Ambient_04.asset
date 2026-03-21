@@ -15,12 +15,12 @@ MonoBehaviour:
   lines:
   - textEn: Mary is on the balcony.
     text: "\u041D\u0430 \u0431\u0430\u043B\u043A\u043E\u043D\u0435 \u041C\u044D\u0440\u0438."
-    pauseAfter: 2
+    pauseAfter: 1.5
     activateObject: 
   - textEn: Meant to be strong, with opinions of her own.
     text: "\u041F\u043E \u0437\u0430\u0434\u0443\u043C\u043A\u0435 \u0441\u0438\u043B\u044C\u043D\u0430\u044F,
       \u0441\u043E \u0441\u0432\u043E\u0438\u043C \u043C\u043D\u0435\u043D\u0438\u0435\u043C."
-    pauseAfter: 3
+    pauseAfter: 2
     activateObject: 
   nextSequence: {fileID: 11400000, guid: 1f4dd69d4eb72fa4d9ed7f32260c5971, type: 2}
   priority: 0

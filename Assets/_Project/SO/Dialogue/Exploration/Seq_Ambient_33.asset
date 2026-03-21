@@ -13,10 +13,21 @@ MonoBehaviour:
   m_Name: Seq_Ambient_33
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - textEn: By the way, how's the clicker?
-    text: "\u041A\u0441\u0442\u0430\u0442\u0438, \u043A\u0430\u043A \u0412\u0430\u043C
-      \u043A\u043B\u0438\u043A\u0435\u0440?"
-    pauseAfter: 2.5
+  - textEn: You know what's great about simple clickers?
+    text: "\u0417\u043D\u0430\u0435\u0442\u0435, \u0432 \u0447\u0451\u043C \u043F\u0440\u0435\u043B\u0435\u0441\u0442\u044C
+      \u043F\u0440\u043E\u0441\u0442\u044B\u0445 \u043A\u043B\u0438\u043A\u0435\u0440\u043E\u0432?"
+    pauseAfter: 2
+    activateObject: 
+  - textEn: They're crystal clear honest.
+    text: "\u041E\u043D\u0438 \u043A\u0440\u0438\u0441\u0442\u0430\u043B\u044C\u043D\u043E
+      \u0447\u0435\u0441\u0442\u043D\u044B."
+    pauseAfter: 1.5
+    activateObject: 
+  - textEn: You click, and you get a result. Instantly.
+    text: "\u0412\u044B \u043A\u043B\u0438\u043A\u0430\u0435\u0442\u0435, \u0438
+      \u043F\u043E\u043B\u0443\u0447\u0430\u0435\u0442\u0435 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442.
+      \u0421\u0440\u0430\u0437\u0443."
+    pauseAfter: 2
     activateObject: 
   nextSequence: {fileID: 11400000, guid: b7c81465d6bcb6c48a759615e350a5ff, type: 2}
   priority: 0

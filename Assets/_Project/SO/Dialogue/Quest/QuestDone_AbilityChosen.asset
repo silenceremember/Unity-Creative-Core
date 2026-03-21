@@ -16,23 +16,23 @@ MonoBehaviour:
   - textEn: My, what a rich selection...
     text: "\u0411\u043E\u0436\u0435, \u043A\u0430\u043A\u043E\u0439 \u0431\u043E\u0433\u0430\u0442\u044B\u0439
       \u0432\u044B\u0431\u043E\u0440..."
-    pauseAfter: 2.5
+    pauseAfter: 2
     activateObject: 
   - textEn: New abilities. Just like in a real RPG.
     text: "\u041D\u043E\u0432\u044B\u0435 \u0441\u043F\u043E\u0441\u043E\u0431\u043D\u043E\u0441\u0442\u0438.
       \u041F\u0440\u044F\u043C\u043E \u043A\u0430\u043A \u0432 \u043D\u0430\u0441\u0442\u043E\u044F\u0449\u0438\u0445
       RPG."
-    pauseAfter: 3.5
+    pauseAfter: 2
     activateObject: 
   - textEn: Make your choice as thoughtfully as possible.
     text: "\u0414\u0435\u043B\u0430\u0439\u0442\u0435 \u0441\u0432\u043E\u0439 \u0432\u044B\u0431\u043E\u0440
       \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E \u0432\u0434\u0443\u043C\u0447\u0438\u0432\u043E."
-    pauseAfter: 3.5
+    pauseAfter: 2
     activateObject: 
   - textEn: You won't be able to undo this.
     text: "\u0412\u044B \u043D\u0435 \u0441\u043C\u043E\u0436\u0435\u0442\u0435 \u043E\u0442\u043A\u0430\u0442\u0438\u0442\u044C
       \u044D\u0442\u0438 \u0438\u0437\u043C\u0435\u043D\u0435\u043D\u0438\u044F."
-    pauseAfter: 3
+    pauseAfter: 2
     activateObject: 
   nextSequence: {fileID: 0}
   priority: 5

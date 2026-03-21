@@ -13,17 +13,18 @@ MonoBehaviour:
   m_Name: Seq_Ambient_15
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
-  - textEn: The house, overall, is nice.
-    text: "\u0414\u043E\u043C, \u0432 \u043E\u0431\u0449\u0435\u043C, \u0445\u043E\u0440\u043E\u0448\u0438\u0439."
-    pauseAfter: 2.5
-    activateObject: 
-  - textEn: You can tell the Developer tried.
-    text: "\u0412\u0438\u0434\u043D\u043E, \u0447\u0442\u043E \u0420\u0430\u0437\u0440\u0430\u0431\u043E\u0442\u0447\u0438\u043A
-      \u0441\u0442\u0430\u0440\u0430\u043B\u0441\u044F."
+  - textEn: This is the average playtime for the game.
+    text: "\u042D\u0442\u043E \u0441\u0440\u0435\u0434\u043D\u0435\u0435 \u0432\u0440\u0435\u043C\u044F
+      \u043F\u0440\u043E\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u044F \u0438\u0433\u0440\u044B."
     pauseAfter: 2
     activateObject: 
-  - textEn: There are details.
-    text: "\u0415\u0441\u0442\u044C \u0434\u0435\u0442\u0430\u043B\u0438."
+  - textEn: Well, for what's left of it.
+    text: "\u0422\u043E\u0447\u043D\u0435\u0435, \u0435\u0451 \u043E\u0441\u0442\u0430\u0432\u0448\u0435\u0439\u0441\u044F
+      \u0447\u0430\u0441\u0442\u0438."
+    pauseAfter: 1.5
+    activateObject: 
+  - textEn: Not yours.
+    text: "\u041D\u0435 \u0412\u0430\u0448\u0435."
     pauseAfter: 1.5
     activateObject: 
   nextSequence: {fileID: 11400000, guid: 86e1ab6aa15b37a418b990b325e2bb10, type: 2}
