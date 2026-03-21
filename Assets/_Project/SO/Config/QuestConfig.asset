@@ -29,3 +29,53 @@ MonoBehaviour:
   promptShakeMagnitude: 10
   promptShakeDuration: 0.35
   inputSpamCooldown: 0.5
+  colorDefault: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  colorDone: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  colorAccept: {r: 0, g: 1, b: 0, a: 1}
+  colorReject: {r: 1, g: 0, b: 0, a: 1}
+  correctCode: 1234
+  shiftDuration: 0.6
+  shiftStagger: 0
+  xpRequirements: f4010000ee020000
+  xpFillCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  flashColor: {r: 1, g: 0.85, b: 0, a: 1}
+  rewardFormat: {fileID: 11400000, guid: 33dcab7248cd7ff45ab93617e44a028d, type: 2}
+  slotOrder: 02000000000000000300000001000000
+  resolveDelay: 0.3
+  resetDelay: 0.8
+  pulseAmount: 0.12
+  autoSolveDelay: 5
+  autoSolveResetDuration: 0.4
+  autoSolveResetPause: 0.6
+  rejectResetDuration: 0.5
+  interactSound: {fileID: 8300000, guid: d7e7786be2e12cb408458604430c0551, type: 3}
+  acceptSound: {fileID: 8300000, guid: c2729a6729423a844aa23aaa42d13bfb, type: 3}
+  rejectSound: {fileID: 8300000, guid: 1464521a0a13ce44f8ab29dd60ab687a, type: 3}
+  slideClips:
+  - {fileID: 8300000, guid: 70e4883b34c76ae4c89d9f0befdd97c6, type: 3}
+  - {fileID: 8300000, guid: 519b2fad883105d40abb24be96cb49d8, type: 3}
+  - {fileID: 8300000, guid: 429e6095b1d57344695be942239ccfb5, type: 3}
+  - {fileID: 8300000, guid: 64bd2e6ea6a6d8b468bdcd1796999fb9, type: 3}

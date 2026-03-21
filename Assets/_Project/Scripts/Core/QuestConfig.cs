@@ -104,9 +104,9 @@ public class QuestConfig : ScriptableObject
     [SerializeField] private Color flashColor = new Color(1f, 0.85f, 0f, 1f);
     public Color FlashColor => flashColor;
 
-    [Tooltip("Reward label format string ({0} = XP amount)")]
-    [SerializeField] private string rewardFormat = "REWARD: {0} XP";
-    public string RewardFormat => rewardFormat;
+    [Tooltip("Reward label format string ({0} = XP amount).")]
+    [SerializeField] private LocalizedString rewardFormat;
+    public LocalizedString RewardFormat => rewardFormat;
 
     [Header("Quest Slot Order")]
     [Tooltip("Order in which painting slots are assigned (0-based indices)")]

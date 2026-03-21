@@ -62,6 +62,7 @@ public class XPLevelManager : MonoBehaviour
     [SerializeField] private GameObject doorObject;
 
     [Header("Dependencies")]
+    [SerializeField] private LanguageVariable languageVar;
     [SerializeField] private BoolVariable isPausedVariable;
 
     [SerializeField] private BoolVariable narratorPlayingVar;
@@ -91,6 +92,12 @@ public class XPLevelManager : MonoBehaviour
             ? config.XPRequirements[_level]
             : config.XPRequirements[config.XPRequirements.Length - 1];
 
+    private string FormatReward(int amount)
+    {
+        var lang = languageVar != null ? languageVar.Value : GameLanguage.Russian;
+        return string.Format(config.RewardFormat.GetText(lang), amount);
+    }
+
 
     void Start()
     {
@@ -102,7 +109,7 @@ public class XPLevelManager : MonoBehaviour
         if (rewardLabel != null)
         {
             rewardLabel.gameObject.SetActive(true);
-            rewardLabel.text = string.Format(config.RewardFormat, config.QuestRewardXP);
+            rewardLabel.text = FormatReward(config.QuestRewardXP);
         }
 
         RefreshUI();
@@ -193,7 +200,7 @@ public class XPLevelManager : MonoBehaviour
         if (rewardLabel != null)
         {
             rewardLabel.gameObject.SetActive(true);
-            rewardLabel.text = string.Format(config.RewardFormat, amount);
+            rewardLabel.text = FormatReward(amount);
         }
 
         _animCts = new CancellationTokenSource();
@@ -238,7 +245,7 @@ public class XPLevelManager : MonoBehaviour
             if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
             {
                 int rewardLeft = Mathf.RoundToInt(Mathf.Lerp(rewardDisplay, rewardEnd, curve));
-                rewardLabel.text = string.Format(config.RewardFormat, rewardLeft);
+                rewardLabel.text = FormatReward(rewardLeft);
                 if (rewardLeft <= 0)
                     rewardLabel.gameObject.SetActive(false);
             }
@@ -253,7 +260,7 @@ public class XPLevelManager : MonoBehaviour
 
         if (rewardLabel != null && rewardLabel.gameObject.activeSelf)
         {
-            rewardLabel.text = string.Format(config.RewardFormat, rewardEnd);
+            rewardLabel.text = FormatReward(rewardEnd);
             if (rewardEnd <= 0)
                 rewardLabel.gameObject.SetActive(false);
         }

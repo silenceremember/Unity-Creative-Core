@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NovelConfig
   m_EditorClassIdentifier: Assembly-CSharp::NovelConfig
   blendDuration: 0.8
-  charsPerSecond: 60
+  charsPerSecond: 45
   blendCurve:
     serializedVersion: 2
     m_Curve:
@@ -39,4 +39,18 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   mixerGroup: {fileID: 24300002, guid: 8bd64c2065c534d499948a463e09f4a6, type: 2}
-  voices: []
+  voices:
+  - speaker: 0
+    blips:
+    - {fileID: 8300000, guid: 25260c62d0f5c6a49bb24b68ff525037, type: 3}
+    pitchMin: 0.9
+    pitchMax: 1
+    blipInterval: 4
+  - speaker: 1
+    blips:
+    - {fileID: 8300000, guid: e70a695ecc1075b4eb4bfd1a15687fb1, type: 3}
+    - {fileID: 8300000, guid: 9a80be49b04a14141bd61f19d04c1ce7, type: 3}
+    - {fileID: 8300000, guid: 9e6d9047ec28ca74a9410ea67419ceb6, type: 3}
+    pitchMin: 0.75
+    pitchMax: 0.9
+    blipInterval: 5
