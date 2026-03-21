@@ -18,6 +18,17 @@ An experimental walking simulator that blends several mechanics together:
 - 🎨 **Quest**: painting-based tasks with XP and progression
 - 🎬 **Final Sequence**: a cinematic ending
 
+### Characters
+
+The game features four layers of awareness, each character knows a different slice of the truth:
+
+| Character | What they know |
+|---|---|
+| **Mary** | Unaware of the Narrator. Doesn't know where she is or what the Player is. |
+| **John** | Can hear the Narrator, but knows nothing about the Developer. Tries his best to play the role he was given. |
+| **The Narrator** | Knows about Mary, John, and the Developer. Doesn't quite understand who the Player is or why they're here. Does his best to entertain them with whatever tools he has. |
+| **The Player** | Just a player. |
+
 Solo-developed from concept to publication on itch.io as a proof of concept.
 
 ---
