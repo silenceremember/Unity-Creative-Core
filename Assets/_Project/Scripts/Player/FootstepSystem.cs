@@ -18,6 +18,10 @@ public class FootstepSystem : MonoBehaviour
     [Tooltip("Footstep clips (step-001 … step-018)")]
     [SerializeField] private AudioClip[] footstepClips;
 
+    [Header("Dependencies")]
+    [SerializeField] private BoolVariable isPausedVariable;
+    [SerializeField] private PlayerController playerController;
+
     private CharacterController _cc;
     private AudioSource _audioSource;
     private float _distanceTravelled;
@@ -35,6 +39,9 @@ public class FootstepSystem : MonoBehaviour
 
     void Update()
     {
+        if (isPausedVariable != null && isPausedVariable.Value) return;
+        if (playerController != null && !playerController.enabled) return;
+
         if (!_cc.isGrounded)
         {
             _distanceTravelled = 0f;

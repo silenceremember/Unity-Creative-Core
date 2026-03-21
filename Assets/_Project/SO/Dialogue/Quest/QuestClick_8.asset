@@ -16,7 +16,7 @@ MonoBehaviour:
   - textEn: Let us talk about escort missions.
     text: "\u041F\u043E\u0433\u043E\u0432\u043E\u0440\u0438\u043C, \u043F\u043E\u0436\u0430\u043B\u0443\u0439,
       \u043E \u043C\u0438\u0441\u0441\u0438\u044F\u0445 \u044D\u0441\u043A\u043E\u0440\u0442\u0430."
-    pauseAfter: 3.5
+    pauseAfter: 1
     activateObject: 
   nextSequence: {fileID: 0}
   priority: 5

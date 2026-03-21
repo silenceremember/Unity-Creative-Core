@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DialogueSequence
   lines:
   - textEn: So.
-    text: "\u0418\u0442\u0430\u043A."
+    text: "\u0418\u0442\u0430\u043A2."
     pauseAfter: 2
     activateObject: 
   - textEn: You jumped into the unknown after all.

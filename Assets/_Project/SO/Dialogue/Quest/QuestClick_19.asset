@@ -15,7 +15,7 @@ MonoBehaviour:
   lines:
   - textEn: I see...
     text: "\u041F\u043E\u043D\u044F\u0442\u043D\u043E..."
-    pauseAfter: 3.5
+    pauseAfter: 1
     activateObject: 
   nextSequence: {fileID: 0}
   priority: 5

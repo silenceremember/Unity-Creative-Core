@@ -4423,9 +4423,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 189060bc873f56d43a5870ab975b18d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FinalTrigger
-  sequence: {fileID: 0}
-  narratorChannel: {fileID: 0}
-  signalChannel: {fileID: 0}
+  sequence: {fileID: 11400000, guid: 7bee698880f3d4d46a7fff9097f92a91, type: 2}
+  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  signalChannel: {fileID: 11400000, guid: 0387d1d9c58ce374c9b9f1eeecdcb2e3, type: 2}
 --- !u!1 &486995627
 GameObject:
   m_ObjectHideFlags: 0
@@ -7609,6 +7609,8 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 74ad999233684ff4193712ade6150c46, type: 3}
   - {fileID: 8300000, guid: 87994f411823fc249b5ab3462f7f1b6b, type: 3}
   - {fileID: 8300000, guid: 269accc8a19e84a4082261bbd3fc4266, type: 3}
+  isPausedVariable: {fileID: 11400000, guid: 3b86b037f2d4e6c47907ac8508655ff7, type: 2}
+  playerController: {fileID: 931120245}
 --- !u!82 &931120244
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8386,8 +8388,8 @@ MonoBehaviour:
   narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
   seqFinalPart1: {fileID: 11400000, guid: 824817aae0e1b4a46a6b1486255e952a, type: 2}
   seqFinalPart2: {fileID: 11400000, guid: 623ca46f9ee9f274785a880ceb7f8899, type: 2}
-  hdriFadeChannel: {fileID: 0}
-  finaleStartChannel: {fileID: 0}
+  hdriFadeChannel: {fileID: 11400000, guid: 0387d1d9c58ce374c9b9f1eeecdcb2e3, type: 2}
+  finaleStartChannel: {fileID: 11400000, guid: 604844f9d1805384bb54e929839b0448, type: 2}
   escHintUI: {fileID: 405646806}
 --- !u!1 &1077374007
 GameObject:
@@ -16578,9 +16580,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 189060bc873f56d43a5870ab975b18d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FinalTrigger
-  sequence: {fileID: 0}
-  narratorChannel: {fileID: 0}
-  signalChannel: {fileID: 0}
+  sequence: {fileID: 11400000, guid: 824817aae0e1b4a46a6b1486255e952a, type: 2}
+  narratorChannel: {fileID: 11400000, guid: 60d23ee2238199c4f8a38cebdad06a02, type: 2}
+  signalChannel: {fileID: 11400000, guid: 604844f9d1805384bb54e929839b0448, type: 2}
 --- !u!43 &1975904988
 Mesh:
   m_ObjectHideFlags: 0

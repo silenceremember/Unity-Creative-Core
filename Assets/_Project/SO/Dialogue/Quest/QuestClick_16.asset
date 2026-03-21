@@ -17,7 +17,7 @@ MonoBehaviour:
     text: "\u0412\u043E\u0437\u043C\u043E\u0436\u043D\u043E \u0412\u0430\u043C \u043D\u0443\u0436\u0435\u043D
       \u0442\u0443\u0442\u043E\u0440\u0438\u0430\u043B. \u041A\u0430\u043A \u0442\u0435,
       \u0447\u0442\u043E \u0443\u0447\u0430\u0442 \u043F\u0440\u044B\u0433\u0430\u0442\u044C."
-    pauseAfter: 3.5
+    pauseAfter: 1
     activateObject: 
   nextSequence: {fileID: 0}
   priority: 5
