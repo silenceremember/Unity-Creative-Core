@@ -267,13 +267,13 @@ RectTransform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1098753692}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 634.1, y: 95.5}
+  m_AnchoredPosition: {x: 671, y: 111.499954}
   m_SizeDelta: {x: 574.6, y: 322.39996}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &66494989
@@ -365,7 +365,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 87.0686, z: 0, w: 82.16931}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -5493,7 +5493,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: f5c3ca88b2ddaec4a96f429d66020c07, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -7426,6 +7426,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenuManager
   pauseMenuCanvas: {fileID: 1098753686}
+  quitButton: {fileID: 1293893962}
   audioConfig: {fileID: 11400000, guid: b0f9155b64d5f74499cf15fc67fe2f91, type: 2}
   volumeSlider: {fileID: 1392466603}
   tvController: {fileID: 383498468}
@@ -14969,7 +14970,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1792654393
 Transform:
   m_ObjectHideFlags: 0

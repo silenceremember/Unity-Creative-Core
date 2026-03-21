@@ -20,6 +20,10 @@ public class ExitGame : MonoBehaviour
 
     void Start()
     {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        gameObject.SetActive(false);
+        return;
+#endif
         _button.interactable = false;
     }
 

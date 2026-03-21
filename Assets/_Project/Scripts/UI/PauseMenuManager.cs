@@ -18,6 +18,8 @@ public class PauseMenuManager : MonoBehaviour
     [Header("UI")]
     [Tooltip("Root GameObject of the ESC menu")]
     [SerializeField] private GameObject pauseMenuCanvas;
+    [Tooltip("Quit button — disabled in WebGL")]
+    [SerializeField] private GameObject quitButton;
 
     [Header("Audio")]
     [SerializeField] private AudioConfig audioConfig;
@@ -52,6 +54,11 @@ public class PauseMenuManager : MonoBehaviour
     {
         if (pauseMenuCanvas != null)
             pauseMenuCanvas.SetActive(false);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        if (quitButton != null)
+            quitButton.SetActive(false);
+#endif
     }
 
     void OnEnable()
