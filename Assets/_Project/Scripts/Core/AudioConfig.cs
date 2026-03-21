@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -30,12 +31,16 @@ public class AudioConfig : ScriptableObject
     [SerializeField] private float defaultVolume = 0.25f;
     public float DefaultVolume => defaultVolume;
 
-    /// <summary>Applies normalized volume (0-1) to the mixer and saves to PlayerPrefs.</summary>
+    /// <summary>Fired whenever volume changes (normalized 0-1).</summary>
+    public event Action<float> OnVolumeChanged;
+
+    /// <summary>Applies normalized volume (0-1) to the mixer, saves to PlayerPrefs, notifies listeners.</summary>
     public void ApplyVolume(float value)
     {
         if (audioMixer == null) return;
         float dB = Mathf.Lerp(dBMax, dBMin, value);
         audioMixer.SetFloat(exposedParam, dB);
         PlayerPrefs.SetFloat(AudioPrefsKeys.MasterVolume, value);
+        OnVolumeChanged?.Invoke(value);
     }
 }

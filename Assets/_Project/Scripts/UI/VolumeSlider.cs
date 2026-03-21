@@ -4,6 +4,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Controls volume via AudioConfig SO.
 /// Slider: 0 (silence) to 1 (max).
+/// Syncs automatically with other VolumeSliders via AudioConfig.OnVolumeChanged.
 /// </summary>
 public class VolumeSlider : MonoBehaviour
 {
@@ -32,11 +33,30 @@ public class VolumeSlider : MonoBehaviour
         }
     }
 
-    private void OnSliderChanged(float value) => audioConfig.ApplyVolume(value);
+    void OnEnable()
+    {
+        if (audioConfig != null)
+            audioConfig.OnVolumeChanged += OnExternalVolumeChanged;
+    }
+
+    void OnDisable()
+    {
+        if (audioConfig != null)
+            audioConfig.OnVolumeChanged -= OnExternalVolumeChanged;
+    }
 
     void OnDestroy()
     {
         if (slider != null)
             slider.onValueChanged.RemoveListener(OnSliderChanged);
     }
+
+    private void OnSliderChanged(float value) => audioConfig.ApplyVolume(value);
+
+    private void OnExternalVolumeChanged(float value)
+    {
+        if (slider != null)
+            slider.SetValueWithoutNotify(value);
+    }
 }
+

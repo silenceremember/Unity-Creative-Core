@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a6cd769b51c0d649bb976226e88e68e, type: 3}
+  m_Name: ClickerConfig
+  m_EditorClassIdentifier: Assembly-CSharp::ClickerConfig
+  punchStrength: 0.45
+  punchDuration: 0.28
+  punchVibrato: 6
+  punchElasticity: 0.6
+  megaEvery: 10
+  megaStrength: 1.1
+  megaDuration: 0.5
+  megaRotation: 12
+  colorCold: {r: 0.7, g: 0.9, b: 1, a: 1}
+  colorWarm: {r: 1, g: 0.85, b: 0.3, a: 1}
+  colorHot: {r: 1, g: 0.35, b: 0.1, a: 1}
+  colorMega: {r: 1, g: 1, b: 1, a: 1}
+  heatPerClick: 0.065
+  megaHeatMultiplier: 2
+  heatDecayRate: 0.25
+  heatWarmThreshold: 0.35
+  heatHotThreshold: 0.7
+  pitchMin: 0.85
+  pitchMax: 1.35
+  rollNumberDuration: 0.12
+  colorTransitionDuration: 0.3

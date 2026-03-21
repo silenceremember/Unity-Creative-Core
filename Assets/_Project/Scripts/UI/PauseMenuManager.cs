@@ -44,8 +44,9 @@ public class PauseMenuManager : MonoBehaviour
     [Tooltip("BoolVariable SO — true while pause menu is open")]
     [SerializeField] private BoolVariable isPausedVariable;
 
-    private bool      _isPaused   = false;
-    private GameState _curState   = GameState.Menu;
+    private bool      _isPaused          = false;
+    private GameState _curState          = GameState.Menu;
+    private bool      _playerWasEnabled  = false;
 
     void Awake()
     {
@@ -144,6 +145,8 @@ public class PauseMenuManager : MonoBehaviour
 
     private void OpenPause()
     {
+        _playerWasEnabled = playerController != null && playerController.enabled;
+
         SetPaused(true);
         Time.timeScale = 0f;
 
@@ -153,8 +156,7 @@ public class PauseMenuManager : MonoBehaviour
         if (volumeSlider != null && audioConfig != null)
             volumeSlider.SetValueWithoutNotify(PlayerPrefs.GetFloat(AudioPrefsKeys.MasterVolume, audioConfig.DefaultVolume));
 
-        if (playerController != null && playerController.enabled)
-            playerController.enabled = false;
+        if (playerController != null) playerController.enabled = false;
     }
 
     private void ClosePause()
@@ -165,10 +167,7 @@ public class PauseMenuManager : MonoBehaviour
         if (pauseMenuCanvas != null)
             pauseMenuCanvas.SetActive(false);
 
-        // Re-enable PlayerController only in Gameplay/Quest, NOT in VisualNovel
-        if (_curState != GameState.VisualNovel &&
-            playerController != null && !playerController.enabled)
-            playerController.enabled = true;
+        if (playerController != null) playerController.enabled = _playerWasEnabled;
     }
 
     private bool IsBlockedState(GameState state)
