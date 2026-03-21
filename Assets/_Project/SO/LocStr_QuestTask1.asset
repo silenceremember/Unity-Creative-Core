@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 406ab44afa38a024b9d9fa9c9408185a, type: 3}
+  m_Name: LocStr_QuestTask1
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedString
+  ru: "\u2014 \u041F\u041E\u041F\u0420\u0410\u0412\u0418\u0422\u042C \u041A\u0410\u0420\u0422\u0418\u041D\u0423
+    1"
+  en: "\u2014 STRAIGHTEN PAINTING 1"
