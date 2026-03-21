@@ -1,9 +1,10 @@
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
 using UnityEngine;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
 using UnityEngine.InputSystem;
+#endif
 
 /// <summary>
-/// Debug hotkeys.
+/// Debug hotkeys (only active in Editor and Development builds).
 /// F1 — skip everything (menu + crawl), start visual novel directly.
 /// F2 — jump to Gameplay (camera on player, controls enabled).
 /// F3 — same as F2 but also starts the painting quest.
@@ -21,6 +22,7 @@ public class DebugSkip : MonoBehaviour
     [SerializeField] private PaintingQuestManager paintingQuestManager;
     [SerializeField] private ExplorationManager explorationManager;
 
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
     void Update()
     {
         if (Keyboard.current == null) return;
@@ -80,13 +82,13 @@ public class DebugSkip : MonoBehaviour
             paintingQuestManager.StartQuest();
 
         if (explorationManager != null)
-            explorationManager.DebugShowTimerAndClicker();
+            explorationManager.ForceShowTimerAndClicker();
     }
 
     void CompleteQuest()
     {
         if (paintingQuestManager == null) return;
-        paintingQuestManager.DebugCompleteQuest();
+        paintingQuestManager.ForceCompleteQuest();
     }
-}
 #endif
+}

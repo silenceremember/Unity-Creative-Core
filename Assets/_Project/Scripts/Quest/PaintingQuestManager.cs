@@ -143,9 +143,8 @@ public class PaintingQuestManager : MonoBehaviour
         return pressIndex < order.Length ? order[pressIndex] : pressIndex;
     }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-    /// <summary>[DEBUG] Instantly completes the quest (O key).</summary>
-    public void DebugCompleteQuest()
+    /// <summary>Instantly completes the quest (snaps all paintings, triggers resolve).</summary>
+    public void ForceCompleteQuest()
     {
         if (!_questActive) StartQuest();
 
@@ -178,7 +177,8 @@ public class PaintingQuestManager : MonoBehaviour
         _questCts = CancellationTokenSource.CreateLinkedTokenSource(destroyCancellationToken);
         ResolveAsync(_questCts.Token).Forget();
     }
-#endif
+
+
 
     void Update()
     {
@@ -365,7 +365,7 @@ public class PaintingQuestManager : MonoBehaviour
                 lbl.fontStyle &= ~FontStyles.Strikethrough;
             }
 
-        DebugCompleteQuest();
+        ForceCompleteQuest();
     }
 
     private void DoReset()

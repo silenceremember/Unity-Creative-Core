@@ -191,9 +191,8 @@ public class ExplorationManager : MonoBehaviour
         clickerLabel.text = "0";
     }
 
-#if UNITY_EDITOR || DEVELOPMENT_BUILD
-    /// <summary>[DEBUG] Instantly shows timer and clicker (F3 in DebugSkip).</summary>
-    public void DebugShowTimerAndClicker()
+    /// <summary>Instantly shows timer and clicker.</summary>
+    public void ForceShowTimerAndClicker()
     {
         if (timerLabel != null && !timerLabel.gameObject.activeSelf)
         {
@@ -206,5 +205,4 @@ public class ExplorationManager : MonoBehaviour
         if (clickerLabel != null && !clickerLabel.gameObject.activeSelf)
             ShowClicker();
     }
-#endif
 }
