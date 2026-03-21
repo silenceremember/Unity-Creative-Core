@@ -19,7 +19,7 @@ public static class ExplorationDialogueBuilder
         if (!AssetDatabase.IsValidFolder(folder))
             AssetDatabase.CreateFolder("Assets/_Project/SO/Dialogue", "Exploration");
 
-        var segmentLines = new DialogueLine[42][];
+        var segmentLines = new DialogueLine[43][];
 
         segmentLines[0] = new[] {
             L("So.", "Итак.", 1.5f),
