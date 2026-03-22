@@ -33,4 +33,12 @@ public class CrawlConfig : ScriptableObject
     [Tooltip("Skip icon base alpha (idle state)")]
     [SerializeField] private float skipIconBaseAlpha = 0.3f;
     public float SkipIconBaseAlpha => skipIconBaseAlpha;
+
+    [Tooltip("Duration (seconds) for text fade-out")]
+    [SerializeField] private float textFadeDuration = 0.75f;
+    public float TextFadeDuration => textFadeDuration;
+
+    [Tooltip("Duration (seconds) for background fade-out (after text)")]
+    [SerializeField] private float backgroundFadeDuration = 0.75f;
+    public float BackgroundFadeDuration => backgroundFadeDuration;
 }

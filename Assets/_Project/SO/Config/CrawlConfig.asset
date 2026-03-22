@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1480c451ac33de648b4c90ed2091cb67, type: 3}
   m_Name: CrawlConfig
   m_EditorClassIdentifier: Assembly-CSharp::CrawlConfig
-  scrollSpeed: 60
-  holdMultiplier: 3
-  startY: -600
+  scrollSpeed: 50
+  holdMultiplier: 6
+  startY: -700
   endY: 4600
   blinkSpeed: 1.5
-  holdMusicPitch: 2
+  holdMusicPitch: 3
   skipIconBaseAlpha: 0.3
+  textFadeDuration: 0.75
+  backgroundFadeDuration: 0.75

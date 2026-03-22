@@ -2916,6 +2916,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 354690692}
+  - component: {fileID: 354690693}
   m_Layer: 5
   m_Name: TextContainer
   m_TagString: Untagged
@@ -2943,6 +2944,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!225 &354690693
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 354690691}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &368567271
 GameObject:
   m_ObjectHideFlags: 0
@@ -6267,7 +6280,6 @@ Transform:
   - {fileID: 330585546}
   - {fileID: 848989913}
   - {fileID: 1572382380}
-  - {fileID: 1516090855}
   - {fileID: 1335457695}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -9663,12 +9675,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IntroCrawl
   textTransform: {fileID: 680659153}
   mainCamera: {fileID: 330585545}
-  crawlAnchor: {fileID: 1516090855}
+  cameraAnchors: {fileID: 11400000, guid: edfcdf395bef5654fad8eae862d94e1c, type: 2}
+  targetAnchor: 1
   config: {fileID: 11400000, guid: dcd3b95feaad9ee44b7a6696b971de59, type: 2}
   skipIcon: {fileID: 1638022965}
   crawlMusic: {fileID: 576977098}
-  sceneAudio: {fileID: 1498482686}
+  forestSound: {fileID: 1498482686}
   crawlRoot: {fileID: 1966073258}
+  crawlCanvas: {fileID: 1966073261}
+  backgroundCanvasGroup: {fileID: 1966073263}
+  textCanvasGroup: {fileID: 354690693}
+  meshToHide: {fileID: 1912338050}
   novelStartChannel: {fileID: 11400000, guid: 1a88f922a4b33874abbdf38147762368, type: 2}
   startCrawlChannel: {fileID: 11400000, guid: a06c8e458788af8499c59c87ca85a1bb, type: 2}
   gameStateChannel: {fileID: 11400000, guid: 5c3cf2a8479847d42bb57d7bafa46319, type: 2}
@@ -12022,134 +12039,6 @@ MonoBehaviour:
   channel: {fileID: 11400000, guid: 3406efb24d9996a4fb63bbf740d2cc1e, type: 2}
   key: SecretBlock
   target: {fileID: 1397135393}
---- !u!1 &1516090852
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1516090855}
-  - component: {fileID: 1516090854}
-  - component: {fileID: 1516090853}
-  m_Layer: 0
-  m_Name: Crawl Camera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1516090853
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1516090852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalCameraData
-  m_RenderShadows: 1
-  m_RequiresDepthTextureOption: 2
-  m_RequiresOpaqueTextureOption: 2
-  m_CameraType: 0
-  m_Cameras: []
-  m_RendererIndex: -1
-  m_VolumeLayerMask:
-    serializedVersion: 2
-    m_Bits: 1
-  m_VolumeTrigger: {fileID: 0}
-  m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 1
-  m_Antialiasing: 1
-  m_AntialiasingQuality: 2
-  m_StopNaN: 0
-  m_Dithering: 0
-  m_ClearDepth: 1
-  m_AllowXRRendering: 1
-  m_AllowHDROutput: 1
-  m_UseScreenCoordOverride: 0
-  m_ScreenSizeOverride: {x: 0, y: 0, z: 0, w: 0}
-  m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
-  m_RequiresDepthTexture: 0
-  m_RequiresColorTexture: 0
-  m_TaaSettings:
-    m_Quality: 3
-    m_FrameInfluence: 0.1
-    m_JitterScale: 1
-    m_MipBias: 0
-    m_VarianceClampScale: 0.9
-    m_ContrastAdaptiveSharpening: 0
-  m_Version: 2
---- !u!20 &1516090854
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1516090852}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_Iso: 200
-  m_ShutterSpeed: 0.005
-  m_Aperture: 16
-  m_FocusDistance: 10
-  m_FocalLength: 50
-  m_BladeCount: 5
-  m_Curvature: {x: 2, y: 11}
-  m_BarrelClipping: 0.25
-  m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 2
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
---- !u!4 &1516090855
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1516090852}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 691070682}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1539988606
 GameObject:
   m_ObjectHideFlags: 0
@@ -15682,6 +15571,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LocalizedLabel
   localizedString: {fileID: 11400000, guid: 302bae10afa39f445bc3356a12e74d6c, type: 2}
   languageVar: {fileID: 11400000, guid: 9996dc4c53aa261408d95e5d9817d942, type: 2}
+--- !u!1 &1912338050 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 625364258685879862, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+  m_PrefabInstance: {fileID: 7203986306646085906}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1928751323
 GameObject:
   m_ObjectHideFlags: 0
@@ -16031,6 +15925,7 @@ GameObject:
   - component: {fileID: 1966073262}
   - component: {fileID: 1966073261}
   - component: {fileID: 1966073260}
+  - component: {fileID: 1966073263}
   m_Layer: 5
   m_Name: CrawlIntroCanvas
   m_TagString: Untagged
@@ -16060,7 +15955,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!223 &1966073261
 Canvas:
   m_ObjectHideFlags: 0
@@ -16072,7 +15967,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 330585545}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -16092,8 +15987,8 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1966073258}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 100}
-  m_LocalScale: {x: 0.10691672, y: 0.10691672, z: 0.10691672}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1600559497}
@@ -16104,8 +15999,20 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1920.0001, y: 1080}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
+--- !u!225 &1966073263
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1966073258}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1971993269
 GameObject:
   m_ObjectHideFlags: 0
@@ -17684,6 +17591,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ArchitecturalRendering
       objectReference: {fileID: 0}
+    - target: {fileID: 625364258685879862, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 688451772180286840, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: sequence
       value: 
@@ -17828,6 +17739,10 @@ PrefabInstance:
       propertyPath: paintingQuestManager
       value: 
       objectReference: {fileID: 162033291}
+    - target: {fileID: 8610850277457072247, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9039376375250334479, guid: 427489ccdf3d61448bc8f8ce1498aaba, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -17854,9 +17769,9 @@ SceneRoots:
   - {fileID: 7203986306646085906}
   - {fileID: 1498482687}
   - {fileID: 576977100}
+  - {fileID: 1966073262}
   - {fileID: 501565077}
   - {fileID: 664775157}
-  - {fileID: 1966073262}
   - {fileID: 6633765}
   - {fileID: 1822483915}
   - {fileID: 736020688}
