@@ -730,6 +730,7 @@ GameObject:
   - component: {fileID: 120632254}
   - component: {fileID: 120632256}
   - component: {fileID: 120632255}
+  - component: {fileID: 120632257}
   m_Layer: 5
   m_Name: NewLevelSkill
   m_TagString: Untagged
@@ -857,6 +858,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 120632253}
   m_CullTransparentMesh: 1
+--- !u!114 &120632257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120632253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05779b0be7dcb184296c33fcf831bcf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizedLabel
+  localizedString: {fileID: 11400000, guid: ae6c7bac0f2b3d14dbed64d8887f7fb0, type: 2}
+  languageVar: {fileID: 11400000, guid: 9996dc4c53aa261408d95e5d9817d942, type: 2}
 --- !u!1 &124054448
 GameObject:
   m_ObjectHideFlags: 0
